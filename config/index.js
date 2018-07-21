@@ -21,7 +21,9 @@ const defaultConfig = {
 		mysql:process.env.MYSQL
 	},
 	security:{
-		token:process.env.TOKEN_SECRET
+		token:process.env.TOKEN_SECRET || "2hg3487wtfasdfyuavw4r78fDCUSHVAG78",
+		salt_rounds:process.env.SALT_ROUNDS || 10,
+		salt:process.env.SALT_ROUNDS || "",
 	},
 	web:{
 		host:process.env.HOST || "localhost",

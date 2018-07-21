@@ -9,6 +9,15 @@ module.exports = {
 		cursor:{
 			type:"String"
 		},
+		id:{
+			type:"Number",
+			required:true,
+		},
+		username:{
+			type:"String",
+			required:true,
+			maxlength:64
+		},
 		email:{
 			type:"String",
 			trim:true,

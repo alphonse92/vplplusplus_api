@@ -1,7 +1,7 @@
 const cluster = require('cluster');
 const Config = require("./config/");
 const Util = require(Config.paths.utils);
-const cpus = 1;//require('os').cpus().length;
+const cpus = require('os').cpus().length;
 global.Config = Config;
 
 if(cluster.isMaster){
@@ -11,8 +11,10 @@ if(cluster.isMaster){
 		.then(result => {
 			var workerIds = [];
 			for(var i = 0; i < cpus; i += 1){
+				Util.log("Creating worker")
 				let worker = cluster.fork();
 				workerIds[worker.id] = worker.id;
+				Util.log("Worker [", worker.id, "] created");
 			}
 			cluster.on('exit', function(worker){
 				Util.log('Cluster worker die [', worker.id, "]");
