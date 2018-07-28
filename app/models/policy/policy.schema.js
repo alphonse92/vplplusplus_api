@@ -4,31 +4,33 @@ const Schema = mongoose.Schema;
 const errors = require(Config.paths.errors + "/user.errors");
 const validators = require(Config.paths.utils).validators;
 module.exports = {
-	name:"User",
+	name:"Policy",
 	schema:{
 		cursor:{
 			type:"String"
 		},
-		id:{
-			type:"Number",
-			required:true,
-		},
-		username:{
+		srn:{
 			type:"String",
-			required:true,
-			maxlength:64
+			required:true
 		},
-		email:{
+		slug:{
 			type:"String",
-			trim:true,
-			validate:{
-				validator:validators.email,
-				message:"errors.invalid_email.error.userMessage"
-			},
-			index:true,
-			required:true,
-			unique:true,
-			maxlength:125
-		}
+			required:true
+		},
+		description:{
+			type:"String",
+			required:true
+		},
+		extends:[{type:"String"}],
+		actions:[{
+				path:{
+					type:"String",
+				},
+				scopes:[{type:"String"}],
+				query:{
+					type:"String"
+				}
+			}
+		]
 	}
 }

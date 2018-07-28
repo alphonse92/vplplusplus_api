@@ -16,14 +16,24 @@ const defaultConfig = {
 		version:"v1",
 		apiPath:"api",
 	},
+	system:{
+		cores:+process.env.SYSTEM_CORES || require('os').cpus().length
+	},
 	db:{
 		mongo:process.env.MONGO,
 		mysql:process.env.MYSQL
 	},
 	security:{
 		token:process.env.TOKEN_SECRET || "2hg3487wtfasdfyuavw4r78fDCUSHVAG78",
+		expiration_minutes:60 * 60 * 24,
 		salt_rounds:process.env.SALT_ROUNDS || 10,
 		salt:process.env.SALT_ROUNDS || "",
+	},
+	moodle:{
+		auth:{
+			// can be: plaintext, md5, sha1, saltedcrypt review your moodle config
+			type:process.env.MOODLE_AUTH_TYPE || "saltedcrypt"
+		}
 	},
 	web:{
 		host:process.env.HOST || "localhost",

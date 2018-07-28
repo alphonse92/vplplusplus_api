@@ -1,10 +1,9 @@
-module.exports = {};
 const Config = global.Config;
 const mongoose = require(Config.paths.db + '/mongo');
 const increment = require('mongoose-auto-increment');
 const paginator = require('mongoose-paginate');
 const timestamps = require('mongoose-timestamp');
-const ModelSchema = require("./schemas/user.schema");
+const ModelSchema = require("./user.schema");
 const Schema = new mongoose.Schema(ModelSchema.schema);
 
 Schema.plugin(paginator);
