@@ -34,7 +34,7 @@ function bootstrap(){
 	Util.log("Bootstraping");
 	addAppListeners();
 	return createDefaultUserIfNotExist()
-		.then(() => createDefaultPoliciesIfNotExist)
+		.then(() => createDefaultPoliciesIfNotExist())
 		.catch(err => Util.response.handleError(err, null))
 }
 

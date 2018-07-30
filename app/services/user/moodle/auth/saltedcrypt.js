@@ -53,11 +53,9 @@ function valideIfIsSiteAdmin(connection, UserRow){
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "config";
 		const sql = 'SELECT * FROM ' + table + ' WHERE name=\'siteadmins\'';
-		console.log(sql)
 		connection.query(sql, function(err, data, fields){
 			if(err)
 				return reject(err);
-			console.log(data)
 			UserRow.is_site_admin = data[0].value.split(",").map(id => +id).includes(UserRow.id);
 			return resolve(UserRow);
 		});

@@ -5,14 +5,12 @@ const UserErrors = require(Config.paths.errors + "/user.errors");
 const Policy = require(Config.paths.models + "/policy/policy.mongo");
 const PolicyService = require(Config.paths.services + "/policy/policy.service");
 const jwt = require('jsonwebtoken');
-const Util = require(Config.paths.utils);
 const _ = require("lodash");
 
 module.exports.User = User;
-
 module.exports.auth = auth;
 function auth(email, password){
-	const AuthStrategy = require("./strategies/auth/" + Config.moodle.auth.type);
+	const AuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	return AuthStrategy(email, password)
 		.then(result => {
 			MoodleUserData = result;
@@ -20,22 +18,22 @@ function auth(email, password){
 				return Promise.reject(UserErrors.user_suspended);
 			return findOneOrCreate({$or:[{id:MoodleUserData.id}, {email:MoodleUserData.email}]}, MoodleUserData)
 		})
-		.then(addPolicies)
 		.then(UserDoc => {
 			UserDoc.type = User.getUserTypes.person;
 			return User.findByIdAndUpdate(UserDoc._id, MoodleUserData, {new :true})
 		})
 		.then(formatAuthResponse)
-		.then(ResponseData => {
-			let token = _.pick(ResponseData, ["_id", "id", "username"]);
-			token.exp = Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes);
-			token = jwt.sign(token, Config.security.token);
-			ResponseData.token = token;
-			return Promise.resolve(ResponseData);
-		})
+		.then(getAuthToken)
 }
 
-
+module.exports.getAuthToken = getAuthToken;
+function getAuthToken(UserDoc){
+	let token = _.pick(UserDoc, ["_id", "id", "username"]);
+	token.exp = Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes);
+	token = jwt.sign(token, Config.security.token);
+	UserDoc.token = token;
+	return Promise.resolve(UserDoc);
+}
 
 module.exports.findOneOrCreate = findOneOrCreate;
 function findOneOrCreate(query, data){
@@ -45,11 +43,12 @@ function findOneOrCreate(query, data){
 				return UserDocument;
 			return User.create(data);
 		})
+		.then(addPolicies)
 }
 
 function addPolicies(UserDoc){
 	UserDoc.policies = getUserPolicies(UserDoc);
-	return Promise.resolve(UserDoc);
+	return UserDoc.save();
 }
 
 module.exports.getUserPolicies = getUserPolicies;
@@ -58,13 +57,14 @@ function getUserPolicies(UserDoc){
 	let archetypesAdded = [];
 
 	if(UserDoc.is_site_admin)
-		policies = policies.concat(getPoliciesByArchetype("siteadministrator")());
+		policies = policies.concat(getPoliciesByArchetype("siteadministrator"));
 
 	UserDoc.roles.forEach(role => {
 		let archetype = role.archetype;
-		archetypesAdded.push(archetype)
-		if(!archetypesAdded.includes(archetype))
+		if(!archetypesAdded.includes(archetype)){
 			policies = policies.concat(getPoliciesByArchetype(archetype));
+			archetypesAdded.push(archetype)
+		}
 	})
 
 	return policies;
@@ -79,15 +79,20 @@ function formatAuthResponse(UserDoc){
 	return PolicyService.getPolicies(UserDoc.policies)
 		.then(PolicyList => {
 			UserDoc = UserDoc.toObject();
-			UserDoc.policies = PolicyList;
+			UserDoc.scopes = PolicyList.reduce((scopes, policy) => {
+				policy.actions.forEach(Action => {
+					scopes = scopes.concat(Action.scopes);
+				})
+				return scopes;
+			}, [])
 			return Promise.resolve(UserDoc)
+		})
+		.then((UserData) => {
+			return Promise.resolve(_.pick(UserData, User.getPublicFields().concat(["scopes"])))
 		})
 }
 
-module.exports.find = find;
-function find(){
 
-}
 
 module.exports.createDefaultUserIfNotExist = createDefaultUserIfNotExist;
 function createDefaultUserIfNotExist(){
@@ -95,7 +100,7 @@ function createDefaultUserIfNotExist(){
 		.then(UserDoc => {
 			if(UserDoc)
 				return Promise.resolve(UserDoc);
-			
+
 			let data = require("./fixtures/client");
 			data.username = Config.client.username;
 			data.email = Config.client.email;
@@ -125,6 +130,7 @@ function getGetUserMiddleware(){
 			.then(User => {
 				if(!User)
 					return Promise.reject(UserErrors.token_not_valid);
+				res.locals.__mv__ = res.locals.__mv__ || {};
 				res.locals.__mv__.user = User;
 				next();
 			})
@@ -132,4 +138,12 @@ function getGetUserMiddleware(){
 	}
 
 
+}
+
+module.exports.list = list;
+function list(req){
+	let id = req.params.id;
+	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
+	let query = Util.mongoose.getQueryFromRequest(req);
+	return Util.mongoose.list(User, id, query, paginator);
 }

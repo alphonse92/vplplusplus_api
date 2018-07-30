@@ -16,6 +16,16 @@ module.exports = {
 			index:true,
 			required:true
 		},
+		name:{
+			type:"String",
+			required:true,
+			maxlength:64,
+		},
+		type:{
+			type:"String",
+			required:true,
+			maxlength:25,
+		},
 		slug:{
 			type:"String",
 			required:true

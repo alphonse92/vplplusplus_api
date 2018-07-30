@@ -30,13 +30,13 @@ function getPoliciesAllowed(service, action, policies){
 	let policiesAllowed = policies.filter(Policy => {
 		let resource = Policy.getResource();
 		Policy.actions = Policy.actions.filter(Action => {
+			let ActionPath = Action.path;
 			let matchWithService = resource.service === service;
-			let matchWithAction = pathToRegexp(Action.path).exec(action);
+			let matchWithAction = pathToRegexp(ActionPath).exec(action);
 			return matchWithService && matchWithAction;
 		})
 		return !!Policy.actions.length;
 	})
-
 	return {
 		allow:!!policiesAllowed.length,
 		policies:policiesAllowed

@@ -8,6 +8,7 @@ const enums = {
 }
 module.exports = {
 	name:"User",
+	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email"],
 	types:{
 		person:enums.user_type[0],
 		api_client:enums.user_type[1],

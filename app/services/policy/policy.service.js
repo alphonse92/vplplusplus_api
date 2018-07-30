@@ -1,6 +1,6 @@
 const Config = global.Config;
 const Policy = require(Config.paths.models + "/policy/policy.mongo");
-
+const Util = require(Config.paths.utils)
 module.exports.create = create;
 function create(data){
 	return Policy.create(data);
@@ -9,20 +9,23 @@ function create(data){
 module.exports.createDefaultPoliciesIfNotExist = createDefaultPoliciesIfNotExist;
 function createDefaultPoliciesIfNotExist(){
 	const env = Config.env;
-	const type = Config.app.init.policies;
-	const fixtures = require("./fixtures/policies");
-	const resources = fixtures.map(p => p.resource);
+	const type = Config.app.init.policy;
 
-	if(type === "every_time"){
+	let fixtures = require("./fixtures/policies");
+	fixtures = Object.keys(fixtures).map(name => fixtures[name]);
+	let resources = fixtures.map(p => p.resource);
+	console.log(type)
+	if(type === "reset"){
 		return reset_policies(fixtures, resources);
 	}else if(type === "sync"){
-		sync_policies(fixtures, resources)
+		return sync_policies(fixtures, resources)
 	}
 
 	return add_policies_first_time(fixtures, resources);
 }
 
 function add_policies_first_time(fixtures, resources){
+	Util.log("Adding policies by first time");
 	return Policy.find({resource:{$in:resources}})
 		.then(Policies => {
 			if(Policies.length !== resources.length){
@@ -33,20 +36,13 @@ function add_policies_first_time(fixtures, resources){
 }
 
 function reset_policies(fixtures, resources){
-	return Policy.findAndRemove({resource:{$in:resources}})
-		.then(() => {
-			return new Promise((resolve, reject) => {
-				Policy.collection.insert(fixtures, (err, docs) => {
-					if(err)
-						return reject(err);
-					return resolve(docs);
-				})
-			})
-		})
+	Util.log("Reset Policies");
+	return Policy.remove({resource:{$in:resources}})
+		.then(() => Promise.all(fixtures.map(fixture => Policy.create(fixture))))
 }
 
 function sync_policies(fixtures, resources){
-
+	Util.log("Syncronicing  Policies");
 	return Policy.find({resource:{$in:resources}})
 		.then(Policies => {
 			let resource_map = Policies.reduce((map, curr) => {
@@ -67,7 +63,8 @@ function sync_policies(fixtures, resources){
 module.exports.getLoadUserPoliciesMiddleware = getLoadUserPoliciesMiddleware;
 function getLoadUserPoliciesMiddleware(){
 	return (req, res, next) => {
-		getPolicies(res.locals.__mv__.user.policies)
+		const user = res.locals.__mv__.user;
+		getPolicies(user.policies)
 			.then(Policies => {
 				res.locals.__mv__.policies = Policies || [];
 				next();
@@ -80,46 +77,38 @@ function getPolicies(srnArray){
 	return getPolicy(srnArray, []);
 }
 
-function getPolicy(srnArray, groupArray){
-	groupArray = groupArray || [];
+function getPolicy(srnArray){
 	let policySrnToVisit = Array.isArray(srnArray) ? srnArray : [srnArray];
-	let policyGroupsToVisit = Array.isArray(groupArray) ? groupArray : [groupArray];
 	return new Promise((resolve, reject) => {
-		findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit);
+		findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit);
 	})
 
 }
 
-function findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit, policyVisited, policies){
+function findRecursiveExtendedPolicy(resolve, reject, resourceToVisit, policyVisited, policies){
 	policyVisited = policyVisited || [];
 	policies = policies || [];
-	Policy.find(getPolicyQuery(policySrnToVisit, policyGroupsToVisit, policyVisited))
+	Policy.find(getPolicyQuery(resourceToVisit, policyVisited))
 		.then(Policies => {
 			if(Policies.length === 0 || !Policies){
 				return resolve(policies);
 			}
-			policySrnToVisit = [];
-			policyGroupsToVisit = [];
+			resourceToVisit = [];
 			Policies.forEach((PolicyDoc) => {
 				policyVisited.push(PolicyDoc._id);
-				policySrnToVisit = policySrnToVisit.concat(PolicyDoc.extends);
+				resourceToVisit = resourceToVisit.concat(PolicyDoc.extends);
 				policies.push(PolicyDoc);
 			});
-			findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit, policyVisited, policies);
+			findRecursiveExtendedPolicy(resolve, reject, resourceToVisit, policyVisited, policies);
 		})
 		.catch(err => reject(err));
 }
 
-function getPolicyQuery(srnArray, groupArray, policyVisited){
-	let query = {$and:[
-			{
-				$or:[
-					{resource:{$in:srnArray}}, {groups:{$in:groupArray}}
-				]
-			},
-			{
-				_id:{$nin:policyVisited}
-			}
+function getPolicyQuery(resourceArray, policyVisited){
+	let query = {
+		$and:[
+			{$or:[{resource:{$in:resourceArray}}]},
+			{_id:{$nin:policyVisited}}
 		]};
 
 	return query;

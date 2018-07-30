@@ -9,5 +9,7 @@ function auth(req, res, next){
 }
 module.exports.find = find;
 function find(req, res, next){
-
+	UserService.list(req)
+		.then(Users => res.send(Users))
+		.catch(err => Util.response.handleError(err, res))
 }

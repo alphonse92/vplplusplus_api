@@ -1,8 +1,8 @@
 const Config = global.Config;
-const DefaultPolicyService = require("./policy.access-manager.service");
+const DefaultPolicyService = require("./../policy.access-manager.service");
+const fixtures = {};
 
-
-module.exports.public = {
+fixtures.public = {
 	resource:"service:api:system:all:all",
 	name:"public",
 	slug:"Public Resources",
@@ -10,11 +10,11 @@ module.exports.public = {
 	description:"Policy for public resources. Take care.",
 	extends:[],
 	actions:[
-		//{path:"POST/api/v1/city/", scopes:["readCities"], query:""} //this an example of a public path
+		{path:"POST/api/v1/users/auth", scopes:["login"], query:""} //this an example of a public path
 	]
 };
 
-module.exports.userCreate = {
+fixtures.userCreate = {
 	resource:"service:api:system:user:create",
 	name:"createUser",
 	slug:"Create User",
@@ -25,7 +25,7 @@ module.exports.userCreate = {
 		{path:"POST/api/v1/users", scopes:["createUser"], query:""}
 	]
 };
-module.exports.userRead = {
+fixtures.userRead = {
 	resource:"service:api:system:user:read",
 	name:"readUser",
 	slug:"Read Users",
@@ -33,10 +33,10 @@ module.exports.userRead = {
 	description:"Policy for Read. This will read only api user. If you want to know more information about some user in moodle, pelase go to Moodle administration",
 	extends:[],
 	actions:[
-		{path:"GET/api/v1/users", scopes:["createUser"], query:""}
+		{path:"GET/api/v1/users/:id?", scopes:["readUser"], query:""}
 	]
 };
-module.exports.userUpdate = {
+fixtures.userUpdate = {
 	resource:"service:api:system:user:update",
 	name:"updateUser",
 	slug:"Update User",
@@ -44,10 +44,10 @@ module.exports.userUpdate = {
 	description:"Policy for update an user manually. If you want update a Moodle user please go to Moodle administration instead",
 	extends:[],
 	actions:[
-		{path:"PUT/api/v1/users", scopes:["createUser"], query:""}
+		{path:"PUT/api/v1/users", scopes:["updateUser"], query:""}
 	]
 };
-module.exports.userDelete = {
+fixtures.userDelete = {
 	resource:"service:api:system:user:delete",
 	name:"deleteUser",
 	slug:"Delete User",
@@ -55,10 +55,10 @@ module.exports.userDelete = {
 	description:"Policy for delete an user manually. If you want delete a Moodle user please go to Moodle administration instead",
 	extends:[],
 	actions:[
-		{path:"DELETE/api/v1/users", scopes:["createUser"], query:""}
+		{path:"DELETE/api/v1/users", scopes:["deleteUser"], query:""}
 	]
 };
-module.exports.policyCreate = {
+fixtures.policyCreate = {
 	resource:"service:api:system:policy:create",
 	name:"createPolicy",
 	slug:"Create Policy",
@@ -69,7 +69,7 @@ module.exports.policyCreate = {
 		{path:"POST/api/v1/policies", scopes:["createPolicy"], query:""}
 	]
 };
-module.exports.policyRead = {
+fixtures.policyRead = {
 	resource:"service:api:system:policy:read",
 	name:"readPolicy",
 	slug:"Read Policys",
@@ -77,10 +77,10 @@ module.exports.policyRead = {
 	description:"Policy for read an API policy manually.",
 	extends:[],
 	actions:[
-		{path:"GET/api/v1/policies", scopes:["createPolicy"], query:""}
+		{path:"GET/api/v1/policies", scopes:["readPolicy"], query:""}
 	]
 };
-module.exports.policyUpdate = {
+fixtures.policyUpdate = {
 	resource:"service:api:system:policy:update",
 	name:"updatePolicy",
 	slug:"Update Policy",
@@ -88,10 +88,10 @@ module.exports.policyUpdate = {
 	description:"Policy for update an API policy manually.",
 	extends:[],
 	actions:[
-		{path:"PUT/api/v1/policies", scopes:["createPolicy"], query:""}
+		{path:"PUT/api/v1/policies", scopes:["updatePolicy"], query:""}
 	]
 };
-module.exports.policyDelete = {
+fixtures.policyDelete = {
 	resource:"service:api:system:policy:delete",
 	name:"deletePolicy",
 	slug:"Delete Policy",
@@ -99,10 +99,10 @@ module.exports.policyDelete = {
 	description:"Delete for update an API policy manually.",
 	extends:[],
 	actions:[
-		{path:"DELETE/api/v1/policies", scopes:["createPolicy"], query:""}
+		{path:"DELETE/api/v1/policies", scopes:["deletePolicy"], query:""}
 	]
 };
-module.exports.configurationRead = {
+fixtures.configurationRead = {
 	resource:"service:api:system:configuration:read",
 	name:"readConfiguration",
 	slug:"Read Configurations",
@@ -110,10 +110,10 @@ module.exports.configurationRead = {
 	description:"Configuration for read an API configuration manually.",
 	extends:[],
 	actions:[
-		{path:"GET/api/v1/configurations", scopes:["createConfiguration"], query:""}
+		{path:"GET/api/v1/configurations", scopes:["readConfiguration"], query:""}
 	]
 };
-module.exports.configurationUpdate = {
+fixtures.configurationUpdate = {
 	resource:"service:api:system:configuration:update",
 	name:"updateConfiguration",
 	slug:"Update Configuration",
@@ -121,6 +121,8 @@ module.exports.configurationUpdate = {
 	description:"Configuration for update an API configuration manually.",
 	extends:[],
 	actions:[
-		{path:"PUT/api/v1/configurations", scopes:["createConfiguration"], query:""}
+		{path:"PUT/api/v1/configurations", scopes:["updateConfiguration"], query:""}
 	]
 };
+
+module.exports = fixtures;

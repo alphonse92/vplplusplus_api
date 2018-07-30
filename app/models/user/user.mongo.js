@@ -11,4 +11,5 @@ Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);
 Schema.plugin(increment.plugin, {model:ModelSchema.name, field:'cursor'});
 Schema.statics.getUserTypes = () => ModelSchema.types;
+Schema.statics.getPublicFields = () => ModelSchema.publicFields;
 module.exports = mongoose.model(ModelSchema.name, Schema);

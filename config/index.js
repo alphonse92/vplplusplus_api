@@ -10,6 +10,7 @@ const models = app + "/models";
 const services = app + "/services";
 const errors = app + "/errors";
 const lang = app + "/language";
+const webservices = app + "/webservices";
 const defaultConfig = {
 	env:process.env.NODE_ENV,
 	service:{
@@ -22,8 +23,12 @@ const defaultConfig = {
 		version:"v1",
 		apiPath:"api",
 		init:{
-			user:process.env.INIT_USER_TYPE || "first_time",
-			policy:process.env.INIT_USER_TYPE || "first_time",
+			user:process.env.INIT_USER_TYPE || "reset",
+			policy:process.env.INIT_USER_TYPE || "reset",
+		},
+		paginator:{
+			limit:+process.env.APP_PAGINATION || 10,
+			page:+process.env.APP_PAGE || 1,
 		}
 	},
 	system:{
@@ -40,6 +45,10 @@ const defaultConfig = {
 		salt:process.env.SALT_ROUNDS || "",
 	},
 	moodle:{
+		web:{
+			host:process.env.MOODLE_HOST || "localhost",
+			port:process.env.MOODLE_PORT || ""
+		},
 		db:{
 			table_prefix:process.env.MOODLE_DB_PREFIX || "mdl_"
 		},
@@ -53,7 +62,7 @@ const defaultConfig = {
 		host:process.env.HOST || "localhost",
 		port:process.env.PORT || "1337"
 	},
-	paths:{cwd, app, config, public, utils, controllers, db, routes, models, services, errors, lang}
+	paths:{cwd, app, config, public, utils, controllers, db, routes, models, services, errors, lang, webservices}
 };
 
 defaultConfig.client.email = defaultConfig.client.username + "@" + defaultConfig.web.host;
