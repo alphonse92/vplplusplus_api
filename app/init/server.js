@@ -7,7 +7,9 @@ const cluster = require('cluster');
 const Config = global.Config;
 const Util = require(Config.paths.utils)
 const app = express();
-
+const PolicyAccessManagerMiddleware = require(Config.paths.services + "/policy/policy.access-manager.service").getMiddleware({service:Config.service.name})
+const GetUserMiddleware = require(Config.paths.services + "/user/user.service").getGetUserMiddleware();
+const LoadUserPolicies = require(Config.paths.services + "/policy/policy.service").getLoadUserPoliciesMiddleware();
 module.exports = function(config){
 	return addPreRoutesMiddlewares(app)
 		.then(addRoutes)
@@ -25,6 +27,9 @@ function addPreRoutesMiddlewares(app){
 		.use(bodyParser.urlencoded({extended:false}))
 		.use(express.static(Config.paths.public))
 		.use(cors({credentials:true, origin:true}))
+		.use(GetUserMiddleware)
+		.use(LoadUserPolicies)
+		.use(PolicyAccessManagerMiddleware)
 	return Promise.resolve(app);
 
 }

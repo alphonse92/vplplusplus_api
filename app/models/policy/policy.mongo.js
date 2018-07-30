@@ -10,4 +10,16 @@ Schema.plugin(paginator);
 Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);
 Schema.plugin(increment.plugin, {model:ModelSchema.name, field:'cursor'});
+Schema.statics.getResourceNameSeparator = ModelSchema.resourceNameSeparator;
+
+Schema.methods.getResource = function(){
+	let parts = this.resource.split(ModelSchema.resourceNameSeparator);
+	return {
+		service:parts[1],
+		owner:parts[2],
+		resource:parts[3],
+		action:parts[4]
+	}
+}
+
 module.exports = mongoose.model(ModelSchema.name, Schema);

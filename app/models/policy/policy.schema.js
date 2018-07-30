@@ -5,12 +5,15 @@ const errors = require(Config.paths.errors + "/user.errors");
 const validators = require(Config.paths.utils).validators;
 module.exports = {
 	name:"Policy",
+	resourceNameSeparator:":",
 	schema:{
 		cursor:{
 			type:"String"
 		},
-		srn:{
+		resource:{
 			type:"String",
+			unique:true,
+			index:true,
 			required:true
 		},
 		slug:{

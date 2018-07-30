@@ -1,9 +1,41 @@
 const Config = global.Config;
 const Util = require(Config.paths.utils);
 const User = require(Config.paths.models + "/user/user.mongo");
+const UserErrors = require(Config.paths.errors + "/user.errors");
 const Policy = require(Config.paths.models + "/policy/policy.mongo");
+const PolicyService = require(Config.paths.services + "/policy/policy.service");
 const jwt = require('jsonwebtoken');
+const Util = require(Config.paths.utils);
 const _ = require("lodash");
+
+module.exports.User = User;
+
+module.exports.auth = auth;
+function auth(email, password){
+	const AuthStrategy = require("./strategies/auth/" + Config.moodle.auth.type);
+	return AuthStrategy(email, password)
+		.then(result => {
+			MoodleUserData = result;
+			if(MoodleUserData.suspended === 1)
+				return Promise.reject(UserErrors.user_suspended);
+			return findOneOrCreate({$or:[{id:MoodleUserData.id}, {email:MoodleUserData.email}]}, MoodleUserData)
+		})
+		.then(addPolicies)
+		.then(UserDoc => {
+			UserDoc.type = User.getUserTypes.person;
+			return User.findByIdAndUpdate(UserDoc._id, MoodleUserData, {new :true})
+		})
+		.then(formatAuthResponse)
+		.then(ResponseData => {
+			let token = _.pick(ResponseData, ["_id", "id", "username"]);
+			token.exp = Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes);
+			token = jwt.sign(token, Config.security.token);
+			ResponseData.token = token;
+			return Promise.resolve(ResponseData);
+		})
+}
+
+
 
 module.exports.findOneOrCreate = findOneOrCreate;
 function findOneOrCreate(query, data){
@@ -15,28 +47,40 @@ function findOneOrCreate(query, data){
 		})
 }
 
-module.exports.auth = auth;
-function auth(email, password){
-	const AuthStrategy = require("./strategies/auth/" + Config.moodle.auth.type);
-	return AuthStrategy(email, password)
-		.then(result => {
-			MoodleUserData = result;
-			return findOneOrCreate({$or:[{id:MoodleUserData.id}, {email:MoodleUserData.email}]}, MoodleUserData)
-		})
-		.then(UserDoc => {
-			if(UserDoc.id !== MoodleUserData.id){
-				UserDoc.id = MoodleUserData.id;
-				return UserDoc.save();
-			}
-			return Promise.resolve(UserDoc);
-		})
-		.then(UserDoc => {
-			let token = _.pick(UserDoc, ["_id", "id", "username"]);
-			token.exp = Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes);
-			token = jwt.sign(token, Config.security.token);
+function addPolicies(UserDoc){
+	UserDoc.policies = getUserPolicies(UserDoc);
+	return Promise.resolve(UserDoc);
+}
+
+module.exports.getUserPolicies = getUserPolicies;
+function getUserPolicies(UserDoc){
+	let policies = [];
+	let archetypesAdded = [];
+
+	if(UserDoc.is_site_admin)
+		policies = policies.concat(getPoliciesByArchetype("siteadministrator")());
+
+	UserDoc.roles.forEach(role => {
+		let archetype = role.archetype;
+		archetypesAdded.push(archetype)
+		if(!archetypesAdded.includes(archetype))
+			policies = policies.concat(getPoliciesByArchetype(archetype));
+	})
+
+	return policies;
+}
+
+module.exports.getPoliciesByArchetype = getPoliciesByArchetype;
+function getPoliciesByArchetype(archetype){
+	return Config.moodle.archetypes[archetype];
+}
+
+function formatAuthResponse(UserDoc){
+	return PolicyService.getPolicies(UserDoc.policies)
+		.then(PolicyList => {
 			UserDoc = UserDoc.toObject();
-			UserDoc.token = token;
-			return Promise.resolve(UserDoc);
+			UserDoc.policies = PolicyList;
+			return Promise.resolve(UserDoc)
 		})
 }
 
@@ -45,83 +89,47 @@ function find(){
 
 }
 
-
-
-exports.getPolicies = getPolicies;
-function getPolicies(uid){
-	let UserDocument = null;
-	let Policies = null;
-	let Groups = null;
-
-	return User.findById(uid)
+module.exports.createDefaultUserIfNotExist = createDefaultUserIfNotExist;
+function createDefaultUserIfNotExist(){
+	return User.findOne({email:Config.client.email})
 		.then(UserDoc => {
-			UserDocument = UserDoc;
-			let srnArray = UserDoc.policies.map((policy) => policy.srn || policy);
-			let groupsArray = UserDoc.groups;
-			return getPolicy(srnArray, groupsArray);
+			if(UserDoc)
+				return Promise.resolve(UserDoc);
+			
+			let data = require("./fixtures/client");
+			data.username = Config.client.username;
+			data.email = Config.client.email;
+			data.type = User.getUserTypes().api_client;
+			return User.create(data);
 		})
-		.then(PoliciesDocs => {
-			let groupsObject = {};
-			PoliciesDocs.forEach(PolicyDoc => {
-				PolicyDoc.groups.forEach(PolicyGroup => {
-					groupsObject[PolicyGroup] = null; //isnt necesary store something
-				});
-			});
-			Groups = Object.keys(groupsObject)
-			Policies = PoliciesDocs;
-			return processDynamicPolicies(Policies, UserDocument);
-		})
-		.then(dynamicPolicies => {
-			dynamicPolicies = dynamicPolicies.filter(policy => policy.statements && policy.statements.length > 0)
-			let payload = {uid:UserDocument._id, policies:dynamicPolicies, groups:Groups}
-			return Promise.resolve(payload);
-		})
-
-
 }
 
-function getPolicy(srnArray, groupArray){
-	groupArray = groupArray || [];
-	let policySrnToVisit = Array.isArray(srnArray) ? srnArray : [srnArray];
-	let policyGroupsToVisit = Array.isArray(groupArray) ? groupArray : [groupArray];
-	return new Promise((resolve, reject) => {
-		findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit);
-	})
 
-}
-
-function findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit, policyVisited, policies){
-	policyVisited = policyVisited || [];
-	policies = policies || [];
-	Policy.find(getPolicyQuery(policySrnToVisit, policyGroupsToVisit, policyVisited))
-		.then(Policies => {
-			if(Policies.length === 0 || !Policies){
-				return resolve(policies);
+module.exports.getGetUserMiddleware = getGetUserMiddleware;
+function getGetUserMiddleware(){
+	return (req, res, next) => {
+		let token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : null;
+		let userFindPromise = null;
+		if(!token){
+			userFindPromise = User.findOne({email:Config.client.email})
+		}else{
+			try{
+				token = jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token);
+				userFindPromise = User.findById(token._id)
+			}catch(e){
+				userFindPromise = Promise.reject(UserErrors.token_not_valid)
 			}
-			policySrnToVisit = [];
-			policyGroupsToVisit = [];
-			Policies.forEach((PolicyDoc) => {
-				policyVisited.push(PolicyDoc._id);
-				policySrnToVisit = policySrnToVisit.concat(PolicyDoc.extends);
-				policies.push(PolicyDoc);
-			});
-			findRecursiveExtendedPolicy(resolve, reject, policySrnToVisit, policyGroupsToVisit, policyVisited, policies);
-		})
-		.catch(err => reject(err));
+		}
+
+		userFindPromise
+			.then(User => {
+				if(!User)
+					return Promise.reject(UserErrors.token_not_valid);
+				res.locals.__mv__.user = User;
+				next();
+			})
+			.catch(err => Util.response.handleError(err, res))
+	}
+
+
 }
-
-function getPolicyQuery(srnArray, groupArray, policyVisited){
-	let query = {$and:[
-			{
-				$or:[
-					{srn:{$in:srnArray}}, {groups:{$in:groupArray}}
-				]
-			},
-			{
-				_id:{$nin:policyVisited}
-			}
-		]};
-
-	return query;
-}
-
