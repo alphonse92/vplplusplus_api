@@ -27,6 +27,9 @@ function createDefaultUserIfNotExist(){
 function createDefaultPoliciesIfNotExist(){
 	return require(Config.paths.services + "/policy/policy.service").createDefaultPoliciesIfNotExist();
 }
+function createDefaultGroupsIfNotExist(){
+	return require(Config.paths.services + "/policy/policy.service").createDefaultGroupsIfNotExist();
+}
 
 
 module.exports = bootstrap;
@@ -35,6 +38,7 @@ function bootstrap(){
 	addAppListeners();
 	return createDefaultUserIfNotExist()
 		.then(() => createDefaultPoliciesIfNotExist())
+		.then(() => createDefaultGroupsIfNotExist())
 		.catch(err => Util.response.handleError(err, null))
 }
 

@@ -5,4 +5,5 @@ module.exports = {
 	crypt:require("./crypt"),
 	response:require("./response"),
 	mongoose:require("./mongoose"),
+	request:require("./request")
 }

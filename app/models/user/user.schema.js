@@ -64,7 +64,21 @@ module.exports = {
 			type:"Boolean",
 			default:false
 		},
+		tokens:[{
+				client:{
+					type:"String",
+					trim:true,
+					maxlength:64
+				},
+				token:{
+					type:"String",
+					trim:true,
+				},
+			}],
 		roles:[{}],
-		policies:[{type:"String"}]
+		groups:[{type:"String"}]
+	},
+	token:{
+		type:"String"
 	}
 }

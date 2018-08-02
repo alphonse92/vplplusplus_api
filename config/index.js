@@ -39,7 +39,7 @@ const defaultConfig = {
 		mysql:process.env.MYSQL
 	},
 	security:{
-		token:process.env.TOKEN_SECRET || "2hg3487wtfasdfyuavw4r78fDCUSHVAG78",
+		token:process.env.TOKEN_SECRET,
 		expiration_minutes:60 * 60 * 24,
 		salt_rounds:process.env.SALT_ROUNDS || 10,
 		salt:process.env.SALT_ROUNDS || "",
@@ -47,7 +47,9 @@ const defaultConfig = {
 	moodle:{
 		web:{
 			host:process.env.MOODLE_HOST || "localhost",
-			port:process.env.MOODLE_PORT || ""
+			port:process.env.MOODLE_PORT || "80",
+			protocol:process.env.MOODLE_PROTOCOL || "http",
+			service:process.env.MOODLE_SERVICE || "moodle_mobile_app"
 		},
 		db:{
 			table_prefix:process.env.MOODLE_DB_PREFIX || "mdl_"
@@ -56,7 +58,6 @@ const defaultConfig = {
 			// can be: plaintext, md5, sha1, saltedcrypt review your moodle config
 			type:process.env.MOODLE_AUTH_TYPE || "saltedcrypt"
 		},
-		archetypes:require("./archetypes")
 	},
 	web:{
 		host:process.env.HOST || "localhost",
@@ -65,11 +66,13 @@ const defaultConfig = {
 	paths:{cwd, app, config, public, utils, controllers, db, routes, models, services, errors, lang, webservices}
 };
 
-defaultConfig.client.email = defaultConfig.client.username + "@" + defaultConfig.web.host;
-
 module.exports = (function(){
 	const _ = require('lodash');
 	const envConfig = require('./env/' + (process.env.NODE_ENV ? process.env.NODE_ENV : 'local') + '/config');
 	const config = _.merge(defaultConfig, envConfig);
+	if(!config.security.token){
+		throw new Error("God, staph, ¡ token security is required ! ");
+	}
+	config.client.email = config.client.username + "@" + config.web.host;
 	return config;
 })();

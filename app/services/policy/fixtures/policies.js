@@ -2,6 +2,46 @@ const Config = global.Config;
 const DefaultPolicyService = require("./../policy.access-manager.service");
 const fixtures = {};
 
+/**
+ * API Policy
+ * 
+ * The policy defines an object that controle the access to some resources in some instances.
+ * It could be granular or monolitic. You can define a policy (A) with an action for a single endpoint, or 
+ * you can create another Policy(B) thats extends policy A, and B could add itselft actions.
+ * 
+ * Resource:
+ * 
+ * Resource name policy is a string compose with some usefull and unique information, 
+ * each part is separe with a ":"
+ * 1:2:3:4:5
+ * 
+ * 1. Component type: for example "microservice", "core", etc
+ * 2. Component name: for example "api"
+ * 3. Policy Owner: Owner for this Policy, system is by default
+ * 4. Resource name: it can be a model, table, document, etc
+ * 5. Operation name: can be created, remove, removeOne, whatever operation that you want to implement
+ * 
+ * Name:
+ * Single name for the policy, it shouldn't visible tu regular user.
+ * 
+ * Slug:
+ * Its a label user friendly
+ * 
+ * Default:
+ * A boolean value thats which indicates if its a default policy. This policy 
+ * cant be removed from system.
+ * 
+ * Description:
+ * User friendly description for regular user
+ * 
+ * Extends:
+ * Is an string array composed for policy resource. 
+ * 
+ * Action:
+ * 
+ * TODO
+ * 
+ */
 fixtures.public = {
 	resource:"service:api:system:all:all",
 	name:"public",

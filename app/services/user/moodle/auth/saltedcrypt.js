@@ -1,12 +1,13 @@
 const Config = global.Config;
+const Util = require(Config.paths.utils);
 const Bcrypt = require("bcrypt-nodejs");
 const UserErrors = require(Config.paths.errors + "/user.errors");
 module.exports = Auth;
-function Auth(email, password){
+function Auth(usernameOrEmail, password){
 	let connection = null;
 	return createConnection()
 		.then(conn => connection = conn)
-		.then(() => findMysqlUserMoodle(connection, email))
+		.then(() => findMysqlUserMoodle(connection, usernameOrEmail))
 		.then(UserRow => validePassword(UserRow, password))
 		.then(UserRow => valideIfIsSiteAdmin(connection, UserRow))
 		.then(UserRow => getRoleAssigments(connection, UserRow))
@@ -22,10 +23,14 @@ function createConnection(){
 	return  require(Config.paths.db + "/mysql")();
 }
 
-function findMysqlUserMoodle(connection, email){
+function findMysqlUserMoodle(connection, usernameOrEmail){
+	let isEmail = usernameOrEmail.indexOf("@") >= 0;
+	let column = isEmail ? "email" : "username";
+	let val = usernameOrEmail;
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "user";
-		connection.query('SELECT * FROM ' + table + ' WHERE email=? AND deleted=0', [email], function(err, data, fields){
+		const sql = 'SELECT * FROM ' + table + ' WHERE ' + column + '=? AND deleted=0';
+		connection.query(sql, [val], function(err, data, fields){
 			if(err)
 				return reject(err);
 			resolve(data[0]);

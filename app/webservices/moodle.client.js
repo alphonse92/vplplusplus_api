@@ -1,5 +1,12 @@
+const Config = global.Config;
 const moodle_client = require("moodle-client");
 
-module.exports =
-	moodle_client.init({wwwroot:"http://localhost/moodle/", token:"d457b5e5b0cc31c05ccf38628e4dfc14"})
+module.exports = {
+	name:"moodle",
+	getClient:(username, password) =>
+		moodle_client.init({
+			wwwroot:Config.moodle.web.host,
+			username:username,
+			password:password
+		})}
 

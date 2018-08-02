@@ -20,4 +20,11 @@ module.exports = {
 			message:"token isnt valid"
 		}
 	},
+	login_fail:{
+		http_code:400,
+		error:{
+			code:-4,
+			message:"Wrong username, email or password"
+		}
+	},
 }

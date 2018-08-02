@@ -22,7 +22,6 @@ function getMiddleware(opt){
 		}
 		res.status(opt.error.http_code, ).send(opt.error.error)
 	}
-
 }
 
 module.exports.getPoliciesAllowed = getPoliciesAllowed;
