@@ -109,6 +109,19 @@ fixtures.policyCreate = {
 		{path:"POST/api/v1/policies", scopes:["createPolicy"], query:""}
 	]
 };
+
+fixtures.client = {
+	resource:"service:api:system:client:create",
+	name:"createClient",
+	slug:"Create Client",
+	type:DefaultPolicyService.types.default,
+	description:"Policy for create an runner client.",
+	extends:[],
+	actions:[
+		{path:"POST/api/v1/users/client", scopes:["createClient"], query:""}
+	]
+};
+
 fixtures.policyRead = {
 	resource:"service:api:system:policy:read",
 	name:"readPolicy",

@@ -1,4 +1,4 @@
-module.exports.getPaginatorFromRequest = getPaginatorFromRequest;
+const ObjectId = require('mongoose').Types.ObjectId;
 const paginationAttributes = {
 	limit:"limit",
 	page:"page",
@@ -18,6 +18,7 @@ function cleanPaginatorAttributesFromRequest(req){
 	}
 }
 
+module.exports.getPaginatorFromRequest = getPaginatorFromRequest;
 function getPaginatorFromRequest(req, defaults, populates){
 	let pagination = {};
 	pagination.limit = +req.query[paginationAttributes.limit] || defaults[paginationAttributes.limit];
@@ -45,3 +46,5 @@ function list(Model, id, query, paginator){
 
 	return Model.paginate(query, paginator);
 }
+
+module.exports.createObjectId = () => new ObjectId();

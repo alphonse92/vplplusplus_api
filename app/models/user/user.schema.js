@@ -4,15 +4,17 @@ const Schema = mongoose.Schema;
 const errors = require(Config.paths.errors + "/user.errors");
 const validators = require(Config.paths.utils).validators;
 const enums = {
-	user_type:["person", "api_client"]
+	user_type:["person", "api_client", "runner_client"]
+}
+const types = {
+	person:enums.user_type[0],
+	api_client:enums.user_type[1],
+	runner_client:enums.user_type[2],
 }
 module.exports = {
 	name:"User",
 	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email"],
-	types:{
-		person:enums.user_type[0],
-		api_client:enums.user_type[1],
-	},
+	types:types,
 	schema:{
 		cursor:{
 			type:"String"
@@ -25,7 +27,6 @@ module.exports = {
 			type:"Number",
 			required:true,
 			index:true,
-			min:-1,
 			unique:true
 		},
 		username:{
@@ -76,9 +77,10 @@ module.exports = {
 				},
 			}],
 		roles:[{}],
-		groups:[{type:"String"}]
+		groups:[{type:"String"}],
+		createdBy:{
+			type:Schema.Types.ObjectId,
+			ref:"User",
+		}
 	},
-	token:{
-		type:"String"
-	}
 }

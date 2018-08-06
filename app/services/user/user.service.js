@@ -28,21 +28,22 @@ function auth(usernameOrEmail, password){
 		})
 		.then(TokenMoodle => {
 			let token = {client:MoodleWebservice.name, token:TokenMoodle};
-			Util.log("token", token);
 			UserDoc.tokens = UserDoc.tokens.filter(t => t.client !== token.client) //remove the last token
 			UserDoc.tokens.push(token) //add the new token
-			UserDoc.type = User.getUserTypes.person;
-			Util.log("tokens", UserDoc.tokens);
+			UserDoc.type = User.getUserTypes().person;
 			return UserDoc.save();
 		})
 		.then(formatAuthResponse)
-		.then(getAuthToken)
+		.then(UserDoc => getAuthToken(UserDoc, {exp:Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes)}))
+
 }
 
 module.exports.getAuthToken = getAuthToken;
-function getAuthToken(UserDoc){
-	let token = _.pick(UserDoc, ["_id", "id", "username"]);
-	token.exp = Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes);
+function getAuthToken(UserDoc, opt){
+	opt = opt || {};
+	let token = _.pick(UserDoc, ["_id", "id", "username", "type"]);
+	if(opt.exp)
+		token.exp = opt.exp;
 	token = jwt.sign(token, Config.security.token);
 	UserDoc.token = token;
 	return Promise.resolve(UserDoc);
@@ -161,12 +162,11 @@ function getGetUserMiddleware(){
 
 				res.locals.__mv__ = res.locals.__mv__ || {};
 				res.locals.__mv__.user = User;
+
 				next();
 			})
 			.catch(err => Util.response.handleError(err, res))
 	}
-
-
 }
 
 module.exports.list = list;
@@ -174,5 +174,37 @@ function list(req){
 	let id = req.params.id;
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
+	query.createdBy = {$exists:false}
+	return Util.mongoose.list(User, id, query, paginator);
+}
+
+/**
+ * This function doesnt create a moodle user. The vpl API isnt a moodle client.
+ * This function only creates a user for vpl api clients, and it api roles,
+ * for example, you can add a user for vpl-jlib.
+ * 
+ *
+ */
+module.exports.createClient = createClient;
+function createClient(UserDoc, client){
+	let data = require("./fixtures/runner");
+	data._id = Util.mongoose.createObjectId();
+	data.id = -1 * Date.now();
+	data.username = client.username;
+	data.email = data.username + "@" + Config.web.host;
+	data.type = User.getUserTypes().runner_client;
+	data.groups = [PolicyService.getDefaultGroups().runner.name];
+	data.createdBy = UserDoc._id;
+	return User.create(data)
+		.then((result) => getAuthToken(result.toObject()))
+}
+
+
+module.exports.listClient = listClient;
+function listClient(req){
+	let id = req.params.id;
+	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
+	let query = Util.mongoose.getQueryFromRequest(req);
+	query.type = User.getUserTypes().runner_client;
 	return Util.mongoose.list(User, id, query, paginator);
 }
