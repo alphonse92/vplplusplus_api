@@ -135,6 +135,10 @@ function getLoadUserPoliciesMiddleware(){
 		getPolicies(res.locals.__mv__.user)
 			.then(Policies => {
 				res.locals.__mv__.policies = Policies || [];
+				res.locals.__mv__.capabilities = Policies.reduce((caps, p) => {
+					caps[p.name] = true;
+					return caps;
+				}, {})
 				next();
 			})
 	}
@@ -159,7 +163,7 @@ function getGroups(groups){
 module.exports.getPoliciesFromGroups = getPoliciesFromGroups;
 function getPoliciesFromGroups(groups){
 	let resources = groups.reduce((groupsOut, groups) => {
-		groupsOut = groupsOut.concat(groups.policies);
+		groupsOut = groupsOut.concat(groups.policies.map(p => p.resource));
 		return groupsOut;
 	}, []);
 	return Policy.find({resource:{$in:resources}});

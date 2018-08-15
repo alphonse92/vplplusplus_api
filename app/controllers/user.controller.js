@@ -1,30 +1,53 @@
 const Config = global.Config;
 const Util = require(Config.paths.utils);
 const UserService = require(Config.paths.services + "/user/user.service")
-module.exports.auth = auth;
+let controller = {};
+let decorator = {}
+
+controller.auth = auth;
 function auth(req, res, next){
 	UserService.auth(req.body.email, req.body.password)
 		.then((result) => res.send(result))
 		.catch(err => Util.response.handleError(err, res))
 }
-module.exports.list = list;
+
+controller.list = list;
 function list(req, res, next){
-	Util.log(res.locals.__mv__.policies)
-	UserService.list(req)
+	UserService.list(res.locals.__mv__.user, req)
 		.then(Users => res.send(Users))
 		.catch(err => Util.response.handleError(err, res))
 }
 
-module.exports.createClient = createClient;
-function createClient(req, res, next){
-	UserService.createClient(res.locals.__mv__.user, req.body)
+controller.getToken = getToken;
+function getToken(req, res, next){
+	UserService.getToken(res.locals.__mv__.user, req.params.id)
+		.then(Token => res.send(Token))
+		.catch(err => Util.response.handleError(err, res))
+}
+
+controller.create = create;
+controller.create.capabilities = UserService.create.capabilities;
+function create(req, res, next){
+	UserService.create(res.locals.__mv__.user, req.body)
 		.then(User => res.send(User))
 		.catch(err => Util.response.handleError(err, res))
 }
 
-module.exports.listClient = listClient;
-function listClient(req, res, next){
-	UserService.listClient(req)
-		.then(Users => res.send(Users))
-		.catch(err => Util.response.handleError(err, res))
+//@TODO
+//module.exports = Util.mv.createController(controller)
+module.exports = createController(controller)
+//module.exports = controller
+
+
+
+function secureCall(UserCaller, func, args){
+	return func.apply(args);
+}
+
+function valideCapabilities(){
+
+}
+
+function createController(controller){
+	return controller;
 }

@@ -9,8 +9,9 @@ Router.get("/health", (req, res) => res.send("ok"));
 Router.get("/:id?", UserCtr.list);
 Router.post("/auth", UserCtr.auth);
 
-Router.get("/client/", UserCtr.listClient);
-Router.post("/client/", UserCtr.createClient);
+Router.get("/", UserCtr.list);
+Router.get("/token/:id", UserCtr.getToken);
+Router.post("/", UserCtr.create);
 
 
 Util.log(Base);

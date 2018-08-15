@@ -1,89 +1,87 @@
 module.exports = {
-siteadministrator:{
-name:"default/siteadministrator",
-	default:true,
-	policies:[
-		//this is the resource for public actions
-		"service:api:system:all:all",
-		"service:api:system:user:create",
-		//site administor can change the users
-		"service:api:system:user:create",
-		"service:api:system:user:read",
-		"service:api:system:user:update",
-		"service:api:system:user:delete",
-		//site administrator can create a runner client
-		"service:api:system:client:create",
-		//site administor can change the policies
-		"service:api:system:policy:create",
-		"service:api:system:policy:read",
-		"service:api:system:policy:update",
-		"service:api:system:policy:delete",
-		//site administor can update and read the api configuration
-		"service:api:system:configuration:read",
-		"service:api:system:configuration:update",
-	]
-},
-	manager:{
-	name:"default/manager",
+	siteadministrator:{
+		name:"default/siteadministrator",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			//this is the resource for public actions
+			{resource:"service:api:system:all.all"},
+			//site administor can change the users
+			{resource:"service:api:system:user.create"},
+			{resource:"service:api:system:user.read"},
+			{resource:"service:api:system:user.update"},
+			{resource:"service:api:system:user.delete"},
+			//site administor can change the policies
+			{resource:"service:api:system:policy.create"},
+			{resource:"service:api:system:policy.read"},
+			{resource:"service:api:system:policy.update"},
+			{resource:"service:api:system:policy.delete"},
+			//site administor can update and read the api configuration
+			{resource:"service:api:system:configuration.read"},
+			{resource:"service:api:system:configuration.update"},
+			{resource:"service:api:system:user.token"},
+		]
+	},
+	manager:{
+		name:"default/manager",
+		default:true,
+		policies:[
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	coursecreator:{
-	name:"default/coursecreator",
+		name:"default/coursecreator",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	editingteacher:{
-	name:"default/editingteacher",
+		name:"default/editingteacher",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	teacher:{
-	name:"default/teacher",
+		name:"default/teacher",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	student:{
-	name:"default/student",
+		name:"default/student",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	guest:{
-	name:"default/guest",
+		name:"default/guest",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	user:{
-	name:"default/user",
+		name:"default/user",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	frontpage:{
-	name:"default/frontpage",
+		name:"default/frontpage",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	},
 	runner:{
-	name:"default/runner",
+		name:"default/runner",
 		default:true,
 		policies:[
-			"service:api:system:all:all",
+			{resource:"service:api:system:all.all"},
 		]
 	}
 };

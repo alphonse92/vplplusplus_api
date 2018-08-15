@@ -40,13 +40,18 @@ function auth(usernameOrEmail, password){
 
 module.exports.getAuthToken = getAuthToken;
 function getAuthToken(UserDoc, opt){
+	UserDoc.token = getAuthTokenFromUser(UserDoc, opt);
+	return Promise.resolve(UserDoc);
+}
+
+module.exports.getAuthTokenFromUser = getAuthTokenFromUser
+function getAuthTokenFromUser(UserDoc, opt){
 	opt = opt || {};
-	let token = _.pick(UserDoc, ["_id", "id", "username", "type"]);
+	let token = _.pick(UserDoc, User.getTokenizerFields());
 	if(opt.exp)
 		token.exp = opt.exp;
 	token = jwt.sign(token, Config.security.token);
-	UserDoc.token = token;
-	return Promise.resolve(UserDoc);
+	return token;
 }
 
 module.exports.findOneOrCreate = findOneOrCreate;
@@ -136,21 +141,32 @@ function createDefaultUserIfNotExist(){
 		})
 }
 
+function getUserFromTokenByUserType(type){
+	let types = {
+		[User.getUserTypes().person]:payload => User.findById(payload._id),
+		[User.getUserTypes().runner_client]:payload => User.findOne({_id:payload._id, token_counter:payload.token_counter}),
+	}
+	type = types[type] || types[User.getUserTypes().person]
+	return  type
+}
 
 module.exports.getGetUserMiddleware = getGetUserMiddleware;
 function getGetUserMiddleware(){
 	return (req, res, next) => {
 		let token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : null;
 		let userFindPromise = null;
+
 		if(!token){
 			userFindPromise = User.findOne({email:Config.client.email})
 		}else{
 			userFindPromise = new Promise((resolve, reject) => {
-				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function(err, decoded){
-					return err ? reject(err) : resolve(decoded)
+				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function(err, payload){
+					return err ? reject(err) : resolve(payload)
 				});
-			}).then(decoded => User.findById(decoded._id))
+			})
+				.then(payload => getUserFromTokenByUserType(payload.type)(payload))
 		}
+
 
 		userFindPromise
 			.then(User => {
@@ -158,7 +174,7 @@ function getGetUserMiddleware(){
 					return Promise.reject(UserErrors.token_not_valid);
 
 				Util.log("HEADERS", req.headers)
-				Util.log("QUERY", "email:", User.email)
+				Util.log("QUERY email:", User.email)
 
 				res.locals.__mv__ = res.locals.__mv__ || {};
 				res.locals.__mv__.user = User;
@@ -169,15 +185,6 @@ function getGetUserMiddleware(){
 	}
 }
 
-module.exports.list = list;
-function list(req){
-	let id = req.params.id;
-	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
-	let query = Util.mongoose.getQueryFromRequest(req);
-	query.createdBy = {$exists:false}
-	return Util.mongoose.list(User, id, query, paginator);
-}
-
 /**
  * This function doesnt create a moodle user. The vpl API isnt a moodle client.
  * This function only creates a user for vpl api clients, and it api roles,
@@ -185,26 +192,48 @@ function list(req){
  * 
  *
  */
-module.exports.createClient = createClient;
-function createClient(UserDoc, client){
+module.exports.create = create;
+function create(UserDoc, client){
 	let data = require("./fixtures/runner");
-	data._id = Util.mongoose.createObjectId();
+	data = Object.assign(data, _.pick(client, User.getFillableFields()))
 	data.id = -1 * Date.now();
-	data.username = client.username;
 	data.email = data.username + "@" + Config.web.host;
 	data.type = User.getUserTypes().runner_client;
 	data.groups = [PolicyService.getDefaultGroups().runner.name];
-	data.createdBy = UserDoc._id;
+	data.base_path = getBasePath(UserDoc);
 	return User.create(data)
 		.then((result) => getAuthToken(result.toObject()))
 }
 
-
-module.exports.listClient = listClient;
-function listClient(req){
+module.exports.list = list;
+function list(UserDoc, req){
 	let id = req.params.id;
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
-	query.type = User.getUserTypes().runner_client;
-	return Util.mongoose.list(User, id, query, paginator);
+	query.base_path = {$regex:"^" + getBasePath(UserDoc)};
+	return Util.mongoose.list(User, id, query, paginator)
 }
+
+module.exports.getToken = getToken;
+function getToken(UserDoc, client_id){
+	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}}
+	return User.findOne(query)
+		.then(UserClientDoc => {
+			if(!UserClientDoc)
+				return Promise.reject(UserErrors.client_doesnt_exist);
+
+			UserClientDoc.token_counter += 1;
+			return UserClientDoc.save();
+		})
+		.then(UserClientDoc => Promise.resolve({token:getAuthTokenFromUser(UserClientDoc)}))
+}
+
+
+module.exports.getBasePath = getBasePath;
+function getBasePath(UserDoc){
+	return UserDoc.base_path ? [
+		UserDoc.base_path,
+		UserDoc.cursor
+	].join(".") : UserDoc.cursor;
+}
+

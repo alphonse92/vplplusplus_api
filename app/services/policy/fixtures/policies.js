@@ -42,8 +42,9 @@ const fixtures = {};
  * TODO
  * 
  */
+
 fixtures.public = {
-	resource:"service:api:system:all:all",
+	resource:"service:api:system:all.all",
 	name:"public",
 	slug:"Public Resources",
 	type:DefaultPolicyService.types.default,
@@ -55,8 +56,8 @@ fixtures.public = {
 };
 
 fixtures.userCreate = {
-	resource:"service:api:system:user:create",
-	name:"createUser",
+	resource:"service:api:system:user.create",
+	name:"user.read",
 	slug:"Create User",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for create an user manually. If you want add a Moodle user please go to Moodle administration instead",
@@ -66,19 +67,19 @@ fixtures.userCreate = {
 	]
 };
 fixtures.userRead = {
-	resource:"service:api:system:user:read",
-	name:"readUser",
+	resource:"service:api:system:user.read",
+	name:"user.read",
 	slug:"Read Users",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for Read. This will read only api user. If you want to know more information about some user in moodle, pelase go to Moodle administration",
 	extends:[],
 	actions:[
-		{path:"GET/api/v1/users/:id?", scopes:["readUser"], query:""}
+		{path:"GET/api/v1/users/:id?", scopes:["readUser"]}
 	]
 };
 fixtures.userUpdate = {
-	resource:"service:api:system:user:update",
-	name:"updateUser",
+	resource:"service:api:system:user.update",
+	name:"user.update",
 	slug:"Update User",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for update an user manually. If you want update a Moodle user please go to Moodle administration instead",
@@ -88,8 +89,8 @@ fixtures.userUpdate = {
 	]
 };
 fixtures.userDelete = {
-	resource:"service:api:system:user:delete",
-	name:"deleteUser",
+	resource:"service:api:system:user.delete",
+	name:"user.delete",
 	slug:"Delete User",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for delete an user manually. If you want delete a Moodle user please go to Moodle administration instead",
@@ -98,9 +99,20 @@ fixtures.userDelete = {
 		{path:"DELETE/api/v1/users", scopes:["deleteUser"], query:""}
 	]
 };
+fixtures.userGetToken = {
+	resource:"service:api:system:user.token",
+	name:"user.token",
+	slug:"Get User Client Token",
+	type:DefaultPolicyService.types.default,
+	description:"Policy for get auth token for a client user",
+	extends:[],
+	actions:[
+		{path:"GET/api/v1/users/token/:id", scopes:["getUserToken"]}
+	]
+};
 fixtures.policyCreate = {
-	resource:"service:api:system:policy:create",
-	name:"createPolicy",
+	resource:"service:api:system:policy.create",
+	name:"policy.create",
 	slug:"Create Policy",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for create an API policy manually.",
@@ -110,21 +122,9 @@ fixtures.policyCreate = {
 	]
 };
 
-fixtures.client = {
-	resource:"service:api:system:client:create",
-	name:"createClient",
-	slug:"Create Client",
-	type:DefaultPolicyService.types.default,
-	description:"Policy for create an runner client.",
-	extends:[],
-	actions:[
-		{path:"POST/api/v1/users/client", scopes:["createClient"], query:""}
-	]
-};
-
 fixtures.policyRead = {
-	resource:"service:api:system:policy:read",
-	name:"readPolicy",
+	resource:"service:api:system:policy.read",
+	name:"policy.read",
 	slug:"Read Policys",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for read an API policy manually.",
@@ -134,8 +134,8 @@ fixtures.policyRead = {
 	]
 };
 fixtures.policyUpdate = {
-	resource:"service:api:system:policy:update",
-	name:"updatePolicy",
+	resource:"service:api:system:policy.update",
+	name:"policy.update",
 	slug:"Update Policy",
 	type:DefaultPolicyService.types.default,
 	description:"Policy for update an API policy manually.",
@@ -145,8 +145,8 @@ fixtures.policyUpdate = {
 	]
 };
 fixtures.policyDelete = {
-	resource:"service:api:system:policy:delete",
-	name:"deletePolicy",
+	resource:"service:api:system:policy.delete",
+	name:"policy.delete",
 	slug:"Delete Policy",
 	type:DefaultPolicyService.types.default,
 	description:"Delete for update an API policy manually.",
@@ -156,8 +156,8 @@ fixtures.policyDelete = {
 	]
 };
 fixtures.configurationRead = {
-	resource:"service:api:system:configuration:read",
-	name:"readConfiguration",
+	resource:"service:api:system:configuration.read",
+	name:"configuration.read",
 	slug:"Read Configurations",
 	type:DefaultPolicyService.types.default,
 	description:"Configuration for read an API configuration manually.",
@@ -167,8 +167,8 @@ fixtures.configurationRead = {
 	]
 };
 fixtures.configurationUpdate = {
-	resource:"service:api:system:configuration:update",
-	name:"updateConfiguration",
+	resource:"service:api:system:configuration.update",
+	name:"configuration.update",
 	slug:"Update Configuration",
 	type:DefaultPolicyService.types.default,
 	description:"Configuration for update an API configuration manually.",

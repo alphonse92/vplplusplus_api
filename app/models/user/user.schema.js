@@ -13,7 +13,9 @@ const types = {
 }
 module.exports = {
 	name:"User",
-	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email"],
+	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email", "type"],
+	fillableFields:["username", "firstname", "lastname", "description", "email"],
+	tokenizerFields:["_id", "id", "username", "type"],
 	types:types,
 	schema:{
 		cursor:{
@@ -47,6 +49,7 @@ module.exports = {
 		},
 		description:{
 			type:"String",
+			required:true,
 			maxlength:4096
 		},
 		email:{
@@ -65,6 +68,11 @@ module.exports = {
 			type:"Boolean",
 			default:false
 		},
+		token_counter:{
+			type:"Number",
+			default:0,
+			min:0
+		},
 		tokens:[{
 				client:{
 					type:"String",
@@ -78,9 +86,9 @@ module.exports = {
 			}],
 		roles:[{}],
 		groups:[{type:"String"}],
-		createdBy:{
-			type:Schema.Types.ObjectId,
-			ref:"User",
+		base_path:{
+			type:"String",
+			default:null
 		}
 	},
 }

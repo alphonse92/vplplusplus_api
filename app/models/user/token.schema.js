@@ -1,28 +1,22 @@
 const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
+const errors = require(Config.paths.errors + "/token.errors");
 const validators = require(Config.paths.utils).validators;
 module.exports = {
-	name:"PolicyGroup",
+	name:"Token",
 	schema:{
 		cursor:{
 			type:"String"
 		},
-		default:{
-			type:"Boolean",
-			required:true,
-			default:false,
+		user:{
+			type:Schema.Types.ObjectId,
+			ref:"User",
+			required:true
 		},
-		name:{
+		token:{
 			type:"String",
 			required:true,
-			unique:true
-		},
-		policies:[{
-				resource:{
-					type:"String"
-				},
-			}
-		]
-	}
+		}
+	},
 }

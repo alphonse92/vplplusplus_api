@@ -17,7 +17,7 @@ function getMiddleware(opt){
 		url = url.replace(/%20/g, "?").split("?")[0];
 		let result = getPoliciesAllowed(opt.service, url, policies)
 		if(result.allow){
-			res.locals.__mv__.policies = result.policies;
+			res.locals.__mv__.policies_allowed = result.policies;
 			return next();
 		}
 		res.status(opt.error.http_code, ).send(opt.error.error)
