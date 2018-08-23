@@ -24,12 +24,19 @@ function auth(usernameOrEmail, password){
 		.then((UserDoc) => User.findByIdAndUpdate(UserDoc._id, MoodleUserData, {new :true}))
 		.then((userdoc) => {
 			UserDoc = userdoc;
-			return getTokenWebservice(userdoc, password)
+			return Promise.all([
+				getTokenWebservice(userdoc, password),
+				getTokenVPLWebService(userdoc, password),
+			])
 		})
-		.then(TokenMoodle => {
+		.then(result => {
+			let TokenMoodle = result[0];
+			let tokenVPL = result[1];
 			let token = {client:MoodleWebservice.name, token:TokenMoodle};
-			UserDoc.tokens = UserDoc.tokens.filter(t => t.client !== token.client) //remove the last token
+			let tokenVpl = {client:MoodleWebservice.vpl, token:tokenVPL};
+			UserDoc.tokens = UserDoc.tokens.filter(t => t.client !== token.client && t.client !== tokenVpl.client) //remove the last token
 			UserDoc.tokens.push(token) //add the new token
+			UserDoc.tokens.push(tokenVpl) //add the new token
 			UserDoc.type = User.getUserTypes().person;
 			return UserDoc.save();
 		})
@@ -60,6 +67,7 @@ function findOneOrCreate(query, data){
 		.then(UserDocument => {
 			if(UserDocument)
 				return UserDocument;
+			data.description = data.description || "Description wasnt provide";
 			return User.create(data);
 		})
 		.then(addGroupsToUser)
@@ -88,6 +96,23 @@ function getUserGroups(UserDoc){
 module.exports.getGroupByArchetype = getGroupByArchetype;
 function getGroupByArchetype(archetype){
 	return PolicyService.getGroupByArchetype(archetype);
+}
+
+module.exports.getTokenVPLWebService = getTokenVPLWebService;
+function getTokenVPLWebService(UserDoc, password){
+	let Host = Config.moodle.web.protocol + "://" + Config.moodle.web.host + ":" + Config.moodle.web.port;
+	let path = "/login/token.php?"
+	let query = [
+		"username=" + UserDoc.username,
+		"password=" + password,
+		"service=" + Config.moodle.web.VPLservice
+	].join("&");
+	let url = Host + path + query;
+	Util.log(url)
+	return Util.request("get", {url})
+		.then(result => {
+			return Promise.resolve(JSON.parse(result.body).token);
+		})
 }
 
 module.exports.getTokenWebservice = getTokenWebservice;
@@ -205,6 +230,10 @@ function create(UserDoc, client){
 		.then((result) => getAuthToken(result.toObject()))
 }
 
+/**
+ * This function doesnt lists the moodle users. The vpl API isnt a moodle client.
+ * This function only list moodle's users for vpl api clients, and it api roles.
+ */
 module.exports.list = list;
 function list(UserDoc, req){
 	let id = req.params.id;
@@ -213,10 +242,20 @@ function list(UserDoc, req){
 	query.base_path = {$regex:"^" + getBasePath(UserDoc)};
 	return Util.mongoose.list(User, id, query, paginator)
 }
+/**
+ * This function doesnt lists the moodle users. The vpl API isnt a moodle client.
+ * This function only list moodle's users for vpl api clients, and it api roles.
+ */
+module.exports.delete = _delete;
+function _delete(UserDoc, client_id){
+	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}, type:User.getUserTypes().runner_client}
+	return User.findOneAndRemove(query)
+		.then(UserDoc => Promise.resolve(_.pick(UserDoc, User.getPublicFields())));
+}
 
 module.exports.getToken = getToken;
 function getToken(UserDoc, client_id){
-	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}}
+	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}, type:User.getUserTypes().runner_client}
 	return User.findOne(query)
 		.then(UserClientDoc => {
 			if(!UserClientDoc)

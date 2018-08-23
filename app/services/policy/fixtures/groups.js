@@ -19,6 +19,8 @@ module.exports = {
 			{resource:"service:api:system:configuration.read"},
 			{resource:"service:api:system:configuration.update"},
 			{resource:"service:api:system:user.token"},
+			//courses
+			{resource:"service:api:system:course.list"}
 		]
 	},
 	manager:{
@@ -33,6 +35,7 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
+			{resource:"service:api:system:course.list"}
 		]
 	},
 	editingteacher:{
@@ -40,6 +43,7 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
+			{resource:"service:api:system:course.list"}
 		]
 	},
 	teacher:{
@@ -47,6 +51,7 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
+			{resource:"service:api:system:course.list"}
 		]
 	},
 	student:{
@@ -54,6 +59,7 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
+			{resource:"service:api:system:course.list"}
 		]
 	},
 	guest:{

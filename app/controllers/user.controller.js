@@ -2,7 +2,6 @@ const Config = global.Config;
 const Util = require(Config.paths.utils);
 const UserService = require(Config.paths.services + "/user/user.service")
 let controller = {};
-let decorator = {}
 
 controller.auth = auth;
 function auth(req, res, next){
@@ -29,6 +28,14 @@ controller.create = create;
 controller.create.capabilities = UserService.create.capabilities;
 function create(req, res, next){
 	UserService.create(res.locals.__mv__.user, req.body)
+		.then(User => res.send(User))
+		.catch(err => Util.response.handleError(err, res))
+}
+
+
+controller.delete = _delete;
+function _delete(req, res, next){
+	UserService.delete(res.locals.__mv__.user, req.params.id)
 		.then(User => res.send(User))
 		.catch(err => Util.response.handleError(err, res))
 }

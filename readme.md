@@ -2,7 +2,32 @@
 
 ##Configuration
 
-##WebServices
+1. add capabilities to auth users for moodle/webservice:createtoken and moodle/webservice:createmobiletoken
+
+##Current functionalities and WebServices
+
+If you want to see the Api Doc please visit: 
+
+### General users:
+1. Login: You must have a Moodle account, according to you role you will grant some access to some resources
+
+### Moodle administrator :
+Moodle's administrator can:
+1. Create a runner client for Jlib. This client grant access to endpoints to manage Vpl Jlib reports
+2. Create a token for a runner client for JLib.
+3. List him Runner Clients.
+4. Remove Runner Clients
+
+
+### Moodle Teacher
+Moodle's teacher can:
+1. Create an a vpl activity
+
+
+### Runner Clients:
+The runner clients can:
+1. Store a user suite test report.
+
 
 ###Moodle Configuration 
 
@@ -124,3 +149,11 @@ VALUES
 (1,3,"moodle/competency:planview",1,1533143978,0),
 (1,3,"moodle/competency:userevidenceview",1,1533143978,0),
 
+
+
+
+#issues found in vpl:
+
+### as teacher (in a nutshell with teacher's cookies):
+   1. i can use the POST/mod/vpl/forms/executionfiles.json.php?id=7&action=save to save any file (there is not validation for it)
+    

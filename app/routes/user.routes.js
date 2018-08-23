@@ -12,6 +12,7 @@ Router.post("/auth", UserCtr.auth);
 Router.get("/", UserCtr.list);
 Router.get("/token/:id", UserCtr.getToken);
 Router.post("/", UserCtr.create);
+Router.delete("/:id", UserCtr.delete);
 
 
 Util.log(Base);

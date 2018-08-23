@@ -13,9 +13,9 @@ const types = {
 }
 module.exports = {
 	name:"User",
-	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email", "type"],
+	publicFields:["_id", "id", "username", "firstname", "lastname", "description", "email", "type", "token_counter"],
 	fillableFields:["username", "firstname", "lastname", "description", "email"],
-	tokenizerFields:["_id", "id", "username", "type"],
+	tokenizerFields:["_id", "id", "username", "type", "token_counter"],
 	types:types,
 	schema:{
 		cursor:{
@@ -49,7 +49,7 @@ module.exports = {
 		},
 		description:{
 			type:"String",
-			required:true,
+			default:"Description was not provided",
 			maxlength:4096
 		},
 		email:{

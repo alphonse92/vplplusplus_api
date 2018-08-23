@@ -49,7 +49,8 @@ const defaultConfig = {
 			host:process.env.MOODLE_HOST || "localhost",
 			port:process.env.MOODLE_PORT || "80",
 			protocol:process.env.MOODLE_PROTOCOL || "http",
-			service:process.env.MOODLE_SERVICE || "moodle_mobile_app"
+			service:process.env.MOODLE_SERVICE || "moodle_mobile_app",
+			VPLservice:process.env.VPL_SERVICE || "mod_vpl_edit"
 		},
 		db:{
 			table_prefix:process.env.MOODLE_DB_PREFIX || "mdl_"
