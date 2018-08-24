@@ -32,5 +32,9 @@ module.exports = {
 			type:"String",
 			default:"Summary was not provided"
 		},
+		timemodified:{
+			type:"string",
+			default:null
+		}
 	},
 }

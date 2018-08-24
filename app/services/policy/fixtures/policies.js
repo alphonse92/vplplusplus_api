@@ -186,7 +186,7 @@ fixtures.configurationUpdate = {
 	]
 };
 
-
+// courses
 fixtures.listCourses = {
 	resource:"service:api:system:course.list",
 	name:"course.list",
@@ -195,7 +195,20 @@ fixtures.listCourses = {
 	description:"Policy for list courses for a person",
 	extends:[], depends:[],
 	actions:[
-		{path:"GET/api/v1/course/", scopes:["readCourse"]}
+		{path:"GET/api/v1/course/", scopes:["listCourse"]}
+	]
+};
+
+//activities
+fixtures.listCourses = {
+	resource:"service:api:system:activity.list",
+	name:"activity.list",
+	slug:"List current course activities",
+	type:DefaultPolicyService.types.default,
+	description:"Policy for list activities for a course",
+	extends:[], depends:[],
+	actions:[
+		{path:"GET/api/v1/course/:course_id/activity", scopes:["listActivities"]}
 	]
 };
 

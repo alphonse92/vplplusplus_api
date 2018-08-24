@@ -20,7 +20,8 @@ module.exports = {
 			{resource:"service:api:system:configuration.update"},
 			{resource:"service:api:system:user.token"},
 			//courses
-			{resource:"service:api:system:course.list"}
+			{resource:"service:api:system:course.list"},
+			{resource:"service:api:system:activity.list"},
 		]
 	},
 	manager:{
@@ -35,7 +36,8 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
-			{resource:"service:api:system:course.list"}
+			{resource:"service:api:system:course.list"},
+			{resource:"service:api:system:activity.list"},
 		]
 	},
 	editingteacher:{
@@ -43,7 +45,8 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
-			{resource:"service:api:system:course.list"}
+			{resource:"service:api:system:course.list"},
+			{resource:"service:api:system:activity.list"},
 		]
 	},
 	teacher:{
@@ -51,7 +54,8 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
-			{resource:"service:api:system:course.list"}
+			{resource:"service:api:system:course.list"},
+			{resource:"service:api:system:activity.list"},
 		]
 	},
 	student:{
@@ -59,7 +63,8 @@ module.exports = {
 		default:true,
 		policies:[
 			{resource:"service:api:system:all.all"},
-			{resource:"service:api:system:course.list"}
+			{resource:"service:api:system:course.list"},
+			{resource:"service:api:system:activity.list"},
 		]
 	},
 	guest:{

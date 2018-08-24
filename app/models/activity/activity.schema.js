@@ -1,7 +1,6 @@
 const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
-//const errors = require(Config.paths.errors + "/course.errors");
 const validators = require(Config.paths.utils).validators;
 
 module.exports = {
@@ -9,12 +8,6 @@ module.exports = {
 	schema:{
 		cursor:{
 			type:"String"
-		},
-		id:{
-			type:"Number",
-			required:true,
-			index:true,
-			unique:true
 		},
 		section_id:{
 			type:"Number",
@@ -33,9 +26,23 @@ module.exports = {
 			default:true
 		},
 		course_id:{
+			type:"Number",
+			required:true,
+		},
+		course__id:{
 			type:Schema.Types.ObjectId,
 			ref:"Course",
 			required:true
+		},
+		id:{
+			type:"Number",
+			required:true,
+			index:true,
+			unique:true
+		},
+		timemodified:{
+			type:"string",
+			default:null
 		},
 		url:{
 			type:"String",
