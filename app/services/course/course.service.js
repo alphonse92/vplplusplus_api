@@ -13,6 +13,7 @@ function getMoodleCourses(CurrentUser) {
 			let opt = { wsfunction: MoodleWebservice.functions.list_courses }
 			return moodleClient.call(opt)
 		})
+		.then(Util.moodle_client.handleResponse)
 		.then(Util.moodle_client.createSyncDocumentFunction(Course, {
 			valide: updateModelIfIsNecesary,
 			transform: transformModelInUpdate

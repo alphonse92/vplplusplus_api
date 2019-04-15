@@ -41,6 +41,7 @@ function getMoodleVplActivitiesCourse(CurrentUser, courseid) {
 			return MoodleWebservice.getClient(token);
 
 		})
+		.then(Util.moodle_client.handleResponse)
 		.then(client => {
 			moodleClient = client;
 			let opt = {

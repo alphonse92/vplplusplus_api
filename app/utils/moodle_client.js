@@ -1,3 +1,30 @@
+const errorCodesHttpStatus = {
+	nopermissions: 401
+}
+module.exports.errorCodesHttpStatus = errorCodesHttpStatus;
+module.exports.getError = getError;
+function getError(MoodleAPIResponse) {
+	return {
+		http_code:errorCodesHttpStatus[MoodleAPIResponse.errorcode],
+		error:{
+			message:MoodleAPIResponse.message
+		}
+	}
+}
+
+
+module.exports.isError = isError;
+function isError(MoodleAPIResponse) {
+	return MoodleAPIResponse.exception || MoodleAPIResponse.errorcode;
+}
+
+module.exports.handleResponse = handleResponse;
+function handleResponse(MoodleAPIResponse){
+	return isError(MoodleAPIResponse) ?
+		Promise.reject(getError(MoodleAPIResponse)) :
+		Promise.resolve(MoodleAPIResponse);
+}
+
 module.exports.createSyncDocumentFunction = createSyncDocumentFunction;
 function createSyncDocumentFunction(Model, opt) {
 
