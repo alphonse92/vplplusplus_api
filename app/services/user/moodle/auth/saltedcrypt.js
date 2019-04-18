@@ -23,6 +23,12 @@ function createConnection(){
 	return  require(Config.paths.db + "/mysql")();
 }
 
+/**
+ * This function retreive a data of a moodle user, querying to the 
+ * mysql moodle database.
+ * @param {*} connection Mysql Connection
+ * @param {*} usernameOrEmail  Email or username of a User
+ */
 function findMysqlUserMoodle(connection, usernameOrEmail){
 	let isEmail = usernameOrEmail.indexOf("@") >= 0;
 	let column = isEmail ? "email" : "username";
@@ -34,11 +40,16 @@ function findMysqlUserMoodle(connection, usernameOrEmail){
 			if(err)
 				return reject(err);
 			resolve(data[0]);
-
 		});
 	})
 
 }
+
+/**
+ * This function validate the password of the User
+ * @param {*} UserRow 
+ * @param {*} password 
+ */
 function validePassword(UserRow, password){
 	if(!UserRow)
 		return Promise.reject(UserErrors.login_fail);
@@ -53,7 +64,11 @@ function validePassword(UserRow, password){
 		});
 	})
 }
-
+/**
+ * Function to valide if the User that attempt to login is a a siteadmin
+ * @param {*} connection 
+ * @param {*} UserRow 
+ */
 function valideIfIsSiteAdmin(connection, UserRow){
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "config";
@@ -66,7 +81,11 @@ function valideIfIsSiteAdmin(connection, UserRow){
 		});
 	})
 }
-
+/**
+ * This function get the role assigments for the user
+ * @param {*} connection 
+ * @param {*} UserRow 
+ */
 function  getRoleAssigments(connection, UserRow){
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "role_assignments";
@@ -81,6 +100,11 @@ function  getRoleAssigments(connection, UserRow){
 
 }
 
+/**
+ * Finally this function retreives the roles for the user
+ * @param {*} connection 
+ * @param {*} UserRow 
+ */
 function  getRoles(connection, UserRow){
 	if(!UserRow.roles.length)
 		return Promise.resolve(UserRow);

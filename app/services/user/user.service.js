@@ -8,98 +8,73 @@ const MoodleWebservice = require(Config.paths.webservices + "/moodle.client");
 const jwt = require('jsonwebtoken');
 const _ = require("lodash");
 
-module.exports.User = User;
-module.exports.auth = auth;
-function auth(usernameOrEmail, password){
-	const AuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
-	let MoodleUserData = null;
-	let UserDoc = null;
-	return AuthStrategy(usernameOrEmail, password)
-		.then(result => {
-			MoodleUserData = result;
-			if(MoodleUserData.suspended === 1)
-				return Promise.reject(UserErrors.user_suspended);
-			return findOneOrCreate({$or:[{id:MoodleUserData.id}, {email:MoodleUserData.email}]}, MoodleUserData)
-		})
-		.then((UserDoc) => User.findByIdAndUpdate(UserDoc._id, MoodleUserData, {new :true}))
-		.then((userdoc) => {
-			UserDoc = userdoc;
-			return Promise.all([
-				getTokenWebservice(userdoc, password),
-				getTokenVPLWebService(userdoc, password),
-			])
-		})
-		.then(result => {
-			let TokenMoodle = result[0];
-			let tokenVPL = result[1];
-			let token = {client:MoodleWebservice.name, token:TokenMoodle};
-			let tokenVpl = {client:MoodleWebservice.vpl, token:tokenVPL};
-			UserDoc.tokens = UserDoc.tokens.filter(t => t.client !== token.client && t.client !== tokenVpl.client) //remove the last token
-			UserDoc.tokens.push(token) //add the new token
-			UserDoc.tokens.push(tokenVpl) //add the new token
-			UserDoc.type = User.getUserTypes().person;
-			return UserDoc.save();
-		})
-		.then(formatAuthResponse)
-		.then(UserDoc => getAuthToken(UserDoc, {exp:Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes)}))
 
+const Service = {}
+Service.User = User;
+
+Service.auth = auth;
+async function auth(usernameOrEmail, password) {
+	const AuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
+
+	const MoodleUserData = await AuthStrategy(usernameOrEmail, password)
+	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
+
+	const type = User.getUserTypes().person
+	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
+	const data = { ...MoodleUserData, type }
+	const UserDoc = await updateOrCreate(query, data)
+	const UserWithPolicies = await getUserWithPolicies(UserDoc)
+	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
 }
 
-module.exports.getAuthToken = getAuthToken;
-function getAuthToken(UserDoc, opt){
+Service.addTokenToUserObject = addTokenToUserObject;
+function addTokenToUserObject(UserDoc, opt) {
 	UserDoc.token = getAuthTokenFromUser(UserDoc, opt);
 	return Promise.resolve(UserDoc);
 }
 
-module.exports.getAuthTokenFromUser = getAuthTokenFromUser
-function getAuthTokenFromUser(UserDoc, opt){
+Service.getAuthTokenFromUser = getAuthTokenFromUser
+function getAuthTokenFromUser(UserDoc, opt) {
 	opt = opt || {};
 	let token = _.pick(UserDoc, User.getTokenizerFields());
-	if(opt.exp)
+	if (opt.exp)
 		token.exp = opt.exp;
 	token = jwt.sign(token, Config.security.token);
 	return token;
 }
 
-module.exports.findOneOrCreate = findOneOrCreate;
-function findOneOrCreate(query, data){
-	return User.findOne(query)
-		.then(UserDocument => {
-			if(UserDocument)
-				return UserDocument;
-			data.description = data.description || "Description wasnt provide";
-			return User.create(data);
-		})
-		.then(addGroupsToUser)
+Service.updateOrCreate = updateOrCreate;
+async function updateOrCreate(query, data) {
+	return User.findOneAndUpdate(query, { ...data }, { upsert: true, new: true }).exec()
 }
 
-function addGroupsToUser(UserDoc){
+function addGroupsToUser(UserDoc) {
 	UserDoc.groups = getUserGroups(UserDoc);
 	return UserDoc.save();
 }
 
-module.exports.getUserGroups = getUserGroups;
-function getUserGroups(UserDoc){
+Service.getUserGroups = getUserGroups;
+function getUserGroups(UserDoc) {
 	let groups = [];
-	if(UserDoc.is_site_admin)
+	if (UserDoc.is_site_admin)
 		groups.push(getGroupByArchetype("siteadministrator").name);
 
 	UserDoc.roles.forEach(role => {
 		let archetype = role.archetype;
-		if(!groups.includes(archetype)){
+		if (!groups.includes(archetype)) {
 			groups.push(getGroupByArchetype(archetype).name)
 		}
 	})
 	return groups;
 }
 
-module.exports.getGroupByArchetype = getGroupByArchetype;
-function getGroupByArchetype(archetype){
+Service.getGroupByArchetype = getGroupByArchetype;
+function getGroupByArchetype(archetype) {
 	return PolicyService.getGroupByArchetype(archetype);
 }
 
-module.exports.getTokenVPLWebService = getTokenVPLWebService;
-function getTokenVPLWebService(UserDoc, password){
+Service.getTokenVPLWebService = getTokenVPLWebService;
+function getTokenVPLWebService(UserDoc, password) {
 	let Host = Config.moodle.web.protocol + "://" + Config.moodle.web.host + ":" + Config.moodle.web.port;
 	let path = "/login/token.php?"
 	let query = [
@@ -109,14 +84,14 @@ function getTokenVPLWebService(UserDoc, password){
 	].join("&");
 	let url = Host + path + query;
 	Util.log(url)
-	return Util.request("get", {url})
+	return Util.request("get", { url })
 		.then(result => {
 			return Promise.resolve(JSON.parse(result.body).token);
 		})
 }
 
-module.exports.getTokenWebservice = getTokenWebservice;
-function getTokenWebservice(UserDoc, password){
+Service.getTokenWebservice = getTokenWebservice;
+function getTokenWebservice(UserDoc, password) {
 	let Host = Config.moodle.web.protocol + "://" + Config.moodle.web.host + ":" + Config.moodle.web.port;
 	let path = "/login/token.php?"
 	let query = [
@@ -126,13 +101,13 @@ function getTokenWebservice(UserDoc, password){
 	].join("&");
 	let url = Host + path + query;
 	Util.log(url)
-	return Util.request("get", {url})
+	return Util.request("get", { url })
 		.then(result => {
 			return Promise.resolve(JSON.parse(result.body).token);
 		})
 }
 
-function formatAuthResponse(UserDoc){
+function getUserWithPolicies(UserDoc) {
 	return PolicyService.getPolicies(UserDoc)
 		.then(PolicyList => {
 			UserDoc = UserDoc.toObject();
@@ -151,11 +126,11 @@ function formatAuthResponse(UserDoc){
 
 
 
-module.exports.createDefaultUserIfNotExist = createDefaultUserIfNotExist;
-function createDefaultUserIfNotExist(){
-	return User.findOne({email:Config.client.email})
+Service.createDefaultUserIfNotExist = createDefaultUserIfNotExist;
+function createDefaultUserIfNotExist() {
+	return User.findOne({ email: Config.client.email })
 		.then(UserDoc => {
-			if(UserDoc)
+			if (UserDoc)
 				return Promise.resolve(UserDoc);
 			let data = require("./fixtures/client");
 			data.username = Config.client.username;
@@ -166,26 +141,26 @@ function createDefaultUserIfNotExist(){
 		})
 }
 
-function getUserFromTokenByUserType(type){
+function getUserFromTokenByUserType(type) {
 	let types = {
-		[User.getUserTypes().person]:payload => User.findById(payload._id),
-		[User.getUserTypes().runner_client]:payload => User.findOne({_id:payload._id, token_counter:payload.token_counter}),
+		[User.getUserTypes().person]: payload => User.findById(payload._id),
+		[User.getUserTypes().runner_client]: payload => User.findOne({ _id: payload._id, token_counter: payload.token_counter }),
 	}
 	type = types[type] || types[User.getUserTypes().person]
-	return  type
+	return type
 }
 
-module.exports.getGetUserMiddleware = getGetUserMiddleware;
-function getGetUserMiddleware(){
+Service.getGetUserMiddleware = getGetUserMiddleware;
+function getGetUserMiddleware() {
 	return (req, res, next) => {
 		let token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : null;
 		let userFindPromise = null;
 
-		if(!token){
-			userFindPromise = User.findOne({email:Config.client.email})
-		}else{
+		if (!token) {
+			userFindPromise = User.findOne({ email: Config.client.email })
+		} else {
 			userFindPromise = new Promise((resolve, reject) => {
-				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function(err, payload){
+				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function (err, payload) {
 					return err ? reject(err) : resolve(payload)
 				});
 			})
@@ -195,7 +170,7 @@ function getGetUserMiddleware(){
 
 		userFindPromise
 			.then(User => {
-				if(!User)
+				if (!User)
 					return Promise.reject(UserErrors.token_not_valid);
 
 				Util.log("HEADERS", req.headers)
@@ -217,8 +192,8 @@ function getGetUserMiddleware(){
  * 
  *
  */
-module.exports.create = create;
-function create(UserDoc, client){
+Service.create = create;
+function create(UserDoc, client) {
 	let data = require("./fixtures/runner");
 	data = Object.assign(data, _.pick(client, User.getFillableFields()))
 	data.id = -1 * Date.now();
@@ -227,52 +202,58 @@ function create(UserDoc, client){
 	data.groups = [PolicyService.getDefaultGroups().runner.name];
 	data.base_path = getBasePath(UserDoc);
 	return User.create(data)
-		.then((result) => getAuthToken(result.toObject()))
+		.then((result) => addTokenToUserObject(result.toObject()))
 }
 
 /**
  * This function doesnt lists the moodle users. The vpl API isnt a moodle client.
  * This function only list moodle's users for vpl api clients, and it api roles.
  */
-module.exports.list = list;
-function list(UserDoc, req){
+Service.list = list;
+function list(UserDoc, req) {
 	let id = req.params.id;
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
-	query.base_path = {$regex:"^" + getBasePath(UserDoc)};
+	query.base_path = { $regex: "^" + getBasePath(UserDoc) };
 	return Util.mongoose.list(User, id, query, paginator)
 }
 /**
  * This function doesnt lists the moodle users. The vpl API isnt a moodle client.
  * This function only list moodle's users for vpl api clients, and it api roles.
  */
-module.exports.delete = _delete;
-function _delete(UserDoc, client_id){
-	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}, type:User.getUserTypes().runner_client}
+Service.delete = _delete;
+function _delete(UserDoc, client_id) {
+	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().runner_client }
 	return User.findOneAndRemove(query)
 		.then(UserDoc => Promise.resolve(_.pick(UserDoc, User.getPublicFields())));
 }
 
-module.exports.getToken = getToken;
-function getToken(UserDoc, client_id){
-	let query = {_id:client_id, base_path:{$regex:"^" + getBasePath(UserDoc)}, type:User.getUserTypes().runner_client}
+Service.getToken = getToken;
+function getToken(UserDoc, client_id) {
+	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().runner_client }
 	return User.findOne(query)
 		.then(UserClientDoc => {
-			if(!UserClientDoc)
+			if (!UserClientDoc)
 				return Promise.reject(UserErrors.client_doesnt_exist);
 
 			UserClientDoc.token_counter += 1;
 			return UserClientDoc.save();
 		})
-		.then(UserClientDoc => Promise.resolve({token:getAuthTokenFromUser(UserClientDoc)}))
+		.then(UserClientDoc => Promise.resolve({ token: addTokenToUserObject(UserClientDoc) }))
 }
 
 
-module.exports.getBasePath = getBasePath;
-function getBasePath(UserDoc){
+Service.getBasePath = getBasePath;
+function getBasePath(UserDoc) {
 	return UserDoc.base_path ? [
 		UserDoc.base_path,
 		UserDoc.cursor
 	].join(".") : UserDoc.cursor;
 }
 
+Service.getApplicationJWTToken
+function getApplicationJWTToken() {
+	return { exp: Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes) }
+}
+
+module.exports = Service
