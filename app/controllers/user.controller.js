@@ -9,7 +9,6 @@ async function auth(req, res, next) {
 		const authType = Object.keys(req.body)[0]
 		const data = req.body[authType]
 		const response = await UserService.authByType(authType, data)
-		// const response = await UserService.auth(req.body.email, req.body.password)
 		res.send(response)
 	} catch (err) {
 		Util.response.handleError(err, res)

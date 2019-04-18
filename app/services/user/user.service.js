@@ -1,3 +1,5 @@
+import * as GoogleService from './google/google.service'
+
 const Config = global.Config;
 const Util = require(Config.paths.utils);
 const User = require(Config.paths.models + "/user/user.mongo");
@@ -21,11 +23,18 @@ async function authByType(authType, data) {
 	return Service.AuthTypeMap[authType](data)
 }
 
-async function AuthGoogle(data) {
-
+async function AuthGoogle({ token }) {
+	const { client_id } = Config.google
+	try {
+		const TokenInformation = await GoogleService.verifyAuthToken(token, client_id)
+		return TokenInformation
+	} catch (e) {
+		console.log(e)
+		return e
+	}
 }
 
-async function AuthSingle( { username, email, password } ) {
+async function AuthSingle({ username, email, password }) {
 	const usernameOrEmail = username || email
 	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	const MoodleUserData = await MoodleAuthStrategy(usernameOrEmail, password)
