@@ -3,12 +3,18 @@ const Util = require(Config.paths.utils);
 const Bcrypt = require("bcrypt-nodejs");
 const UserErrors = require(Config.paths.errors + "/user.errors");
 module.exports = Auth;
-function Auth(usernameOrEmail, password){
+function Auth(usernameOrEmail, password, mustValidePassword = true) {
 	let connection = null;
 	return createConnection()
 		.then(conn => connection = conn)
 		.then(() => findMysqlUserMoodle(connection, usernameOrEmail))
-		.then(UserRow => validePassword(UserRow, password))
+		.then(UserRow => UserRow
+			? Promise.resolve(UserRow)
+			: Promise.reject(UserErrors.login_fail))
+		.then(UserRow => mustValidePassword
+			? validePassword(UserRow, password)
+			: Promise.resolve(UserRow)
+		)
 		.then(UserRow => valideIfIsSiteAdmin(connection, UserRow))
 		.then(UserRow => getRoleAssigments(connection, UserRow))
 		.then(UserRow => getRoles(connection, UserRow))
@@ -19,8 +25,8 @@ function Auth(usernameOrEmail, password){
 
 
 }
-function createConnection(){
-	return  require(Config.paths.db + "/mysql")();
+function createConnection() {
+	return require(Config.paths.db + "/mysql")();
 }
 
 /**
@@ -29,15 +35,15 @@ function createConnection(){
  * @param {*} connection Mysql Connection
  * @param {*} usernameOrEmail  Email or username of a User
  */
-function findMysqlUserMoodle(connection, usernameOrEmail){
+function findMysqlUserMoodle(connection, usernameOrEmail) {
 	let isEmail = usernameOrEmail.indexOf("@") >= 0;
 	let column = isEmail ? "email" : "username";
 	let val = usernameOrEmail;
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "user";
 		const sql = 'SELECT * FROM ' + table + ' WHERE ' + column + '=? AND deleted=0';
-		connection.query(sql, [val], function(err, data, fields){
-			if(err)
+		connection.query(sql, [val], function (err, data, fields) {
+			if (err)
 				return reject(err);
 			resolve(data[0]);
 		});
@@ -50,15 +56,15 @@ function findMysqlUserMoodle(connection, usernameOrEmail){
  * @param {*} UserRow 
  * @param {*} password 
  */
-function validePassword(UserRow, password){
-	if(!UserRow)
-		return Promise.reject(UserErrors.login_fail);
+function validePassword(UserRow, password, mustValidePassword = true) {
+
+	if (!mustValidePassword) return UserRow
 	return new Promise((resolve, reject) => {
 		let hash = UserRow.password.replace(/^\$2y(.+)$/i, '$2a$1');
-		Bcrypt.compare(password, hash, function(err, res){
-			if(err)
+		Bcrypt.compare(password, hash, function (err, res) {
+			if (err)
 				return reject(err);
-			if(!res)
+			if (!res)
 				return reject(UserErrors.login_fail);
 			resolve(UserRow);
 		});
@@ -69,12 +75,12 @@ function validePassword(UserRow, password){
  * @param {*} connection 
  * @param {*} UserRow 
  */
-function valideIfIsSiteAdmin(connection, UserRow){
+function valideIfIsSiteAdmin(connection, UserRow) {
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "config";
 		const sql = 'SELECT * FROM ' + table + ' WHERE name=\'siteadmins\'';
-		connection.query(sql, function(err, data, fields){
-			if(err)
+		connection.query(sql, function (err, data, fields) {
+			if (err)
 				return reject(err);
 			UserRow.is_site_admin = data[0].value.split(",").map(id => +id).includes(UserRow.id);
 			return resolve(UserRow);
@@ -86,12 +92,12 @@ function valideIfIsSiteAdmin(connection, UserRow){
  * @param {*} connection 
  * @param {*} UserRow 
  */
-function  getRoleAssigments(connection, UserRow){
+function getRoleAssigments(connection, UserRow) {
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "role_assignments";
 		const sql = 'SELECT * FROM ' + table + ' WHERE userid=' + UserRow.id;
-		connection.query(sql, function(err, data, fields){
-			if(err)
+		connection.query(sql, function (err, data, fields) {
+			if (err)
 				return reject(err);
 			UserRow.roles = data.map(role_assignment => role_assignment.roleid);
 			resolve(UserRow);
@@ -105,15 +111,15 @@ function  getRoleAssigments(connection, UserRow){
  * @param {*} connection 
  * @param {*} UserRow 
  */
-function  getRoles(connection, UserRow){
-	if(!UserRow.roles.length)
+function getRoles(connection, UserRow) {
+	if (!UserRow.roles.length)
 		return Promise.resolve(UserRow);
 
 	return new Promise((resolve, reject) => {
 		const table = Config.moodle.db.table_prefix + "role";
 		const sql = 'SELECT * FROM ' + table + ' WHERE id IN (' + UserRow.roles.join(",") + ")";
-		connection.query(sql, function(err, data, fields){
-			if(err)
+		connection.query(sql, function (err, data, fields) {
+			if (err)
 				return reject(err);
 			UserRow.roles = data;
 			resolve(UserRow);

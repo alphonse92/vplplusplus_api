@@ -25,13 +25,16 @@ async function authByType(authType, data) {
 
 async function AuthGoogle({ token }) {
 	const { client_id } = Config.google
-	try {
-		const TokenInformation = await GoogleService.verifyAuthToken(token, client_id)
-		return TokenInformation
-	} catch (e) {
-		console.log(e)
-		return e
-	}
+	const TokenInformation = await GoogleService.verifyAuthToken(token, client_id)
+	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
+	const MoodleUserData = await MoodleAuthStrategy(TokenInformation.email, undefined, false)
+	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
+	const type = User.getUserTypes().person
+	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
+	const data = { ...MoodleUserData, type }
+	const UserDoc = await updateOrCreate(query, data)
+	const UserWithPolicies = await getUserWithPolicies(UserDoc)
+	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
 }
 
 async function AuthSingle({ username, email, password }) {
