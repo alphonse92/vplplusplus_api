@@ -11,12 +11,24 @@ const _ = require("lodash");
 
 const Service = {}
 Service.User = User;
+Service.AuthTypeMap = {
+	single: AuthSingle,
+	google: AuthGoogle
+}
 
-Service.auth = auth;
-async function auth(usernameOrEmail, password) {
-	const AuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
+Service.authByType = authByType
+async function authByType(authType, data) {
+	return Service.AuthTypeMap[authType](data)
+}
 
-	const MoodleUserData = await AuthStrategy(usernameOrEmail, password)
+async function AuthGoogle(data) {
+
+}
+
+async function AuthSingle( { username, email, password } ) {
+	const usernameOrEmail = username || email
+	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
+	const MoodleUserData = await MoodleAuthStrategy(usernameOrEmail, password)
 	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
 
 	const type = User.getUserTypes().person

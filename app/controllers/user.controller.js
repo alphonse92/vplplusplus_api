@@ -4,10 +4,16 @@ const UserService = require(Config.paths.services + "/user/user.service")
 const controller = {};
 
 controller.auth = auth;
-function auth(req, res, next) {
-	UserService.auth(req.body.email, req.body.password)
-		.then((result) => res.send(result))
-		.catch(err => Util.response.handleError(err, res))
+async function auth(req, res, next) {
+	try {
+		const authType = Object.keys(req.body)[0]
+		const data = req.body[authType]
+		const response = await UserService.authByType(authType, data)
+		// const response = await UserService.auth(req.body.email, req.body.password)
+		res.send(response)
+	} catch (err) {
+		Util.response.handleError(err, res)
+	}
 }
 
 controller.list = list;
