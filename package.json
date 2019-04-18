@@ -1,40 +1,48 @@
 {
-  "name": "vplplusplus_api",
-  "version": "1.0.0",
-  "description": "Vpl plus plus api project",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "scripts": {
-    "start": "NODE_PATH=. node server.js",
-    "startDev": "nodemon -L  --watch ./app --watch ./config -x \"npm start\"",
-    "test": "NODE_ENV=test node server.js"
-  },
-  "author": "Alejandro Molina Vergel",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^3.0.0",
-    "bcrypt-nodejs": "0.0.3",
-    "body-parser": "^1.18.3",
-    "cors": "^2.8.4",
-    "express": "^4.16.3",
-    "gulp": "^3.9.1",
-    "gulp-apidoc": "^0.2.8",
-    "helmet": "^3.12.1",
-    "install": "^0.12.1",
-    "jsonwebtoken": "^8.3.0",
-    "lodash": "^4.17.10",
-    "moment": "^2.22.2",
-    "mongoose": "^5.2.4",
-    "mongoose-auto-increment": "^5.0.1",
-    "mongoose-paginate": "^5.0.3",
-    "mongoose-timestamp": "^0.6.0",
-    "moodle-client": "^0.5.1",
-    "morgan": "^1.9.0",
-    "mysql": "^2.16.0",
-    "npm": "^6.2.0",
-    "path-to-regexp": "^2.2.1",
-    "request": "^2.87.0"
-  }
+	"name": "vplplusplus_api",
+	"version": "1.0.0",
+	"description": "Vpl plus plus api project",
+	"main": "index.js",
+	"directories": {
+		"test": "test"
+	},
+	"scripts": {
+		"start": "NODE_PATH=. babel-node server.js",
+		"startDev": "nodemon -L --watch ./app --watch ./config --exec babel-node server.js",
+		"test": "NODE_ENV=test node server.js"
+	},
+	"author": "Alejandro Molina Vergel",
+	"license": "ISC",
+	"dependencies": {
+		"bcrypt": "^3.0.0",
+		"bcrypt-nodejs": "0.0.3",
+		"body-parser": "^1.18.3",
+		"cors": "^2.8.4",
+		"express": "^4.16.3",
+		"gulp": "^3.9.1",
+		"gulp-apidoc": "^0.2.8",
+		"helmet": "^3.12.1",
+		"install": "^0.12.1",
+		"jsonwebtoken": "^8.3.0",
+		"lodash": "^4.17.10",
+		"moment": "^2.22.2",
+		"mongoose": "^5.2.4",
+		"mongoose-auto-increment": "^5.0.1",
+		"mongoose-paginate": "^5.0.3",
+		"mongoose-timestamp": "^0.6.0",
+		"moodle-client": "^0.5.1",
+		"morgan": "^1.9.0",
+		"mysql": "^2.16.0",
+		"npm": "^6.2.0",
+		"path-to-regexp": "^2.2.1",
+		"request": "^2.87.0"
+	},
+	"devDependencies": {
+		"@babel/cli": "^7.4.3",
+		"@babel/core": "^7.4.3",
+		"@babel/node": "^7.2.2",
+		"@babel/preset-env": "^7.4.3",
+		"@babel/register": "^7.4.0",
+		"nodemon": "^1.18.11"
+	}
 }

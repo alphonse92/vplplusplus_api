@@ -1,7 +1,7 @@
 const cwd = process.cwd();
 const app = cwd + "/app";
 const config = cwd + "/config";
-const public = cwd + "/public";
+const publicPath = cwd + "/public";
 const utils = app + "/utils";
 const controllers = app + "/controllers";
 const db = app + "/db";
@@ -64,7 +64,7 @@ const defaultConfig = {
 		host:process.env.HOST || "localhost",
 		port:process.env.PORT || "1337"
 	},
-	paths:{cwd, app, config, public, utils, controllers, db, routes, models, services, errors, lang, webservices}
+	paths:{cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices}
 };
 
 module.exports = (function(){
