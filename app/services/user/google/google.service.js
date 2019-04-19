@@ -19,13 +19,11 @@ function throwInvalidTokenError(condition, infoText) {
 }
 
 async function makeRequestToValide(token) {
-	let response
 	try {
 		const endpoint = 'https://oauth2.googleapis.com/tokeninfo?id_token='
 		const url = `${endpoint}${token}`
-		response = await request('get', { url })
-		return response
-	} catch (e) {
+		return await request('get', { url })
+	} catch (response) {
 		log(`invalid status code: ${response.httpResponse.statusCode}`)
 		log(`    body: ${response.body}`)
 		throwInvalidTokenError(true, )
