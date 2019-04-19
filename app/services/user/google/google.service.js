@@ -1,13 +1,47 @@
 
 
 const Util = require(Config.paths.utils);
-const { request } = Util
+const { request, log } = Util
 
 async function verifyAuthToken(token, CLIENT_ID) {
-	const requestResponse = await request('get', { url: `https://oauth2.googleapis.com/tokeninfo?id_token=${token}` })
-	const tokenData = JSON.parse(requestResponse.body)
-	if (tokenData.aud !== CLIENT_ID) throw new Error('Invalid Token')
-	return tokenData
+	const requestResponse = await makeRequestToValide(token)
+	const { body } = requestResponse
+	const requestBodyJSON = getJsonFromBody(body)
+	valideClient(requestBodyJSON, CLIENT_ID)
+	return requestBodyJSON
+
+}
+function throwInvalidTokenError(condition, infoText) {
+	if (condition) {
+		if (infoText) log(infoText)
+		throw new Error('Invalid Token')
+	}
+}
+
+async function makeRequestToValide(token) {
+	let response
+	try {
+		const endpoint = 'https://oauth2.googleapis.com/tokeninfo?id_token='
+		const url = `${endpoint}${token}`
+		response = await request('get', { url })
+		return response
+	} catch (e) {
+		log(`invalid status code: ${response.httpResponse.statusCode}`)
+		log(`    body: ${response.body}`)
+		throwInvalidTokenError(true, )
+	}
+}
+function valideClient(requestBodyJSON, CLIENT_ID) {
+	throwInvalidTokenError(requestBodyJSON.aud !== CLIENT_ID, 'Client does not match')
+}
+function getJsonFromBody(body) {
+	try {
+		return JSON.parse(body)
+	} catch (e) {
+		log('Something went wrong trying to validate the token. The response isnt JSON format ')
+	}
+
+	throwInvalidTokenError(true)
 }
 
 export {
