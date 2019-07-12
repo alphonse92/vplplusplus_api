@@ -21,7 +21,6 @@ function getGroupByArchetype(archetype){
 
 module.exports.createDefaultPoliciesIfNotExist = createDefaultPoliciesIfNotExist;
 function createDefaultPoliciesIfNotExist(){
-	const env = Config.env;
 	const type = Config.app.init.policy;
 
 	let fixtures = require("./fixtures/policies");
@@ -78,7 +77,6 @@ function sync_policies(fixtures, resources){
 
 module.exports.createDefaultGroupsIfNotExist = createDefaultGroupsIfNotExist;
 function createDefaultGroupsIfNotExist(){
-	const env = Config.env;
 	const type = Config.app.init.policy;
 
 	let group_fixtures = require("./fixtures/groups");

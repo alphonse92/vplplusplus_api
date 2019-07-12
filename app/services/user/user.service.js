@@ -69,10 +69,10 @@ function getAuthTokenFromUser(UserDoc, opt) {
 
 Service.updateOrCreate = updateOrCreate;
 async function updateOrCreate(query, data) {
-	const currentUser = User.findOne(query)
-	return currentUser
+	const currentUser = await User.findOne(query).exec()
+	return !currentUser
 		? User.create(data)
-		: User.updateOne(data, { new: true })
+		: User.findByIdAndUpdate({ _id: currentUser._id }, data, { new: true })
 }
 
 function addGroupsToUser(UserDoc) {
