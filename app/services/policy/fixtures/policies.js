@@ -47,7 +47,7 @@ const fixtures = { ...WebClientFixtures };
  */
 
 fixtures.public = {
-	resource: "service:api:system:all.all",
+	resource: "service:api:system:public",
 	name: "public",
 	slug: "Public Resources",
 	type: DefaultPolicyService.types.default,

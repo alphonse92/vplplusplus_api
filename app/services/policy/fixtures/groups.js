@@ -4,7 +4,7 @@ module.exports = {
 		default: true,
 		policies: [
 			//this is the resource for public actions
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 			//site administor can change the users
 			{ resource: "service:api:system:user.create" },
 			{ resource: "service:api:system:user.read" },
@@ -28,14 +28,14 @@ module.exports = {
 		name: "default/manager",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 		]
 	},
 	coursecreator: {
 		name: "default/coursecreator",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },
@@ -50,7 +50,7 @@ module.exports = {
 		name: "default/editingteacher",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },
@@ -65,7 +65,7 @@ module.exports = {
 		name: "default/teacher",
 		default: true,
 		policies: [
-		{ resource: "service:api:system:all.all" },
+		{ resource: "service:api:system:public" },
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },
@@ -80,7 +80,7 @@ module.exports = {
 		name: "default/student",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },
@@ -93,28 +93,28 @@ module.exports = {
 		name: "default/guest",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 		]
 	},
 	user: {
 		name: "default/user",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 		]
 	},
 	frontpage: {
 		name: "default/frontpage",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 		]
 	},
 	runner: {
 		name: "default/runner",
 		default: true,
 		policies: [
-			{ resource: "service:api:system:all.all" },
+			{ resource: "service:api:system:public" },
 		]
 	}
 };
