@@ -33,6 +33,7 @@ async function AuthGoogle({ token }) {
 	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
 	const UserDoc = await updateOrCreate(query, data)
+	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
 }
@@ -47,6 +48,7 @@ async function AuthSingle({ username, email, password }) {
 	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
 	const UserDoc = await updateOrCreate(query, data)
+	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
 }
