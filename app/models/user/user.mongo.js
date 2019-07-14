@@ -19,4 +19,12 @@ Schema.statics.getUserTypes = () => ModelSchema.types;
 Schema.statics.getPublicFields = () => ModelSchema.publicFields;
 Schema.statics.getFillableFields = () => ModelSchema.fillableFields;
 Schema.statics.getTokenizerFields = () => ModelSchema.tokenizerFields;
+
+Schema.virtual('summaries', {
+    ref: 'Summary',
+    localField: '_id',
+    foreignField: 'user',
+    justOne: false
+});
+
 module.exports = mongoose.model(ModelSchema.name, Schema);

@@ -35,9 +35,6 @@ function createDefaultPoliciesIfNotExist(){
 	return add_policies_first_time(fixtures, resources);
 }
 
-
-
-
 function add_policies_first_time(fixtures, resources){
 	Util.log("Adding policies by first time");
 	return Policy.find({resource:{$in:resources}})

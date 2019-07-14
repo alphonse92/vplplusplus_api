@@ -116,11 +116,6 @@ fixtures.createClientRunnerToken = {
 	]
 };
 
-
-
-
-
-
 fixtures.policyCreate = {
 	resource: "service:api:system:policy.create",
 	name: "policy.create",
@@ -189,6 +184,57 @@ fixtures.configurationUpdate = {
 	]
 };
 
+// project
+fixtures.listProjects = {
+	resource: "service:api:system:project.list",
+	name: "project.list",
+	slug: "List current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/", scopes: ["listProject"] }
+	]
+};
+
+fixtures.createProjects = {
+	resource: "service:api:system:project.create",
+	name: "project.create",
+	slug: "Create current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/", scopes: ["createProject"] }
+	]
+};
+
+fixtures.updateProjects = {
+	resource: "service:api:system:project.update",
+	name: "project.update",
+	slug: "Update current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "PATCH/api/v1/project/", scopes: ["updateProject"] }
+	]
+};
+
+fixtures.deleteProjects = {
+	resource: "service:api:system:project.delete",
+	name: "project.delete",
+	slug: "Delete current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "DELETE/api/v1/project/", scopes: ["deleteProject"] }
+	]
+};
+
+
+
 // courses
 fixtures.listCourses = {
 	resource: "service:api:system:course.list",
@@ -203,7 +249,7 @@ fixtures.listCourses = {
 };
 
 //activities
-fixtures.listCourses = {
+fixtures.listActivities = {
 	resource: "service:api:system:activity.list",
 	name: "activity.list",
 	slug: "List current course activities",
