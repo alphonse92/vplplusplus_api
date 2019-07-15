@@ -34,6 +34,10 @@ module.exports = {
 			default: 10,
 			min: 0,
 		},
+		code: {
+			type: 'String',
+			required: true,
+		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",

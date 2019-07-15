@@ -34,6 +34,10 @@ module.exports = {
 			type: "String",
 			required: true
 		},
+		code: {
+			type: 'String',
+			required: true,
+		},
 		grade: {
 			type: 'Number',
 			default: 10,

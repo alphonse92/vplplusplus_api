@@ -1,4 +1,6 @@
+import { set } from 'lodash'
 const ObjectId = require('mongoose').Types.ObjectId;
+
 const paginationAttributes = {
 	limit: "limit",
 	page: "page",
@@ -22,21 +24,41 @@ function cleanPaginatorAttributesFromRequest(req) {
 	}
 }
 
+function parsePathsToPopulates(arrayOfPaths) {
+	const reduceArrayOfPathsToPopulateSchema = (out, path, index) => set(out, path, false)
+	const parcePopulateSchemaToPopulates =
+		obj => Object
+			.keys(obj)
+			.map(modelName => {
+				const children = obj[modelName]
+				const hasChildren = !!children
+				return { path: modelName, populate: !hasChildren ? [] : parcePopulateSchemaToPopulates(children) }
+			})
+	const populateSchema = arrayOfPaths.reduce(reduceArrayOfPathsToPopulateSchema, {})
+	const populates = parcePopulateSchemaToPopulates(populateSchema)
+	return populates
+}
+
+
+
+
 module.exports.getPaginatorFromRequest = getPaginatorFromRequest;
-function getPaginatorFromRequest(req, defaults, populates) {
-	let pagination = {};
+function getPaginatorFromRequest(req, defaults = {}, populates) {
+	const {
+		limit = defaults[paginationAttributes.limit],
+		page = defaults[paginationAttributes.page]
+	} = req.query
 	const reqPopulate = req.query.populate
-	pagination.limit = +req.query[paginationAttributes.limit] || defaults[paginationAttributes.limit];
-	pagination.page = +req.query[paginationAttributes.page] || defaults[paginationAttributes.page];
-	// please change it because it does not allows to populate recorsivelly 
-	pagination.populate = populates || reqPopulate
+	const arrayOfPopulates = populates || reqPopulate
 		? Array.isArray(reqPopulate)
 			? reqPopulate
 			: [reqPopulate]
 		: []
-	pagination.populate = pagination.populate.map(path => ({ path }))
+	const populate = parsePathsToPopulates(arrayOfPopulates)
+	const paginator = { limit, page, populate }
 	cleanPaginatorAttributesFromRequest(req);
-	return pagination;
+	console.log(paginator)
+	return paginator
 }
 
 
@@ -53,4 +75,4 @@ function list(Model, id, query, paginator) {
 	return Model.paginate(query, paginator);
 }
 
-module.exports.createObjectId = () => new ObjectId();
+module.exports.createObjectId = () => new ObjectId()
