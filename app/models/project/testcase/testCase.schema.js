@@ -13,6 +13,35 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "Test",
 			required: true
-		}
+		},
+		name: {
+			type: 'String',
+			required: true
+		},
+		objective: {
+			type: 'String',
+			required: true
+		},
+		successMessage: {
+			type: "String",
+			required: true
+		},
+		successMessageLink: {
+			type: "String",
+			required: true
+		},
+		failureMessage: {
+			type: "String",
+			required: true
+		},
+		grade: {
+			type: 'Number',
+			default: 10,
+			min: 0,
+		},
 	},
 }
+
+
+
+

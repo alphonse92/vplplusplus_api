@@ -285,4 +285,9 @@ function getApplicationJWTToken() {
 	return { exp: Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes) }
 }
 
+Service.getUserFromResponse = getUserFromResponse
+function getUserFromResponse(res) {
+	return res.locals.__mv__.user
+}
+
 module.exports = Service

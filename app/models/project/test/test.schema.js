@@ -13,6 +13,31 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
 			required: true
+		},
+		name: {
+			type: 'String',
+			required: true
+		},
+		tags: {
+			type: [{ type: 'String' }],
+		},
+		description: {
+			type: 'String',
+			required: true
+		},
+		objective: {
+			type: 'String',
+			required: true
+		},
+		maxGrade: {
+			type: 'Number',
+			default: 10,
+			min: 0,
+		},
+		owner: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true
 		}
 	},
 }

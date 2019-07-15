@@ -4,9 +4,9 @@ const increment = require('mongoose-auto-increment');
 const paginator = require('mongoose-paginate');
 const timestamps = require('mongoose-timestamp');
 const ModelSchema = require("./project.schema");
-const Schema = new mongoose.Schema(ModelSchema.schema);
+const Schema = new mongoose.Schema(ModelSchema.schema, { toJSON: { virtuals: true } });
 
-schema.virtual('tests', {
+Schema.virtual('tests', {
   ref: 'Test',
   localField: '_id',
   foreignField: 'project',

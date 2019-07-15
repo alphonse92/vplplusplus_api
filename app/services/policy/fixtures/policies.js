@@ -193,7 +193,7 @@ fixtures.listProjects = {
 	description: "Policy for list projects for a person",
 	extends: [], depends: [],
 	actions: [
-		{ path: "GET/api/v1/project/", scopes: ["listProject"] }
+		{ path: "GET/api/v1/project/:id?", scopes: ["listProject"] }
 	]
 };
 
@@ -217,7 +217,7 @@ fixtures.updateProjects = {
 	description: "Policy for list projects for a person",
 	extends: [], depends: [],
 	actions: [
-		{ path: "PATCH/api/v1/project/", scopes: ["updateProject"] }
+		{ path: "PATCH/api/v1/project/:id", scopes: ["updateProject"] }
 	]
 };
 
@@ -229,7 +229,7 @@ fixtures.deleteProjects = {
 	description: "Policy for list projects for a person",
 	extends: [], depends: [],
 	actions: [
-		{ path: "DELETE/api/v1/project/", scopes: ["deleteProject"] }
+		{ path: "DELETE/api/v1/project/:id", scopes: ["deleteProject"] }
 	]
 };
 

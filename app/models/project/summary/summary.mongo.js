@@ -4,7 +4,7 @@ const increment = require('mongoose-auto-increment');
 const paginator = require('mongoose-paginate');
 const timestamps = require('mongoose-timestamp');
 const ModelSchema = require("./summary.schema");
-const Schema = new mongoose.Schema(ModelSchema.schema);
+const Schema = new mongoose.Schema(ModelSchema.schema, { toJSON: { virtuals: true } });
 
 Schema.plugin(paginator);
 Schema.plugin(timestamps);

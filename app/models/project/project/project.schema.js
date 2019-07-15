@@ -21,7 +21,7 @@ module.exports = {
 			type: "Boolean",
 			required: true
 		},
-		created_by: {
+		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true
