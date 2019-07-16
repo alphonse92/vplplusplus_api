@@ -21,10 +21,6 @@ function list(UserDoc, req) {
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
 	query.owner = UserDoc._id
-	console.log('querying ')
-	console.log('id', id)
-	console.log('query', query)
-	console.log('paginator', paginator)
 	return Util.mongoose.list(Project, id, query, paginator)
 }
 

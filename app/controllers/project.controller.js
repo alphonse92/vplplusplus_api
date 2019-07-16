@@ -6,7 +6,6 @@ const UserService = require(Config.paths.services + '/user/user.service');
 
 module.exports.get = get;
 async function get(req, res, next) {
-	const id = req.params.id
 	const CurrentUser = UserService.getUserFromResponse(res)
 	const Projects = await ProjectService.list(CurrentUser, req)
 	res.send(Projects)

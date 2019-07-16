@@ -1,4 +1,6 @@
+
 import { set } from 'lodash'
+
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const paginationAttributes = {
@@ -24,26 +26,28 @@ function cleanPaginatorAttributesFromRequest(req) {
 	}
 }
 
-function parsePathsToPopulates(arrayOfPaths) {
+function parsePathsToPopulates(arrayOfPaths, selects = {}) {
 	const reduceArrayOfPathsToPopulateSchema = (out, path, index) => set(out, path, false)
 	const parcePopulateSchemaToPopulates =
-		obj => Object
-			.keys(obj)
-			.map(modelName => {
-				const children = obj[modelName]
+		populateSchema => Object
+			.keys(populateSchema)
+			.map(model => {
+				const children = populateSchema[model]
 				const hasChildren = !!children
-				return { path: modelName, populate: !hasChildren ? [] : parcePopulateSchemaToPopulates(children) }
+				const selectArray = selects[model] || []
+				return {
+					path: model,
+					select: selectArray.concat('_id'),
+					populate: !hasChildren ? [] : parcePopulateSchemaToPopulates(children)
+				}
 			})
 	const populateSchema = arrayOfPaths.reduce(reduceArrayOfPathsToPopulateSchema, {})
 	const populates = parcePopulateSchemaToPopulates(populateSchema)
 	return populates
 }
 
-
-
-
 module.exports.getPaginatorFromRequest = getPaginatorFromRequest;
-function getPaginatorFromRequest(req, defaults = {}, populates) {
+function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 	const {
 		limit = defaults[paginationAttributes.limit],
 		page = defaults[paginationAttributes.page]
@@ -54,10 +58,9 @@ function getPaginatorFromRequest(req, defaults = {}, populates) {
 			? reqPopulate
 			: [reqPopulate]
 		: []
-	const populate = parsePathsToPopulates(arrayOfPopulates)
+	const populate = parsePathsToPopulates(arrayOfPopulates, selects)
 	const paginator = { limit, page, populate }
 	cleanPaginatorAttributesFromRequest(req);
-	console.log(paginator)
 	return paginator
 }
 
