@@ -4,9 +4,11 @@ const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
 const TestService = require(Config.paths.services + '/project/project.test.service');
+const Util = require(Config.paths.utils);
 const Service = {}
 
 class ProjectService extends BaseService {
+
 	constructor() {
 		super(Project)
 	}
@@ -15,7 +17,7 @@ class ProjectService extends BaseService {
 		try {
 			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
 		} catch (e) {
-			throw Error(Errors.project_doesnt_exist)
+			throw new Util.Error(Errors.project_doesnt_exist)
 		}
 	}
 
