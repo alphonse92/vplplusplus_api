@@ -5,7 +5,6 @@ const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
 const TestService = require(Config.paths.services + '/project/project.test.service');
 const Util = require(Config.paths.utils);
-const Service = {}
 
 class ProjectService extends BaseService {
 
@@ -39,6 +38,4 @@ class ProjectService extends BaseService {
 
 }
 
-Service.ProjectService = new ProjectService()
-
-module.exports = Service
+module.exports = new ProjectService()

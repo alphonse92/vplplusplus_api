@@ -22,17 +22,43 @@ Schema.plugin(increment.plugin, { model: ModelSchema.name, field: 'cursor' });
 
 Schema.methods.compile = async function () {
   if (!this.test_cases) await this.populate('test_cases').execPopulate()
-  const className = capitalize(camelCase(this.name))
-  return `
-    public class ${className}Test{
-      
-      ${this.code}
+  if (!this.owner) await this.populate('owner').execPopulate()
+  const {
+    name,
+    objective,
+    maxGrade,
+    tags,
+    owner
+  } = this
+  const className = capitalize(camelCase(name))
+  const compiledCode =
+    `
 
-      ${this.test_cases.map(test_case => `${test_case.compile()}`)}
+import org.junit.Test;
+import VPLPluPlusCore.Configurator;
+import static org.junit.Assert.assertEquals;
+import VPLPluPlusCore.annotations.VplPlusPlusAnnotation;
+import VPLPluPlusCore.annotations.VplTestInfoAnnotation;
+import VPLPluPlusCore.annotations.VplTestDescriptorAnnotation;
+import org.junit.Before;
 
-    }
+@VplPlusPlusAnnotation
+@VplTestInfoAnnotation(
+  name = "${name}",
+  tags = "${tags}",
+  created_by = "${owner.firstname} ${owner.lastname}",
+  maxGrade = ${maxGrade},
+  objetive =  ${objective},
+)
+public class ${className}Test{
+  
+  ${this.code}
+  
+  ${this.test_cases.map(test_case => `${test_case.compile()}`).join("\n")}
+}
 
-  `
-
+`
+  console.log(compiledCode)
+  return compiledCode
 }
 module.exports = mongoose.model(ModelSchema.name, Schema);

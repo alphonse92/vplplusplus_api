@@ -1,7 +1,6 @@
 const Config = global.Config;
-const OldService = require(Config.paths.services + '/project/project.service');
 const UserService = require(Config.paths.services + '/user/user.service');
-const ProjectService = OldService.ProjectService
+const ProjectService = require(Config.paths.services + '/project/project.service');
 
 module.exports.get = get;
 async function get(req, res, next) {

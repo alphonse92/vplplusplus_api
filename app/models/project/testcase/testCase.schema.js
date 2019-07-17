@@ -43,6 +43,10 @@ module.exports = {
 			default: 10,
 			min: 0,
 		},
+		timeout: {
+			type: "String",
+			default: "Configurator.TIMEOUT_VERY_LONG"
+		}
 	},
 }
 
