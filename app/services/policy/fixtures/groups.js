@@ -63,6 +63,12 @@ module.exports = {
 			{ resource: "service:api:system:test.create" },
 			{ resource: "service:api:system:test.update" },
 			{ resource: "service:api:system:test.delete" },
+			// tests cases
+			{ resource: "service:api:system:test.case.list" },
+			{ resource: "service:api:system:test.case.compile" },
+			{ resource: "service:api:system:test.case.create" },
+			{ resource: "service:api:system:test.case.update" },
+			{ resource: "service:api:system:test.case.delete" },
 			// courses
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
@@ -91,6 +97,12 @@ module.exports = {
 			{ resource: "service:api:system:test.create" },
 			{ resource: "service:api:system:test.update" },
 			{ resource: "service:api:system:test.delete" },
+			// tests cases
+			{ resource: "service:api:system:test.case.list" },
+			{ resource: "service:api:system:test.case.compile" },
+			{ resource: "service:api:system:test.case.create" },
+			{ resource: "service:api:system:test.case.update" },
+			{ resource: "service:api:system:test.case.delete" },
 			// courses
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },

@@ -310,6 +310,54 @@ fixtures.deleteTest = {
 };
 
 
+// test cases
+fixtures.listTestCase = {
+	resource: "service:api:system:test.case.list",
+	name: "test.list",
+	slug: "List current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy to get test cases from project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/test/:id/case/:id?", scopes: ["listTestCase"] }
+	]
+};
+
+fixtures.createTestCase = {
+	resource: "service:api:system:test.case.create",
+	name: "test.create",
+	slug: "Create current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy to create a test case to a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/:id/test/:id/case/:id", scopes: ["createTestCase"] }
+	]
+};
+
+fixtures.updateTestCase = {
+	resource: "service:api:system:test.case.update",
+	name: "test.update",
+	slug: "Update current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for update test case in a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "PATCH/api/v1/project/:id/test/:id/case/:id", scopes: ["updateTestCase"] }
+	]
+};
+
+fixtures.deleteTestCase = {
+	resource: "service:api:system:test.case.delete",
+	name: "test.delete",
+	slug: "Delete current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy to delete test case from a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "PATCH/api/v1/project/:id/test/:id/case/:id", scopes: ["deleteTestCase"] }
+	]
+};
 
 
 
