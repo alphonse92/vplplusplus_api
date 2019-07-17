@@ -23,3 +23,9 @@ function update(req, res, next) {
 	res.send("ok project controller")
 }
 
+module.exports.compile = compile
+async function compile(req, res, next) {
+	const CurrentUser = UserService.getUserFromResponse(res)
+	const Project = await ProjectService.get(CurrentUser, req.params.id)
+	res.send(Project.compile())
+}

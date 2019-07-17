@@ -73,8 +73,7 @@ function getQueryFromRequest(req) {
 
 module.exports.list = list;
 function list(Model, id, query, paginator) {
-	if (id && !Object.keys(query)) return Model.findById(id);
-	if (id) query._id = id;
+	if (id) return Model.findById(id);
 	return Model.paginate(query, paginator);
 }
 

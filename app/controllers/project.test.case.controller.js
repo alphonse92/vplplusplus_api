@@ -22,4 +22,3 @@ module.exports.update = update;
 function update(req, res, next) {
 	res.send("ok project controller")
 }
-

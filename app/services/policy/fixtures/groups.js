@@ -51,10 +51,19 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// projects
 			{ resource: "service:api:system:project.list" },
+			{ resource: "service:api:system:project.compile" },
 			{ resource: "service:api:system:project.create" },
 			{ resource: "service:api:system:project.update" },
 			{ resource: "service:api:system:project.delete" },
+			// tests
+			{ resource: "service:api:system:test.list" },
+			{ resource: "service:api:system:test.compile" },
+			{ resource: "service:api:system:test.create" },
+			{ resource: "service:api:system:test.update" },
+			{ resource: "service:api:system:test.delete" },
+			// courses
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },
@@ -70,10 +79,19 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// projects
 			{ resource: "service:api:system:project.list" },
+			{ resource: "service:api:system:project.compile" },
 			{ resource: "service:api:system:project.create" },
 			{ resource: "service:api:system:project.update" },
 			{ resource: "service:api:system:project.delete" },
+			// tests
+			{ resource: "service:api:system:test.list" },
+			{ resource: "service:api:system:test.compile" },
+			{ resource: "service:api:system:test.create" },
+			{ resource: "service:api:system:test.update" },
+			{ resource: "service:api:system:test.delete" },
+			// courses
 			{ resource: "service:api:system:course.list" },
 			{ resource: "service:api:system:activity.list" },
 			{ resource: "client:web:system:webclient.dashboard:show" },

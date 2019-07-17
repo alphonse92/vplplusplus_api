@@ -197,6 +197,19 @@ fixtures.listProjects = {
 	]
 };
 
+fixtures.compileProject = {
+	resource: "service:api:system:project.compile",
+	name: "project.compile",
+	slug: "Compile project current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for compile project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/compile", scopes: ["compileProject"] }
+	]
+};
+
+
 fixtures.createProjects = {
 	resource: "service:api:system:project.create",
 	name: "project.create",
@@ -232,6 +245,71 @@ fixtures.deleteProjects = {
 		{ path: "DELETE/api/v1/project/:id", scopes: ["deleteProject"] }
 	]
 };
+
+
+// tests
+fixtures.listTest = {
+	resource: "service:api:system:test.list",
+	name: "test.list",
+	slug: "List current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/test/:id?", scopes: ["listTest"] }
+	]
+};
+
+fixtures.compileTest = {
+	resource: "service:api:system:test.compile",
+	name: "test.compile",
+	slug: "Compile test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for compile test",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/test/:id/compile", scopes: ["compileTest"] }
+	]
+};
+
+
+fixtures.createTest = {
+	resource: "service:api:system:test.create",
+	name: "test.create",
+	slug: "Create current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for list projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/:id/test", scopes: ["createTest"] }
+	]
+};
+
+fixtures.updateTest = {
+	resource: "service:api:system:test.update",
+	name: "test.update",
+	slug: "Update current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for update test in a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "PATCH/api/v1/project/:id/test/:id", scopes: ["updateTest"] }
+	]
+};
+
+fixtures.deleteTest = {
+	resource: "service:api:system:test.delete",
+	name: "test.delete",
+	slug: "Delete current test",
+	type: DefaultPolicyService.types.default,
+	description: "Policy to delete test in a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "PATCH/api/v1/project/:id/test/:id", scopes: ["deleteTest"] }
+	]
+};
+
+
 
 
 

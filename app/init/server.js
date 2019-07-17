@@ -16,8 +16,10 @@ module.exports = function (config) {
 		.then(AddPostRoutesMiddleware)
 		.then(init)
 		.catch(err => {
+			console.log(err)
 			if (err.code === "BABEL_PARSE_ERROR") console.log(err)
-			else Util.log(err);
+			else if (err.http_code) Util.log(err);
+			else console.log(err) && Util.log(err);
 		})
 };
 
@@ -31,6 +33,7 @@ function addPreRoutesMiddlewares(app) {
 		.use(GetUserMiddleware)
 		.use(LoadUserPolicies)
 		.use(PolicyAccessManagerMiddleware)
+
 	return Promise.resolve(app);
 
 }
@@ -42,6 +45,20 @@ function addRoutes(app) {
 }
 
 function AddPostRoutesMiddleware(app) {
+	app.use((err, req, res, next) => {
+		try {
+			if (err.code === "BABEL_PARSE_ERROR") console.log(err)
+			else if (err.http_code) Util.log(err);
+			else console.log(err) && Util.log(err);
+			const {
+				http_code = 500,
+				error = { code: -1, message: "Server Error" }
+			} = err
+			res.status(http_code).send(error)
+		} catch (e) {
+			console.log(e)
+		}
+	})
 	return Promise.resolve(app)
 }
 

@@ -1,27 +1,42 @@
+
 const Config = global.Config;
-const Util = require(Config.paths.utils);
+const BaseService = require(Config.paths.services + '/service');
+const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
 const TestService = require(Config.paths.services + '/project/project.test.service');
 const Service = {}
 
-Service.create = create;
-async function create(data) {
-	const { _id, tests, ...project } = data
-	const isUpdate = !!_id
-	const ProjectDoc = isUpdate
-		? await Project.findByIdAndUpdate(_id, project, { new: true })
-		: await Project.create(project)
-	await TestService.createAll(ProjectDoc, tests)
-	return ProjectDoc
+class ProjectService extends BaseService {
+	constructor() {
+		super(Project)
+	}
+
+	async listUsingTheRequest(CurrentUser, req) {
+		try {
+			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
+		} catch (e) {
+			throw Error(Errors.project_doesnt_exist)
+		}
+	}
+
+	compile(CurrentUser, _id) {
+		const { _id: owner } = CurrentUser
+		const ProjectDoc = super.get({ owner, _id })
+		return ProjectDoc.compile()
+	}
+
+	async create(data) {
+		const { _id, tests, ...project } = data
+		const isUpdate = !!_id
+		const ProjectDoc = isUpdate
+			? await Project.findByIdAndUpdate(_id, project, { new: true })
+			: await Project.create(project)
+		await TestService.createAll(ProjectDoc, tests)
+		return ProjectDoc
+	}
+
 }
 
-Service.list = list;
-function list(UserDoc, req) {
-	let id = req.params.id;
-	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
-	let query = Util.mongoose.getQueryFromRequest(req);
-	query.owner = UserDoc._id
-	return Util.mongoose.list(Project, id, query, paginator)
-}
+Service.ProjectService = new ProjectService()
 
 module.exports = Service

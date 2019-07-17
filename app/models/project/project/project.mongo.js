@@ -17,4 +17,5 @@ Schema.plugin(paginator);
 Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);
 Schema.plugin(increment.plugin, { model: ModelSchema.name, field: 'cursor' });
+
 module.exports = mongoose.model(ModelSchema.name, Schema);
