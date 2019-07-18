@@ -7,12 +7,26 @@ module.exports = {
 	name: "TestCase",
 	schema: {
 		cursor: {
-			type: "String"
+			type: "String",
+			_private: true
+		},
+		owner: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+			_private: true
+		},
+		project: {
+			type: Schema.Types.ObjectId,
+			ref: "Project",
+			required: true,
+			_private: true
 		},
 		test: {
 			type: Schema.Types.ObjectId,
 			ref: "Test",
-			required: true
+			required: true,
+			_private: true
 		},
 		name: {
 			type: 'String',

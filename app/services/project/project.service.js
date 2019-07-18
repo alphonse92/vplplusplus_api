@@ -1,3 +1,4 @@
+import { pick } from 'lodash'
 
 const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
@@ -26,14 +27,33 @@ class ProjectService extends BaseService {
 		return ProjectDoc.compile()
 	}
 
-	async create(data) {
-		const { _id, tests, ...project } = data
+	async create(CurrentUser, data) {
+		const { _id, tests = [], ...payloadProject } = data
+		const project = pick(payloadProject, Project.getPublicFields())
 		const isUpdate = !!_id
 		const ProjectDoc = isUpdate
-			? await Project.findByIdAndUpdate(_id, project, { new: true })
-			: await Project.create(project)
-		await TestService.createAll(ProjectDoc, tests)
+			? await super.update({ _id, owner: CurrentUser._id }, project)
+			: await super.create({ ...project, owner: CurrentUser._id })
+		await TestService.createAll(CurrentUser, ProjectDoc, tests)
 		return ProjectDoc
+	}
+
+
+	async delete(CurrentUser, projectId) {
+
+		await this.validateHasSummaries()
+
+		const ProjectDocument = await super.delete({ owner: CurrentUser._id, _id: projectId })
+		await TestService.delete({ project: projectId })
+		return ProjectDocument
+
+
+		return super.list()
+	}
+
+	async validateHasSummaries(projectId) {
+		const ProjectSummaries = await SummaryService.list({ project: projectId })
+		if (ProjectSummaries.docs.count) throw new Util.Error(Errors.project_blocked)
 	}
 
 }

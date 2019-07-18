@@ -22,6 +22,7 @@ Router.patch("/:id/test/:id", TestController.update);
 Router.delete("/:id/test/:id", TestController.delete);
 
 Router.get("/:id/test/:id/case/:id?", TestCaseController.get);
+Router.post("/:id/test/:id/case/:id/compile", TestCaseController.compile);
 Router.post("/:id/test/:id/case/", TestCaseController.create);
 Router.patch("/:id/test/:id/case/:id", TestCaseController.update);
 Router.delete("/:id/test/:id/case/:id", TestCaseController.delete);

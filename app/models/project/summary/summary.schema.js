@@ -15,6 +15,11 @@ module.exports = {
 		cursor: {
 			type: "String"
 		},
+		project: {
+			type: Schema.Types.ObjectId,
+			ref: "Project",
+			required: true
+		},
 		test_case: {
 			type: Schema.Types.ObjectId,
 			ref: "TestCase",

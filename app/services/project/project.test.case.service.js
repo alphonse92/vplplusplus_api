@@ -1,23 +1,54 @@
+import { pick } from 'lodash'
+
 const Config = global.Config;
-const Util = require(Config.paths.utils);
+const BaseService = require(Config.paths.services + '/service');
+const Errors = require(Config.paths.errors + '/project.test.case.errors');
 const TestCase = require(Config.paths.models + "/project/testCase/testCase.mongo");
-const Service = {}
+const Util = require(Config.paths.utils);
 
-Service.createAll = createAll;
-function createAll(test_id, ArrayOfTestCases) {
-	return Promise.all(ArrayOfTestCases.map(data => create(test_id, data)))
+
+class TestCaseService extends BaseService {
+
+	constructor() {
+		super(TestCase)
+	}
+
+	async listUsingTheRequest(CurrentUser, req) {
+		try {
+			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
+		} catch (e) {
+			throw new Util.Error(Errors.test_case_does_not_exist)
+		}
+	}
+
+	async compile(CurrentUser, _id) {
+		const { _id: owner } = CurrentUser
+		const TestCaseDoc = await super.get({ owner, _id })
+		return TestCaseDoc.compile()
+	}
+
+	createAll(CurrentUser, ProjectDoc, TestDoc, ArrayOfTestCases) {
+		return Promise.all(ArrayOfTestCases.map(data => this.create(CurrentUser, ProjectDoc, TestDoc, data)))
+	}
+
+	async create(CurrentUser, ProjectDoc, TestDoc, data) {
+		const { _id, ...testCasePayload } = data
+		const { _id: owner } = CurrentUser
+		const { _id: project } = ProjectDoc
+		const { _id: test } = TestDoc
+		const test_case = pick(testCasePayload, TestCase.getPublicFields())
+		const isUpdate = !!_id
+		const TestCaseDoc = isUpdate
+			? await super.update({ _id, owner, project, test }, test_case)
+			: await super.create({ ...test_case, owner, project, test })
+		return TestCaseDoc
+	}
+
+	async deleteFromProject(project) {
+		await super.deleteMany({ project })
+		await TestCaseService.deleteMany({ project })
+	}
+
 }
 
-Service.create = create;
-async function create(test_id, data) {
-	const { _id, test_id: tesIdFromPayload, ...test_case } = data
-	const isUpdate = !!_id
-	const TestCaseDoc = isUpdate
-		? await TestCase.findByIdAndUpdate(_id, test_case, { new: true })
-		: await TestCase.create({ ...test_case, test: test_id })
-	return TestCaseDoc
-}
-
-
-
-module.exports = Service
+module.exports = new TestCaseService()

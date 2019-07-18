@@ -1,24 +1,55 @@
 const Config = global.Config;
-const Util = require(Config.paths.utils);
-// const ActivityService = require(Config.paths.services + "/activity/activity.service")
-const ProjectService = require(Config.paths.services + '/project/project.service');
+const UserService = require(Config.paths.services + '/user/user.service');
+const TestService = require(Config.paths.services + '/project/project.test.service');
+
 
 module.exports.get = get;
-function get(req, res, next) {
-	res.send("ok project controller")
+async function get(req, res, next) {
+	try {
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const Tests = await TestService.listUsingTheRequest(CurrentUser, req)
+		res.send(Tests)
+	} catch (e) {
+		next(e)
+	}
+
+}
+
+module.exports.compile = compile
+async function compile(req, res, next) {
+	try {
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const code = await TestService.compile(CurrentUser, req.params.id)
+		res.send(code)
+	} catch (e) {
+		next(e)
+	}
+
 }
 
 module.exports.create = create;
-function create(req, res, next) {
-	res.send("ok project controller")
+async function create(req, res, next) {
+	try {
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const testPayload = { ...req.body, owner: CurrentUser._id }
+		const Test = await TestService.create(testPayload)
+		res.send(Test)
+	} catch (e) { next(e) }
+
 }
 
-module.exports.delete = deleteProject;
-function deleteProject(req, res, next) {
-	res.send("ok project controller")
+module.exports.delete = deleteTest;
+async function deleteTest(req, res, next) {
+	try {
+		res.send("ok test controller")
+	} catch (e) { next(e) }
+
 }
 
 module.exports.update = update;
-function update(req, res, next) {
-	res.send("ok project controller")
+async function update(req, res, next) {
+	try {
+		res.send("ok test controller")
+	} catch (e) { next(e) }
 }
+

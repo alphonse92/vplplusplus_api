@@ -15,7 +15,7 @@ class BaseService {
   }
 
   list(query) {
-    return Util.mongoose.list(this.Model, id, query, {})
+    return Util.mongoose.list(this.Model, query.id, query, {})
   }
 
   async listUsingTheRequest(requestData, MapOfSelectFieldFromPopulates, baseQuery) {
@@ -37,14 +37,14 @@ class BaseService {
     return document
   }
 
-  async delete(id) {
-    const document = await this.Model.findOneAndDelete(id)
+  async delete(query) {
+    const document = await this.Model.findOneAndDelete(query)
     if (!document) throw new Util.Error(Errors.document_does_not_exist)
     return document
   }
 
   deleteMany(query) {
-    return this.Model.findOneAndDelete(query)
+    return this.Model.deleteMany(query)
   }
 
 }

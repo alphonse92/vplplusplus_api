@@ -78,3 +78,24 @@ function list(Model, id, query, paginator) {
 }
 
 module.exports.createObjectId = () => new ObjectId()
+
+module.exports.extractFields = extractFields;
+function extractFields(ModelSchema) {
+	const { schema: DataSchemaWithFields } = ModelSchema
+	return Object
+		.keys(DataSchemaWithFields)
+		.reduce((obj, docFieldName) => {
+			const fieldSchema = DataSchemaWithFields[docFieldName]
+			if (fieldSchema._private) obj.privateFields.push(docFieldName)
+			else obj.publicFields.push(docFieldName)
+			return obj
+		}, { privateFields: ['_id'], publicFields: ['_id'] })
+}
+
+module.exports.addStatics = addStatics;
+function addStatics(Schema, ModelSchema) {
+	const { publicFields, privateFields } = extractFields(ModelSchema)
+	Schema.statics.getPublicFields = () => publicFields
+	Schema.statics.getPrivateFields = () => privateFields
+	return Schema
+}

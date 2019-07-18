@@ -1,6 +1,7 @@
 import { capitalize, camelCase } from 'lodash'
 
 const Config = global.Config;
+const Util = require(Config.paths.utils)
 const mongoose = require(Config.paths.db + '/mongo');
 const increment = require('mongoose-auto-increment');
 const paginator = require('mongoose-paginate');
@@ -20,9 +21,13 @@ Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);
 Schema.plugin(increment.plugin, { model: ModelSchema.name, field: 'cursor' });
 
+Util.mongoose.addStatics(Schema, ModelSchema)
+
 Schema.methods.compile = async function () {
   if (!this.test_cases) await this.populate('test_cases').execPopulate()
   if (!this.owner) await this.populate('owner').execPopulate()
+
+  console.log(this.owner)
   const {
     name,
     objective,
@@ -61,4 +66,7 @@ public class ${className}Test{
   console.log(compiledCode)
   return compiledCode
 }
+
+
+
 module.exports = mongoose.model(ModelSchema.name, Schema);

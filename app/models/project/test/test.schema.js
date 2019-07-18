@@ -7,12 +7,14 @@ module.exports = {
 	name: "Test",
 	schema: {
 		cursor: {
-			type: "String"
+			type: "String",
+			_private: true
 		},
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: true
+			required: true,
+			_private: true
 		},
 		name: {
 			type: 'String',
@@ -41,7 +43,8 @@ module.exports = {
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true
+			required: true,
+			_private: true
 		}
 	},
 }

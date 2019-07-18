@@ -30,8 +30,7 @@ module.exports.create = create;
 async function create(req, res, next) {
 	try {
 		const CurrentUser = UserService.getUserFromResponse(res)
-		const projectPayload = { ...req.body, owner: CurrentUser._id }
-		const Project = await ProjectService.create(projectPayload)
+		const Project = await ProjectService.create(CurrentUser, req.body)
 		res.send(Project)
 	} catch (e) { next(e) }
 
@@ -40,7 +39,9 @@ async function create(req, res, next) {
 module.exports.delete = deleteProject;
 async function deleteProject(req, res, next) {
 	try {
-		res.send("ok project controller")
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const ProjectDeleted = await ProjectService.delete(CurrentUser, req.params.id)
+		res.send(ProjectDeleted)
 	} catch (e) { next(e) }
 
 }
