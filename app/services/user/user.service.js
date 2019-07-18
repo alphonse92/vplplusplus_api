@@ -43,11 +43,12 @@ async function AuthSingle({ username, email, password }) {
 	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	const MoodleUserData = await MoodleAuthStrategy(usernameOrEmail, password)
 	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
-
+	
 	const type = User.getUserTypes().person
 	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
 	const UserDoc = await updateOrCreate(query, data)
+	Util.log(data)
 	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
