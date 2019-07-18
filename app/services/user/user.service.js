@@ -244,7 +244,7 @@ function list(UserDoc, req) {
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
 	query.base_path = { $regex: "^" + getBasePath(UserDoc) };
-	return Util.mongoose.list(User, id, query, paginator)
+	return Util.mongoose.paginate(User, id, query, paginator)
 }
 /**
  * This function doesnt lists the moodle users. The vpl API isnt a moodle client.

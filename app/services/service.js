@@ -15,7 +15,7 @@ class BaseService {
   }
 
   list(query) {
-    return Util.mongoose.list(this.Model, query.id, query, {})
+    return Util.mongoose.list(this.Model, query._id, query, {})
   }
 
   async listUsingTheRequest(requestData, MapOfSelectFieldFromPopulates, baseQuery) {

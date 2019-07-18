@@ -3,13 +3,13 @@ const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
 const validators = require(Config.paths.utils).validators;
-const SummaryResultType = {
+const SummaryResultTypes = {
 	approved: "Approved",
 	repproved: "Repproved",
 }
 
 module.exports = {
-	SummaryResultType,
+	SummaryResultTypes,
 	name: "Summary",
 	schema: {
 		cursor: {
@@ -37,8 +37,9 @@ module.exports = {
 			max: 10000
 		},
 		result: {
-			enum: Object.keys(SummaryResultType),
-			default: SummaryResultType.repproved
+			type: "String",
+			enums: Object.values(SummaryResultTypes),
+			default: SummaryResultTypes.repproved
 		}
 
 	},

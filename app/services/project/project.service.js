@@ -5,6 +5,7 @@ const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
 const TestService = require(Config.paths.services + '/project/project.test.service');
+const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const Util = require(Config.paths.utils);
 
 class ProjectService extends BaseService {
@@ -38,22 +39,22 @@ class ProjectService extends BaseService {
 		return ProjectDoc
 	}
 
-
 	async delete(CurrentUser, projectId) {
 
 		await this.validateHasSummaries()
 
-		const ProjectDocument = await super.delete({ owner: CurrentUser._id, _id: projectId })
-		await TestService.delete({ project: projectId })
+		const query = { owner: CurrentUser._id, _id: projectId }
+		const ProjectDocument = await super.delete(query)
+		await TestService.deleteMany(query)
+		await TestCaseService.deleteMany(query)
+
 		return ProjectDocument
 
-
-		return super.list()
 	}
 
 	async validateHasSummaries(projectId) {
 		const ProjectSummaries = await SummaryService.list({ project: projectId })
-		if (ProjectSummaries.docs.count) throw new Util.Error(Errors.project_blocked)
+		if (ProjectSummaries.docs.total) throw new Util.Error(Errors.project_blocked)
 	}
 
 }
