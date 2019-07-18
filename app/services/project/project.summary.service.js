@@ -12,7 +12,25 @@ class SummaryService extends BaseService {
     super(Summary)
   }
 
-  
+  create(TestCaseDoc, data) {
+    const { project, _id: test_case } = TestCaseDoc
+    return super.create({ ...data, test_case, project })
+  }
+
+  async update(query, data) {
+    throw new Util.Error(Errors.blocked)
+  }
+
+  async delete(query) {
+    throw new Util.Error(Errors.blocked)
+
+  }
+
+  deleteMany(query) {
+    throw new Util.Error(Errors.blocked)
+  }
+
+
 }
 
 module.exports = new SummaryService()

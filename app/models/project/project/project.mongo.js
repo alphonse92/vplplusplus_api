@@ -14,6 +14,13 @@ Schema.virtual('tests', {
   justOne: false
 });
 
+Schema.virtual('summaries', {
+  ref: 'Summary',
+  localField: '_id',
+  foreignField: 'project',
+  justOne: false
+});
+
 Schema.plugin(paginator);
 Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);
