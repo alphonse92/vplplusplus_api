@@ -53,3 +53,12 @@ async function update(req, res, next) {
 	} catch (e) { next(e) }
 }
 
+module.exports.export = _export;
+function _export(type) {
+	return async function (req, res, next) {
+		try {
+			res.send("ok project controller")
+		} catch (e) { next(e) }
+	}
+
+}

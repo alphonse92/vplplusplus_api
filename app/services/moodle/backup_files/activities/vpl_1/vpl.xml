@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<activity id="3" moduleid="4" modulename="vpl" contextid="50">
+  <vpl id="3">
+    <name>Practica pruebas unitarias</name>
+    <shortdescription>Pruebas unitarias automáticas</shortdescription>
+    <intro>&lt;p&gt;aasdsadas&lt;/p&gt;</intro>
+    <introformat>1</introformat>
+    <startdate>0</startdate>
+    <duedate>0</duedate>
+    <maxfiles>100</maxfiles>
+    <maxfilesize>0</maxfilesize>
+    <requirednet></requirednet>
+    <password></password>
+    <grade>100</grade>
+    <visiblegrade>1</visiblegrade>
+    <usevariations>0</usevariations>
+    <variationtitle>$@NULL@$</variationtitle>
+    <basedon>$@NULL@$</basedon>
+    <run>0</run>
+    <debug>0</debug>
+    <evaluate>0</evaluate>
+    <evaluateonsubmission>0</evaluateonsubmission>
+    <automaticgrading>0</automaticgrading>
+    <maxexetime>$@NULL@$</maxexetime>
+    <restrictededitor>0</restrictededitor>
+    <example>0</example>
+    <maxexememory>$@NULL@$</maxexememory>
+    <maxexefilesize>$@NULL@$</maxexefilesize>
+    <maxexeprocesses>$@NULL@$</maxexeprocesses>
+    <jailservers>$@NULL@$</jailservers>
+    <emailteachers>0</emailteachers>
+    <worktype>0</worktype>
+    <required_files>
+    </required_files>
+    <execution_files>
+      <execution_file id="">
+        <name>execution_files.lst</name>
+        <content>vpl_run.sh
+vpl_debug.sh
+vpl_evaluate.sh
+vpl_evaluate.cases
+CalculatorTest.java</content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files.lst.keep</name>
+        <content>vpl_run.sh
+vpl_debug.sh
+vpl_evaluate.sh
+vpl_evaluate.cases
+CalculatorTest.java</content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files/vpl_run.sh</name>
+        <content></content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files/vpl_debug.sh</name>
+        <content></content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files/vpl_evaluate.sh</name>
+        <content>. vpl_run.sh
+</content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files/vpl_evaluate.cases</name>
+        <content></content>
+      </execution_file>
+      <execution_file id="">
+        <name>execution_files/CalculatorTest.java</name>
+        <content>import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Formatter;
+import java.util.Locale;
+
+public class CalculatorTest {
+    public static void main(String[] arg)
+    {
+        CalculatorTest t = new CalculatorTest();
+        int grade = 0;
+        try {
+            t.testOne(); //worth 50 marks
+            System.out.println(formatOutput("Test One", "50", null));
+            grade += 50;
+        } catch (AssertionError e) {
+            System.out.println(formatOutput("Test One", "50", e));
+        }
+        try {
+            t.testTwo(); //worth 50 marks
+            System.out.println(formatOutput("Test Two", "50", null));
+            grade += 50;
+        } catch (AssertionError e) {
+            System.out.println(formatOutput("Test Two", "50", e));
+        }
+        System.out.println("Grade :=&gt;&gt; "+grade);
+        
+    }
+    @Test
+    public void testOne() {
+        assertTrue(true);
+    }
+
+    @Test
+    public void testTwo() {
+        fail("This went wrong");
+    }
+    
+  @Test
+  public void evaluatesExpression() {
+      
+    Calculator calculator = new Calculator();
+    int sum = calculator.evaluate("1+2+3");
+    assertEquals(7, sum);
+  }
+  
+  
+  private static String formatOutput(String testName, String value, AssertionError e) {
+        StringBuilder sb = new StringBuilder();
+        Formatter f = new Formatter(sb, Locale.getDefault());
+        String grade = (e == null ? value : "0");
+        f.format("Comment :=&gt;&gt; %s: %s. %s marks\n", testName, (e == null ? "success" : "failure"), grade);
+        if (e != null) {
+            f.format("&lt;|-- \n%s\n --|&gt;\n", e.getMessage());
+        }
+        return sb.toString();
+    }
+  
+}</content>
+      </execution_file>
+    </execution_files>
+    <variations>
+    </variations>
+    <submissions>
+    </submissions>
+  </vpl>
+</activity>
