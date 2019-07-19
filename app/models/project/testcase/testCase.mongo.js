@@ -32,12 +32,14 @@ Schema.methods.compile = function () {
     successReferenceLink,
     failureMessage,
     failureReferenceLink,
-    timeout
+    timeout,
+    _id: id
   } = this
   const methodName = capitalize(camelCase(name))
   const compiledCode =
     `
   @VplTestDescriptorAnnotation(
+    id = "${id}"
     name = "${name}",
     objective = ${objective},
     grade = ${grade},
