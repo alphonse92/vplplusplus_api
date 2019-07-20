@@ -29,7 +29,7 @@ class ProjectService extends BaseService {
 	compile(CurrentUser, _id) {
 		const { _id: owner } = CurrentUser
 		const ProjectDoc = super.get({ owner, _id })
-		return ProjectDoc.compile()
+		return ProjectDoc.compile().code
 	}
 
 	async create(CurrentUser, data) {

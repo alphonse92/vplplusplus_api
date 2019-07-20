@@ -88,3 +88,8 @@ final xml structure
 ## /.ARCHIVE_INDEX
 
 This looks like a reference to each important file to restore the moodle backup. Nothing happen if this file not exist. So, we will omit add this to the backup file generated from  vpl++
+
+
+## activities/$ModuleName_$moduleid/module.xml
+
+This file contains the vpl activity data. VPL ++ will generate a simple backup for the project, however, after teacher restore it, he is able to modify the activity options.

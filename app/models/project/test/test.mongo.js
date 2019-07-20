@@ -36,7 +36,8 @@ Schema.methods.compile = async function () {
     owner
   } = this
   const className = capitalize(camelCase(name))
-  const compiledCode =
+  const filename = `${className}Test`
+  const code =
     `
 
 import org.junit.Test;
@@ -55,16 +56,15 @@ import org.junit.Before;
   maxGrade = ${maxGrade},
   objetive =  ${objective},
 )
-public class ${className}Test{
+public class {
   
   ${this.code}
   
-  ${this.test_cases.map(test_case => `${test_case.compile()}`).join("\n")}
+  ${this.test_cases.map(test_case => `${test_case.compile().code}`).join("\n")}
 }
 
 `
-  console.log(compiledCode)
-  return compiledCode
+  return { code, filename }
 }
 
 

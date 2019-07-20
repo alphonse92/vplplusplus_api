@@ -35,8 +35,8 @@ Schema.methods.compile = function () {
     timeout,
     _id: id
   } = this
-  const methodName = capitalize(camelCase(name))
-  const compiledCode =
+  const name = capitalize(camelCase(name))
+  const code =
     `
   @VplTestDescriptorAnnotation(
     id = "${id}"
@@ -49,11 +49,11 @@ Schema.methods.compile = function () {
     failureReferenceLink = "${failureReferenceLink}",
   )
   @Test(timeout = ${timeout})
-  public void ${methodName}Test(){     
-    ${this.code}
+  public void ${name}Test(){     
+    ${this.code, name}
   }
 `
-  return compiledCode
+  return { code }
 
 }
 module.exports = mongoose.model(ModelSchema.name, Schema);

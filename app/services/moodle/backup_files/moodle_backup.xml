@@ -70,12 +70,12 @@
       <setting>
         <level>root</level>
         <name>blocks</name>
-        <value>1</value>
+        <value>0</value>
       </setting>
       <setting>
         <level>root</level>
         <name>filters</name>
-        <value>1</value>
+        <value>0</value>
       </setting>
       <setting>
         <level>root</level>

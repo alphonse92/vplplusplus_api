@@ -24,7 +24,7 @@ class TestCaseService extends BaseService {
 	async compile(CurrentUser, _id) {
 		const { _id: owner } = CurrentUser
 		const TestCaseDoc = await super.get({ owner, _id })
-		return TestCaseDoc.compile()
+		return TestCaseDoc.compile().code
 	}
 
 	createAll(CurrentUser, ProjectDoc, TestDoc, ArrayOfTestCases) {
