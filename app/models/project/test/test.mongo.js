@@ -48,13 +48,20 @@ Schema.methods.compile = async function () {
 * 
 * If you need help please contact to the Vpl++ creator
 */
+
 import org.junit.Test;
 import VPLPluPlusCore.Configurator;
-import static org.junit.Assert.assertEquals;
 import VPLPluPlusCore.annotations.VplPlusPlusAnnotation;
 import VPLPluPlusCore.annotations.VplTestInfoAnnotation;
 import VPLPluPlusCore.annotations.VplTestDescriptorAnnotation;
+
+// set here your imports
+// YOU NEED TO SET YOUR IMPORTS MANUALLY 
+
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
+
+// end of your imports
 
 @VplPlusPlusAnnotation
 @VplTestInfoAnnotation(
