@@ -200,12 +200,24 @@ fixtures.listProjects = {
 fixtures.compileProject = {
 	resource: "service:api:system:project.compile",
 	name: "project.compile",
-	slug: "Compile project current project",
+	slug: "Compile current project",
 	type: DefaultPolicyService.types.default,
 	description: "Policy for compile project",
 	extends: [], depends: [],
 	actions: [
 		{ path: "GET/api/v1/project/:id/compile", scopes: ["compileProject"] }
+	]
+};
+
+fixtures.exportProject = {
+	resource: "service:api:system:project.export",
+	name: "project.export",
+	slug: "Export current project",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for compile project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/export/:type", scopes: ["exportProject"] }
 	]
 };
 

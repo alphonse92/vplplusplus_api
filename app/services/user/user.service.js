@@ -35,7 +35,7 @@ async function AuthGoogle({ token }) {
 	const UserDoc = await updateOrCreate(query, data)
 	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
-	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
+	return addTokenToUserObject(UserWithPolicies, getJWTConfig())
 }
 
 async function AuthSingle({ username, email, password }) {
@@ -43,7 +43,7 @@ async function AuthSingle({ username, email, password }) {
 	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	const MoodleUserData = await MoodleAuthStrategy(usernameOrEmail, password)
 	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
-	
+
 	const type = User.getUserTypes().person
 	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
@@ -51,7 +51,7 @@ async function AuthSingle({ username, email, password }) {
 	Util.log(data)
 	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
-	return addTokenToUserObject(UserWithPolicies, getApplicationJWTToken())
+	return addTokenToUserObject(UserWithPolicies, getJWTConfig())
 }
 
 Service.addTokenToUserObject = addTokenToUserObject;
@@ -281,9 +281,14 @@ function getBasePath(UserDoc) {
 	].join(".") : UserDoc.cursor;
 }
 
-Service.getApplicationJWTToken
-function getApplicationJWTToken() {
-	return { exp: Math.floor(Date.now() / 1000) + (Config.security.expiration_minutes) }
+Service.getJWTConfig = getJWTConfig
+function getJWTConfig() {
+	const opts = {}
+	const { expiration_minutes } = Config.security
+	const getExp = (minutes) => Math.floor(Date.now() / 1000) + minutes
+	if (expiration_minutes !== 'NEVER' && !Number.isNaN(expiration_minutes)) opts.exp = getExp(expiration_minutes)
+	else if (Number.isNaN(expiration_minutes)) opts.exp = getExp(60 * 60 * 24)
+	return opts
 }
 
 Service.getUserFromResponse = getUserFromResponse

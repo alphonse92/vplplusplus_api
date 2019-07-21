@@ -25,7 +25,7 @@ Util.mongoose.addStatics(Schema, ModelSchema)
 
 Schema.methods.compile = function () {
   const {
-    name,
+    name: testCaseName,
     objective,
     grade,
     successMessage,
@@ -35,7 +35,7 @@ Schema.methods.compile = function () {
     timeout,
     _id: id
   } = this
-  const name = capitalize(camelCase(name))
+  const name = capitalize(camelCase(testCaseName))
   const code =
     `
   @VplTestDescriptorAnnotation(
@@ -50,10 +50,11 @@ Schema.methods.compile = function () {
   )
   @Test(timeout = ${timeout})
   public void ${name}Test(){     
-    ${this.code, name}
+    ${this.code}
   }
 `
-  return { code }
+  const out = { code }
+  return out
 
 }
 module.exports = mongoose.model(ModelSchema.name, Schema);

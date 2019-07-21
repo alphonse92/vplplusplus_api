@@ -19,6 +19,10 @@ Each root's children belongs to a data in the database.
 docs: https://docs.moodle.org/dev/Backup_2.0_general_architecture
 We will focus on the files that VPL++ development procces is interest
 
+The Structure doesnt matter really, you can set fake data in the mostly fields of moodle_backup,
+except in moodle_backup.information.contents b/c it has a reference to the course modules in activities folder.
+
+
 #### moodle_backup.information
 
 These files are just used to track and show information about the course that activity belongs to.

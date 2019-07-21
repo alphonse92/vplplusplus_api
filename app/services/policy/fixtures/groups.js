@@ -54,6 +54,7 @@ module.exports = {
 			// projects
 			{ resource: "service:api:system:project.list" },
 			{ resource: "service:api:system:project.compile" },
+			{ resource: "service:api:system:project.export" },
 			{ resource: "service:api:system:project.create" },
 			{ resource: "service:api:system:project.update" },
 			{ resource: "service:api:system:project.delete" },
@@ -88,6 +89,7 @@ module.exports = {
 			// projects
 			{ resource: "service:api:system:project.list" },
 			{ resource: "service:api:system:project.compile" },
+			{ resource: "service:api:system:project.export" },
 			{ resource: "service:api:system:project.create" },
 			{ resource: "service:api:system:project.update" },
 			{ resource: "service:api:system:project.delete" },

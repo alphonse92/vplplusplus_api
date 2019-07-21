@@ -27,7 +27,6 @@ Schema.methods.compile = async function () {
   if (!this.test_cases) await this.populate('test_cases').execPopulate()
   if (!this.owner) await this.populate('owner').execPopulate()
 
-  console.log(this.owner)
   const {
     name,
     objective,
@@ -36,7 +35,7 @@ Schema.methods.compile = async function () {
     owner
   } = this
   const className = capitalize(camelCase(name))
-  const filename = `${className}Test`
+  const filename = `${className}Test.java`
   const code =
     `
 
@@ -56,7 +55,7 @@ import org.junit.Before;
   maxGrade = ${maxGrade},
   objetive =  ${objective},
 )
-public class {
+public class ${className}{
   
   ${this.code}
   
@@ -64,7 +63,9 @@ public class {
 }
 
 `
-  return { code, filename }
+  const out = { code, filename }
+  return out
+
 }
 
 

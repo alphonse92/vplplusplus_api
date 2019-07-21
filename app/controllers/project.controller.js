@@ -54,11 +54,13 @@ async function update(req, res, next) {
 }
 
 module.exports.export = _export;
-function _export(type) {
-	return async function (req, res, next) {
-		try {
-			res.send("ok project controller")
-		} catch (e) { next(e) }
-	}
+async function _export(req, res, next) {
+	const { id, type } = req.params
+	const CurrentUser = UserService.getUserFromResponse(res)
+	try {
+		const projectExported = await ProjectService.export(type, CurrentUser, id)
+		const path = require('path')
+		res.sendFile(path.resolve(projectExported.path))
+	} catch (e) { next(e) }
 
 }

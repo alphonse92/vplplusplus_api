@@ -8,7 +8,7 @@ module.exports.ALPHABET;
 module.exports.numbers;
 module.exports.special;
 
-module.export.getCode = getCode;
+module.exports.getCode = getCode;
 function getCode(){
 	let ts = Date.now().toString();
 	let out = "";

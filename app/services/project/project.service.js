@@ -4,9 +4,10 @@ const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
-const TestService = require(Config.paths.services + '/project/project.test.service');
-const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
-const SummaryService = require(Config.paths.services + '/project/project.summary.service');
+
+const TestService = require('./project.test.service');
+const TestCaseService = require('./project.test.case.service');
+const SummaryService = require('./project.summary.service');
 const Util = require(Config.paths.utils);
 
 class ProjectService extends BaseService {
@@ -61,6 +62,25 @@ class ProjectService extends BaseService {
 		if (ProjectSummaries.docs.total) throw new Util.Error(Errors.project_blocked)
 	}
 
+
+	async export(type, CurrentUser, id) {
+		let exporter
+		try { exporter = require('./exporters/' + type) }
+		catch (e) {
+			throw new Util.Error(Errors.exporter_does_not_exist)
+		}
+		const query = { _id: id, owner: CurrentUser._id }
+		const ProjectDoc = await super.get(query, [
+			{ path: 'owner' },
+			{
+				path: 'tests',
+				populate: {
+					path: 'test_cases'
+				}
+			}
+		])
+		return exporter(ProjectDoc)
+	}
 }
 
 module.exports = new ProjectService()

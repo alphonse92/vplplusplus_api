@@ -1,3 +1,4 @@
+const os = require('os')
 const cwd = process.cwd();
 const app = cwd + "/app";
 const config = cwd + "/config";
@@ -22,6 +23,7 @@ const defaultConfig = {
 	app: {
 		version: "v1",
 		apiPath: "api",
+		cacheFolder: process.env.CACHE_FOLDER || os.tmpdir() + '/vplplusplus',
 		init: {
 			user: process.env.INIT_USER_TYPE || "reset",
 			policy: process.env.INIT_USER_TYPE || "reset",
@@ -32,7 +34,7 @@ const defaultConfig = {
 		}
 	},
 	system: {
-		cores: +process.env.SYSTEM_CORES || require('os').cpus().length
+		cores: +process.env.SYSTEM_CORES || os.cpus().length
 	},
 	db: {
 		mongo: process.env.MONGO,
@@ -40,7 +42,7 @@ const defaultConfig = {
 	},
 	security: {
 		token: process.env.TOKEN_SECRET,
-		expiration_minutes: 60 * 60 * 24,
+		expiration_minutes: process.env.TOKEN_EXP_MINUTES || 60 * 60 * 24,
 		salt_rounds: process.env.SALT_ROUNDS || 10,
 		salt: process.env.SALT_ROUNDS || "",
 	},

@@ -13,5 +13,12 @@ module.exports = {
 			message: "Project cant be updated or deleted because it was executed before"
 		}
 	},
+	exporter_does_not_exist: {
+		http_code: 404,
+		error: {
+			code: -3,
+			message: "Exporter type does not exist"
+		}
+	},
 
 }

@@ -8,8 +8,8 @@ class BaseService {
     this.Model = Model
   }
 
-  async get(query) {
-    const document = await this.Model.findOne(query)
+  async get(query, populates=[]) {
+    const document = await this.Model.findOne(query).populate(populates)
     if (!document) throw new Util.Error(Errors.document_does_not_exist)
     return document
   }

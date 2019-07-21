@@ -11,7 +11,7 @@ Router.get("/health", (req, res) => res.send("ok"));
 
 Router.get("/:id?", ProjectController.get);
 Router.get("/:id/compile", ProjectController.compile);
-Router.get("/:id/export/moodle_vpl", ProjectController.export('moodle_vpl'));
+Router.get("/:id/export/:type", ProjectController.export);
 Router.post("/", ProjectController.create);
 Router.patch("/:id", ProjectController.update);
 Router.delete("/:id", ProjectController.delete);
