@@ -36,9 +36,18 @@ Schema.methods.compile = async function () {
   } = this
   const className = capitalize(camelCase(name))
   const filename = `${className}Test.java`
+ 
   const code =
-    `
 
+`**
+* VplJUnit version 1.0
+* This class was generated automatically.
+* You can modify this class manually, please review the
+* VplJunit runner documentation for vpl to know
+* how to improve your JUnit tests with vpl
+* 
+* If you need help please contact to the Vpl++ creator
+*/
 import org.junit.Test;
 import VPLPluPlusCore.Configurator;
 import static org.junit.Assert.assertEquals;
