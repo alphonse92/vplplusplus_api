@@ -1,4 +1,11 @@
 module.exports = {
+	runner: {
+		name: "default/runner",
+		default: true,
+		policies: [
+			{ resource: "service:api:system:test.case.summary.create" }
+		]
+	},
 	siteadministrator: {
 		name: "default/siteadministrator",
 		default: true,
@@ -150,13 +157,6 @@ module.exports = {
 	},
 	frontpage: {
 		name: "default/frontpage",
-		default: true,
-		policies: [
-			{ resource: "service:api:system:public" },
-		]
-	},
-	runner: {
-		name: "default/runner",
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },

@@ -28,10 +28,9 @@ Router.post("/:id/test/:id/case/", TestCaseController.create);
 Router.patch("/:id/test/:id/case/:id", TestCaseController.update);
 Router.delete("/:id/test/:id/case/:id", TestCaseController.delete);
 
-Router.get("/:id/test/:id/case/summary/:id?", SummaryController.get);
-Router.post("/:id/test/:id/case/summary/", SummaryController.create);
-Router.patch("/:id/test/:id/case/:id/summary/:id", SummaryController.update);
-Router.delete("/:id/test/:id/case/:id/summary/:id", SummaryController.delete);
+Router.get("/:id/test/:id/case/:id/summary/:id?", SummaryController.get);
+Router.post("/:id/test/:id/case/:id/summary/", SummaryController.create);
+
 
 Util.log(Base);
 

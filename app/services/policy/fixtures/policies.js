@@ -313,6 +313,20 @@ fixtures.deleteTestCase = {
 	]
 };
 
+// test summaries
+
+fixtures.createTestSummary = {
+	resource: "service:api:system:test.case.summary.create",
+	name: "test.case.summary.create",
+	slug: "Create a user summary for a test case resolution",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for create a user summary for a test case resolution",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/:id/test/:id/case/:id/summary/", scopes: ["createSummary"] }
+	]
+};
+
 
 
 // courses
