@@ -8,25 +8,25 @@ module.exports = {
 	schema: {
 		cursor: {
 			type: "String",
-			_private: true
+			_readOnly: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			_private: true
+			_readOnly: true
 		},
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
 			required: true,
-			_private: true
+			_readOnly: true
 		},
 		test: {
 			type: Schema.Types.ObjectId,
 			ref: "Test",
 			required: true,
-			_private: true
+			_readOnly: true
 		},
 		name: {
 			type: 'String',

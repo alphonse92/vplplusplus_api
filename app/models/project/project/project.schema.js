@@ -8,7 +8,7 @@ module.exports = {
 	schema: {
 		cursor: {
 			type: "String",
-			_private: true
+			_readOnly: true
 		},
 		name: {
 			type: "String",
@@ -26,7 +26,7 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			_private: true
+			_readOnly: true
 		}
 	},
 }

@@ -1,10 +1,5 @@
+import { PolicyTypes } from './fixtures/policies/policy_types'
 const pathToRegexp = require('path-to-regexp');
-const types = {
-	default: "default",
-	custom: "custom",
-}
-const pathSeparator = "/"
-const resourceNameSeparator = ":";
 
 module.exports.getMiddleware = getMiddleware;
 function getMiddleware(opt) {
@@ -47,9 +42,4 @@ function getPoliciesAllowed(service, action, policies) {
 	};
 }
 
-
-
-
-
-
-module.exports.types = types;
+module.exports.types = PolicyTypes;

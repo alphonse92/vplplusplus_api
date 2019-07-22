@@ -5,11 +5,12 @@ module.exports = {
 		policies: [
 			//this is the resource for public actions
 			{ resource: "service:api:system:public" },
-			//site administor can change the users
-			{ resource: "service:api:system:user.create" },
+			//site administor can change the users,
 			{ resource: "service:api:system:user.read" },
-			{ resource: "service:api:system:user.update" },
-			{ resource: "service:api:system:user.delete" },
+			// site administrator can manage the application tokens
+			{ resource: "service:api:system:token.list" },
+			{ resource: "service:api:system:token.create" },
+			{ resource: "service:api:system:token.delete" },
 			//site administor can change the policies
 			{ resource: "service:api:system:policy.create" },
 			{ resource: "service:api:system:policy.read" },

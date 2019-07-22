@@ -1,44 +1,37 @@
 const Config = global.Config;
+const Util = require(Config.paths.utils)
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
-// const errors = require(Config.paths.errors + "/test∫.errors");
 const validators = require(Config.paths.utils).validators;
 module.exports = {
-	name: "Test",
+	name: "Token",
 	schema: {
 		cursor: {
 			type: "String",
 			_readOnly: true
 		},
-		project: {
-			type: Schema.Types.ObjectId,
-			ref: "Project",
+		name: {
+			type: "String",
+			required: true,
+			maxlength: 255,
+			_readOnly: true
+		},
+		description: {
+			type: "String",
+			required: true,
+			maxlength: 255,
+			_readOnly: true
+		},
+		token: {
+			type: "String",
 			required: true,
 			_readOnly: true
 		},
-		name: {
-			type: 'String',
-			required: true
-		},
-		tags: {
-			type: [{ type: 'String' }],
-		},
-		description: {
-			type: 'String',
-			required: true
-		},
-		objective: {
-			type: 'String',
-			required: true
-		},
-		maxGrade: {
-			type: 'Number',
-			default: 10,
-			min: 0,
-		},
-		code: {
-			type: 'String',
+		user: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
 			required: true,
+			_readOnly: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,

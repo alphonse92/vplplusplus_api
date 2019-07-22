@@ -1,14 +1,19 @@
+const validator = require('validator')
 module.exports = {
-	email:function(v){
-		var re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-		return !v || !v.trim().length || re.test(v);
+	email: {
+		validator: v => validator.isEmail(v),
+		message: props => `${props.value} is a not valid email`
 	},
-	ObjectId:function(v){
+	alphaNumeric: {
+		validator: v => validator.isAlphanumeric(v),
+		message: props => `${props.value} must be a alphanumeric value`
+	},
+	ObjectId: function (v) {
 		const ObjectId = require('mongoose').Types.ObjectId;
-		try{
+		try {
 			new ObjectId(v);
 			return true;
-		}catch(e){
+		} catch (e) {
 			return false;
 		}
 	}

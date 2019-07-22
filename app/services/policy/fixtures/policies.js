@@ -1,8 +1,8 @@
-const Config = global.Config;
+import { Admin } from './policies/index'
+
 const DefaultPolicyService = require("./../policy.access-manager.service");
 const WebClientFixtures = require('./policies/webclient')
-
-const fixtures = { ...WebClientFixtures };
+const fixtures = { ...WebClientFixtures, ...Admin };
 
 
 /**
@@ -55,64 +55,6 @@ fixtures.public = {
 	extends: [], depends: [],
 	actions: [
 		{ path: "POST/api/v1/users/auth", scopes: ["login"], query: "" } //this an example of a public path
-	]
-};
-
-
-fixtures.userRead = {
-	resource: "service:api:system:user.read",
-	name: "user.read",
-	slug: "Read Users",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for Read. This will read only api user. If you want to know more information about some user in moodle, pelase go to Moodle administration",
-	extends: [], depends: [],
-	actions: [
-		{ path: "GET/api/v1/users/:id?", scopes: ["readUser"] }
-	]
-};
-
-fixtures.createRunnerClient = {
-	resource: "service:api:system:user.create",
-	name: "user.read",
-	slug: "Create User",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for create an user manually. If you want add a Moodle user please go to Moodle administration instead",
-	extends: [], depends: [],
-	actions: [
-		{ path: "POST/api/v1/users", scopes: ["createClientRunner"], query: "" }
-	]
-};
-fixtures.updateRunnerClient = {
-	resource: "service:api:system:user.update",
-	name: "user.update",
-	slug: "Update User",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for update an user manually. If you want update a Moodle user please go to Moodle administration instead",
-	extends: [], depends: [],
-	actions: [
-		{ path: "PUT/api/v1/users/:id", scopes: ["updateClientRunner"], query: "" }
-	]
-};
-fixtures.deleteRunnerClient = {
-	resource: "service:api:system:user.delete",
-	name: "user.delete",
-	slug: "Delete User",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for delete an user manually. If you want delete a Moodle user please go to Moodle administration instead",
-	extends: [], depends: [],
-	actions: [
-		{ path: "DELETE/api/v1/users/:id", scopes: ["deleteClientRunner"], query: "" }
-	]
-};
-fixtures.createClientRunnerToken = {
-	resource: "service:api:system:user.token",
-	name: "user.token",
-	slug: "Get User Client Token",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for get auth token for a client user",
-	extends: [], depends: [],
-	actions: [
-		{ path: "GET/api/v1/users/token/:id", scopes: ["createClientRunnerToken"] }
 	]
 };
 

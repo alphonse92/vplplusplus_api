@@ -48,7 +48,6 @@ async function AuthSingle({ username, email, password }) {
 	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
 	const UserDoc = await updateOrCreate(query, data)
-	Util.log(data)
 	await addGroupsToUser(UserDoc)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getJWTConfig())
@@ -163,6 +162,7 @@ function createDefaultUserIfNotExist() {
 			if (UserDoc)
 				return Promise.resolve(UserDoc);
 			let data = require("./fixtures/client");
+			data.id = Date.now() * -1
 			data.username = Config.client.username;
 			data.email = Config.client.email;
 			data.type = User.getUserTypes().api_client;
@@ -172,12 +172,14 @@ function createDefaultUserIfNotExist() {
 }
 
 function getUserFromTokenByUserType(type) {
+	
 	let types = {
 		[User.getUserTypes().person]: payload => User.findById(payload._id),
+		[User.getUserTypes().api_client]: payload => User.findById(payload._id),
 		[User.getUserTypes().runner_client]: payload => User.findOne({ _id: payload._id, token_counter: payload.token_counter }),
 	}
-	type = types[type] || types[User.getUserTypes().person]
-	return type
+
+	return types[type]
 }
 
 Service.getGetUserMiddleware = getGetUserMiddleware;
@@ -193,8 +195,7 @@ function getGetUserMiddleware() {
 				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function (err, payload) {
 					return err ? reject(err) : resolve(payload)
 				});
-			})
-				.then(payload => getUserFromTokenByUserType(payload.type)(payload))
+			}).then(payload => getUserFromTokenByUserType(payload.type)(payload))
 		}
 
 
@@ -223,16 +224,16 @@ function getGetUserMiddleware() {
  *
  */
 Service.create = create;
-function create(UserDoc, client) {
+async function create(CurrentUser, client, tokenOpts) {
 	let data = require("./fixtures/runner");
 	data = Object.assign(data, _.pick(client, User.getFillableFields()))
 	data.id = -1 * Date.now();
 	data.email = data.username + "@" + Config.web.host;
-	data.type = User.getUserTypes().runner_client;
-	data.groups = [PolicyService.getDefaultGroups().runner.name];
-	data.base_path = getBasePath(UserDoc);
-	return User.create(data)
-		.then((result) => addTokenToUserObject(result.toObject()))
+	data.type = User.getUserTypes().api_client;
+	data.base_path = getBasePath(CurrentUser);
+	const UserDoc = await User.create(data)
+	const UserWithToken = addTokenToUserObject(UserDoc.toObject(), tokenOpts)
+	return UserWithToken
 }
 
 /**
@@ -253,14 +254,14 @@ function list(UserDoc, req) {
  */
 Service.delete = _delete;
 function _delete(UserDoc, client_id) {
-	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().runner_client }
+	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().api_client }
 	return User.findOneAndRemove(query)
 		.then(UserDoc => Promise.resolve(_.pick(UserDoc, User.getPublicFields())));
 }
 
 Service.getToken = getToken;
 function getToken(UserDoc, client_id) {
-	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().runner_client }
+	let query = { _id: client_id, base_path: { $regex: "^" + getBasePath(UserDoc) }, type: User.getUserTypes().api_client }
 	return User.findOne(query)
 		.then(UserClientDoc => {
 			if (!UserClientDoc)
@@ -294,6 +295,12 @@ function getJWTConfig() {
 Service.getUserFromResponse = getUserFromResponse
 function getUserFromResponse(res) {
 	return res.locals.__mv__.user
+}
+
+
+Service.getUserTypes = getUserTypes
+function getUserTypes() {
+	return User.getUserTypes()
 }
 
 module.exports = Service

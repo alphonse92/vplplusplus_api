@@ -41,9 +41,11 @@ Schema.methods.compile = async function () {
 
 `**
 * VplJUnit version 1.0
-* This class was generated automatically.
+* This class was generated automatically, and adds 
+* the VPL++ api to improve your tests with extra functionalities.
+* 
 * You can modify this class manually, please review the
-* VplJunit runner documentation for vpl to know
+* VplJunit runner documentation of vpl ++  to know
 * how to improve your JUnit tests with vpl
 * 
 * If you need help please contact to the Vpl++ creator

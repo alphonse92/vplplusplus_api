@@ -18,7 +18,7 @@ const defaultConfig = {
 		name: "api"
 	},
 	client: {
-		username: process.env.PUBLIC_USERNAME || "__API__"
+		username: process.env.PUBLIC_USERNAME || "FrontEndUserClient"
 	},
 	app: {
 		version: "v1",

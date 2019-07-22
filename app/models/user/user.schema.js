@@ -16,10 +16,6 @@ const EmailSchema = {
 	type: "String",
 	trim: true,
 	index: true,
-	validate: {
-		validator: validators.email,
-		message: "errors.invalid_email.error.userMessage"
-	},
 	required: true,
 	unique: true,
 	maxlength: 125
@@ -28,7 +24,7 @@ const EmailSchema = {
 module.exports = {
 	name: "User",
 	publicFields: ["_id", "id", "username", "firstname", "lastname", "description", "email", "type", "token_counter"],
-	fillableFields: ["username", "firstname", "lastname", "description", "email"],
+	fillableFields: ["username", "firstname", "lastname", "description", "email", "groups"],
 	tokenizerFields: ["_id", "id", "username", "type", "token_counter"],
 	types: types,
 	schema: {
@@ -47,6 +43,7 @@ module.exports = {
 		},
 		username: {
 			type: "String",
+			validate: validators.alphaNumeric,
 			required: true,
 			index: true,
 			maxlength: 64

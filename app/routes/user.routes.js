@@ -8,11 +8,12 @@ const UserCtr = require(Config.paths.controllers + "/user.controller");
 Router.get("/health", (req, res) => res.send("ok"));
 Router.get("/:id?", UserCtr.list);
 Router.post("/auth", UserCtr.auth);
+// Router.post("/", UserCtr.create);
 
-Router.get("/", UserCtr.list);
-Router.get("/token/:id", UserCtr.getToken);
-Router.post("/", UserCtr.create);
-Router.delete("/:id", UserCtr.delete);
+// disable no implemented methods
+// Router.get("/", UserCtr.list);
+// Router.get("/token/:id", UserCtr.getToken);
+// Router.delete("/:id", UserCtr.delete);
 
 
 Util.log(Base);
