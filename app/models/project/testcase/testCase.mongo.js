@@ -39,7 +39,7 @@ Schema.methods.compile = function () {
   const code =
     `
   @VplTestDescriptorAnnotation(
-    id = "${id}"
+    api_id = "${id}"
     name = "${name}",
     objective = ${objective},
     grade = ${grade},

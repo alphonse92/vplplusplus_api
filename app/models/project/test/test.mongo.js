@@ -28,6 +28,7 @@ Schema.methods.compile = async function () {
   if (!this.owner) await this.populate('owner').execPopulate()
 
   const {
+    _id,
     name,
     objective,
     maxGrade,
@@ -36,10 +37,10 @@ Schema.methods.compile = async function () {
   } = this
   const className = capitalize(camelCase(name))
   const filename = `${className}Test.java`
- 
+
   const code =
 
-`**
+    `**
 * VplJUnit version 1.0
 * This class was generated automatically, and adds 
 * the VPL++ api to improve your tests with extra functionalities.
@@ -67,6 +68,7 @@ import org.junit.Before;
 
 @VplPlusPlusAnnotation
 @VplTestInfoAnnotation(
+  api_id = "${_id}"
   name = "${name}",
   tags = "${tags}",
   created_by = "${owner.firstname} ${owner.lastname}",
