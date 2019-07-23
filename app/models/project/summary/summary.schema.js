@@ -30,16 +30,13 @@ module.exports = {
 			ref: "User",
 			required: true
 		},
-		score: {
-			type: "Number",
-			default: 0,
-			min: 0,
-			max: 10000
+		approved: {
+			type: "Boolean",
+			default: false
 		},
-		result: {
+		output: {
 			type: "String",
-			enums: Object.values(SummaryResultTypes),
-			default: SummaryResultTypes.repproved
+			default: ""
 		}
 
 	},
