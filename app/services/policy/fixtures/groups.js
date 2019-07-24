@@ -82,9 +82,11 @@ module.exports = {
 			{ resource: "service:api:system:test.case.create" },
 			{ resource: "service:api:system:test.case.update" },
 			{ resource: "service:api:system:test.case.delete" },
-			// courses
-			{ resource: "service:api:system:course.list" },
-			{ resource: "service:api:system:activity.list" },
+			// summaries
+			{ resource: "service:api:system:test.case.summary.list" },
+			// Topics
+			{ resource: "service:api:system:topic.list" },
+			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.lab:show" },
 			{ resource: "client:web:system:webclient.students:show" },
@@ -117,9 +119,11 @@ module.exports = {
 			{ resource: "service:api:system:test.case.create" },
 			{ resource: "service:api:system:test.case.update" },
 			{ resource: "service:api:system:test.case.delete" },
-			// courses
-			{ resource: "service:api:system:course.list" },
-			{ resource: "service:api:system:activity.list" },
+			// summaries
+			{ resource: "service:api:system:test.case.summary.list" },
+			// Topics
+			{ resource: "service:api:system:topic.list" },
+			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.lab:show" },
 			{ resource: "client:web:system:webclient.students:show" },
@@ -133,12 +137,15 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// projects
 			{ resource: "service:api:system:project.list" },
-			{ resource: "service:api:system:project.create" },
-			{ resource: "service:api:system:project.update" },
-			{ resource: "service:api:system:project.delete" },
-			{ resource: "service:api:system:course.list" },
-			{ resource: "service:api:system:activity.list" },
+			// tests cases
+			{ resource: "service:api:system:test.case.list" },
+			// summaries
+			{ resource: "service:api:system:test.case.summary.list" },
+			// Topics
+			{ resource: "service:api:system:topic.list" },
+			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.configuration:show" },
 			{ resource: "client:web:system:webclient.help:show" },
