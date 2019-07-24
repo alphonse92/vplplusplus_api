@@ -2,6 +2,7 @@ import { PolicyTypes } from './policy_types'
 
 const TOKEN_RESOURCE_NAME = 'token'
 const USER_RESOURCE_NAME = 'user'
+const TOPIC_RESOURCE_NAME = 'topic'
 
 // export const createUser = {
 //   resource: `service:api:system:${USER_RESOURCE_NAME}.list`,
@@ -64,3 +65,37 @@ export const deleteToken = {
   ]
 };
 
+
+export const createTopic = {
+  resource: `service:api:system:${TOPIC_RESOURCE_NAME}.create`,
+  name: `${TOPIC_RESOURCE_NAME}.create`,
+  slug: `Create ${TOPIC_RESOURCE_NAME}`,
+  type: PolicyTypes.default,
+  description: `Policy to create a ${TOPIC_RESOURCE_NAME}`,
+  extends: [], depends: [],
+  actions: [
+    { path: `POST/api/v1/${TOPIC_RESOURCE_NAME}/`, scopes: [`createTopic`] }
+  ]
+}
+export const deleteTopic = {
+  resource: `service:api:system:${TOPIC_RESOURCE_NAME}.delete`,
+  name: `${TOPIC_RESOURCE_NAME}.delete`,
+  slug: `Delete ${TOPIC_RESOURCE_NAME}`,
+  type: PolicyTypes.default,
+  description: `Policy to delete a ${TOPIC_RESOURCE_NAME}`,
+  extends: [], depends: [],
+  actions: [
+    { path: `DELETE/api/v1/${TOPIC_RESOURCE_NAME}/:id`, scopes: [`deleteTopic`] }
+  ]
+}
+export const listTopic = {
+  resource: `service:api:system:${TOPIC_RESOURCE_NAME}.list`,
+  name: `${TOPIC_RESOURCE_NAME}.list`,
+  slug: `List ${TOPIC_RESOURCE_NAME}`,
+  type: PolicyTypes.default,
+  description: `Policy to list the ${TOPIC_RESOURCE_NAME}`,
+  extends: [], depends: [],
+  actions: [
+    { path: `GET/api/v1/${TOPIC_RESOURCE_NAME}/:id?`, scopes: [`listTopic`] }
+  ]
+}

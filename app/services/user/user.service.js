@@ -172,7 +172,7 @@ function createDefaultUserIfNotExist() {
 }
 
 function getUserFromTokenByUserType(type) {
-	
+
 	let types = {
 		[User.getUserTypes().person]: payload => User.findById(payload._id),
 		[User.getUserTypes().api_client]: payload => User.findById(payload._id),
@@ -301,6 +301,11 @@ function getUserFromResponse(res) {
 Service.getUserTypes = getUserTypes
 function getUserTypes() {
 	return User.getUserTypes()
+}
+
+Service.get = get
+function get(query) {
+	return User.findOne(query)
 }
 
 module.exports = Service

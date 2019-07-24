@@ -25,10 +25,14 @@ module.exports = {
 			ref: "TestCase",
 			required: true
 		},
-		student: {
+		moodle_user: {
+			type: "String",
+			required: true
+		},
+		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true
+			default: null
 		},
 		approved: {
 			type: "Boolean",

@@ -1,7 +1,5 @@
 const Config = global.Config;
-const Util = require(Config.paths.utils);
-// const ActivityService = require(Config.paths.services + "/activity/activity.service")
-const ProjectService = require(Config.paths.services + '/project/project.service');
+const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 
 module.exports.get = get;
 function get(req, res, next) {
@@ -9,8 +7,16 @@ function get(req, res, next) {
 }
 
 module.exports.create = create;
-function create(req, res, next) {
-	res.send("ok project controller")
+async function create(req, res, next) {
+	const {
+		project_id,
+		test_case_id
+	} = req.params
+
+	const project = { _id: project_id }
+	const testCase = { _id: test_case_id }
+	const SummaryDoc = await SummaryService.create(project, testCase, req.body)
+	res.send(SummaryDoc)
 }
 
 module.exports.delete = deleteProject;

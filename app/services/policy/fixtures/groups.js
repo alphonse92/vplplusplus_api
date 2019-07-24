@@ -18,6 +18,10 @@ module.exports = {
 			{ resource: "service:api:system:token.list" },
 			{ resource: "service:api:system:token.create" },
 			{ resource: "service:api:system:token.delete" },
+			// site administrator can manage the application tokens
+			{ resource: "service:api:system:topic.list" },
+			{ resource: "service:api:system:topic.create" },
+			{ resource: "service:api:system:topic.delete" },
 			//site administor can change the policies
 			{ resource: "service:api:system:policy.create" },
 			{ resource: "service:api:system:policy.read" },

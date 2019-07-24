@@ -16,20 +16,35 @@ Router.post("/", ProjectController.create);
 Router.patch("/:id", ProjectController.update);
 Router.delete("/:id", ProjectController.delete);
 
-Router.get("/:id/test/:id?", TestController.get);
-Router.get("/:id/test/:id/compile", TestController.compile);
-Router.post("/:id/test/", TestController.create);
-Router.patch("/:id/test/:id", TestController.update);
-Router.delete("/:id/test/:id", TestController.delete);
+Router.get("/:project_id/test/:id?", TestController.get);
+Router.get("/:project_id/test/:id/compile", TestController.compile);
+Router.post("/:project_id/test/", TestController.create);
+Router.patch("/:project_id/test/:id", TestController.update);
+Router.delete("/:project_id/test/:id", TestController.delete);
 
-Router.get("/:id/test/:id/case/:id?", TestCaseController.get);
-Router.post("/:id/test/:id/case/:id/compile", TestCaseController.compile);
-Router.post("/:id/test/:id/case/", TestCaseController.create);
-Router.patch("/:id/test/:id/case/:id", TestCaseController.update);
-Router.delete("/:id/test/:id/case/:id", TestCaseController.delete);
+Router.get("/:project_id/test/:test_id/case/:id?", TestCaseController.get);
+Router.post("/:project_id/test/:test_id/case/:id/compile", TestCaseController.compile);
+Router.post("/:project_id/test/:test_id/case/", TestCaseController.create);
+Router.patch("/:project_id/test/:test_id/case/:id", TestCaseController.update);
+Router.delete("/:project_id/test/:test_id/case/:id", TestCaseController.delete);
 
 Router.get("/:id/test/:id/case/:id/summary/:id?", SummaryController.get);
-Router.post("/:id/test/:id/case/:id/summary/", SummaryController.create);
+Router.post("/:project_id/test/:test_id/case/:test_case_id/summary/", SummaryController.create);
+
+// project reports
+Router.get('/report') // get report of all projects
+Router.get('/:id/report') // get report of especific project
+
+// user reports
+Router.get('/report/user') // get report of all users
+Router.get('/report/user/:id') // get report of specific user
+Router.get('/report/user/evolution') // get report of students evolution (how the skill level student change along the time)
+Router.get('/report/user/:id/evolution') // get report of students evolution (how the skill level student change along the time)
+Router.get('/:id/report/user') // get report of all users of specific project
+Router.get('/:id/report/user/:id') // get report of specific user of specific project
+
+
+
 
 
 Util.log(Base);

@@ -27,8 +27,11 @@ class BaseService {
     return data
   }
 
-  create(data) {
-    return this.Model.create(data)
+  async create(data) {
+    try {
+      return await this.Model.create(data)
+    } catch (e) { throw new Util.Error(e) }
+
   }
 
   async update(query, data) {

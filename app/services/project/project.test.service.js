@@ -4,7 +4,7 @@ const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.test.errors');
 const Test = require(Config.paths.models + "/project/test/test.mongo");
-const TestCaseService = require(Config.paths.services + "/project/project.test.case.service");
+const TestCaseService = require('./project.test.case.service');
 const Util = require(Config.paths.utils);
 
 

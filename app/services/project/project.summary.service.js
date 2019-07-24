@@ -1,20 +1,99 @@
 import { pick } from 'lodash'
 
 const Config = global.Config;
+const Util = require(Config.paths.utils);
+const Projectservice = require('./project.service');
+const TestCaseService = require('./project.test.case.service');
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.summary.errors');
+const UserService = require(Config.paths.services + '/user/user.service');
 const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
-const Util = require(Config.paths.utils);
 
+/**
+ * SummaryService, class to manage Summaries of a testcase resolution.
+ * This clase provide services to manage the summaries, you CANT
+ * delete, or update them. 
+ * 
+ * This service only can create and retreive summaries. 
+ * 
+ * The reasons is because surelly the institute
+ * want to keep the results history along the time.
+ * 
+ * If you want to delete summaries you need to remove them directly 
+ * from database. 
+ * 
+ */
 class SummaryService extends BaseService {
 
   constructor() {
     super(Summary)
   }
 
-  create(TestCaseDoc, data) {
-    const { project, _id: test_case } = TestCaseDoc
-    return super.create({ ...data, test_case, project })
+  /**
+   * Create a Summary related to a project and test case
+   * @canExecute Client Runners, users that belongs to the group default/runner
+   * @param {*} ProjectDoc 
+   * @param {*} TestCaseDoc 
+   * @param {*} data 
+   */
+  async create(ProjectDoc, TestCaseDoc, data) {
+    const { id: test_case } = TestCaseDoc
+    const { id: project } = ProjectDoc
+
+    const UserDoc = await UserService.get({ id: data.moodle_user })
+    // const TestCaseDoc = await TestCaseService.get({ _id: test_case })
+
+    const user = !UserDoc ? null : UserDoc._id
+
+    return super.create({
+      ...data,
+      project,
+      test_case,
+      user
+    })
+  }
+
+  /**
+   * Retreive the summaries
+   * Ways to retreive summaries
+   * 
+   * 1. Using the ProjectService TestService or TestCaseService, and populate the summaries (just teachers)
+   * 2. Using this service (see cases below)
+   * 
+   * * Cases:
+   * 
+   * 1. Get my summaries if CurrentUser is a Student:
+   *   1. Find summary by Summary.user = CurrentUser._id
+   * 2. Get my summaries if Current user is a teacher 
+   *   1. Find the The projects that owner is CurrentUser 
+   *   2. Populate summaries virtual attribute
+   *   3. Reduce array of projects and extract the summaries
+   * 3. Get Summaries if Current user is an admin
+   *   1. Returns all summaries  
+   * 
+   * @canExecute default/siteadministrator, default/editingteacher, default/teacher, default/student
+   * @param {*} CurrentUser 
+   * @param {*} TestCase 
+   */
+  async listUsingTheRequest(CurrentUser) {
+    const { _id: user } = CurrentUser
+
+    const query = { $or: [] }
+
+    if (!UserService.isAdmin(CurrentUser)) {
+      // If current user is a teacher, then retreive the test cases that he is the owner
+      const ListProjectsThatCurrentProjectIsOwner = await TestCaseService.list({ owner: user }).select('_id').exec()
+      // build the query using the test case data
+      const queryTeacher = { test_case: { $in: ListProjectsThatCurrentProjectIsOwner } }
+      query.$or.push(queryTeacher)
+
+      const queryStudent = { user }
+      query.$or.push(queryStudent)
+
+    }
+
+    const result = await super.listUsingTheRequest(req, {}, query)
+
   }
 
   async update(query, data) {
