@@ -1,8 +1,12 @@
 const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
-// const errors = require(Config.paths.errors + "/test.errors");
-const validators = require(Config.paths.utils).validators;
+
+/**
+ * Topic is the most minimal part of a test, is a specific assesment to 
+ * check the stundent habilities
+ */
+
 module.exports = {
 	name: "TestCase",
 	schema: {
@@ -25,6 +29,12 @@ module.exports = {
 		test: {
 			type: Schema.Types.ObjectId,
 			ref: "Test",
+			required: true,
+			_readOnly: true
+		},
+		topic: {
+			type: Schema.Types.ObjectId,
+			ref: "Topic",
 			required: true,
 			_readOnly: true
 		},
