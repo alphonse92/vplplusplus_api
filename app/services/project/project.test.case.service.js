@@ -36,8 +36,8 @@ class TestCaseService extends BaseService {
 		const { _id: owner } = CurrentUser
 		const { _id: project } = ProjectDoc
 		const { _id: test } = TestDoc
-		const test_case = pick(testCasePayload, TestCase.getPublicFields())
 		const isUpdate = !!_id
+		const test_case = !isUpdate ? testCasePayload : pick(testCasePayload, TestCase.getPublicFields())
 		const TestCaseDoc = isUpdate
 			? await super.update({ _id, owner, project, test }, test_case)
 			: await super.create({ ...test_case, owner, project, test })

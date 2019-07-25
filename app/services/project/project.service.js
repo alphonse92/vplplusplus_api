@@ -35,8 +35,8 @@ class ProjectService extends BaseService {
 
 	async create(CurrentUser, data) {
 		const { _id, tests = [], ...payloadProject } = data
-		const project = pick(payloadProject, Project.getPublicFields())
 		const isUpdate = !!_id
+		const project = !isUpdate ? payloadProject : pick(payloadProject, Project.getPublicFields())
 		const ProjectDoc = isUpdate
 			? await super.update({ _id, owner: CurrentUser._id }, project)
 			: await super.create({ ...project, owner: CurrentUser._id })

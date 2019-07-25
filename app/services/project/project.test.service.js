@@ -38,8 +38,8 @@ class TestService extends BaseService {
 		const { _id: project } = ProjectDoc
 		const { _id, test_cases = [], ...testPayload } = data
 		const maxGrade = test_cases.reduce((sum, testCase) => (sum + testCase.grade), 0)
-		const test = { ...pick(testPayload, Test.getPublicFields()), maxGrade }
 		const isUpdate = !!_id
+		const test = !isUpdate ? testPayload : { ...pick(testPayload, Test.getPublicFields()), maxGrade }
 		const TestDoc = isUpdate
 			? await super.update({ _id, owner }, test)
 			: await super.create({ ...test, owner, project })
