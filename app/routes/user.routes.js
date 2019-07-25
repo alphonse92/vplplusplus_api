@@ -8,6 +8,8 @@ const UserCtr = require(Config.paths.controllers + "/user.controller");
 Router.get("/health", (req, res) => res.send("ok"));
 Router.get("/:id?", UserCtr.list);
 Router.post("/auth", UserCtr.auth);
+Router.get("/students/", UserCtr.listStudents);
+
 // Router.post("/", UserCtr.create);
 
 // disable no implemented methods
@@ -17,4 +19,4 @@ Router.post("/auth", UserCtr.auth);
 
 
 Util.log(Base);
-module.exports = {Base, Router};
+module.exports = { Base, Router };

@@ -241,12 +241,11 @@ async function create(CurrentUser, client, tokenOpts) {
  * This function only list moodle's users for vpl api clients, and it api roles.
  */
 Service.list = list;
-function list(UserDoc, req) {
+function list(UserDoc, req, baseQuery = {}) {
 	let id = req.params.id;
 	let paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	let query = Util.mongoose.getQueryFromRequest(req);
-	query.base_path = { $regex: "^" + getBasePath(UserDoc) };
-	return Util.mongoose.paginate(User, id, query, paginator)
+	return Util.mongoose.paginate(User, id, { query, ...baseQuery }, paginator)
 }
 /**
  * This function doesnt lists the moodle users. The vpl API isnt a moodle client.
