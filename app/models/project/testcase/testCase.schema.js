@@ -58,6 +58,10 @@ module.exports = {
 			type: "String",
 			required: true
 		},
+		failureMessageLink: {
+			type: "String",
+			required: true
+		},
 		code: {
 			type: 'String',
 			required: true,
