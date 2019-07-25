@@ -27,6 +27,11 @@ class BaseService {
     return data
   }
 
+  createAll(ArrayOfData) {
+    const set = Array.isArray(ArrayOfData) ? ArrayOfData : [ArrayOfData]
+    return Promise.all(set.map(this.create))
+  }
+
   async create(data) {
     try {
       return await this.Model.create(data)

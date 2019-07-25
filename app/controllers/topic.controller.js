@@ -18,8 +18,7 @@ module.exports.create = create;
 async function create(req, res, next) {
   try {
     const CurrentUser = UserService.getUserFromResponse(res)
-    const name = Util.string.unLatinize(req.body.name).toLowerCase()
-    const Topic = await TopicService.create(CurrentUser, { ...req.body, name })
+    const Topic = await TopicService.createAll(CurrentUser, req.body)
     res.send(Topic)
   } catch (e) {
     next(e)

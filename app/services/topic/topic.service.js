@@ -14,10 +14,15 @@ class TopicService extends BaseService {
 
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id, deleted_at: null })
+			return await super.listUsingTheRequest(req, {}, { deleted_at: null })
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
+	}
+
+	createAll(CurrentUser, ArrayOfData) {
+		const set = Array.isArray(ArrayOfData) ? ArrayOfData : [ArrayOfData]
+		return Promise.all(set.map(topic => this.create(CurrentUser, topic)))
 	}
 
 	async create(CurrentUser, TokenData) {

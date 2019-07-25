@@ -32,12 +32,12 @@ module.exports = {
 			required: true,
 			_readOnly: true
 		},
-		topic: {
+		topic: [{
 			type: Schema.Types.ObjectId,
 			ref: "Topic",
 			required: true,
 			_readOnly: true
-		},
+		}],
 		name: {
 			type: 'String',
 			required: true
