@@ -33,7 +33,6 @@ class CourseService extends MoodleService {
     const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
     const contextAsATeacher = this.getContextsByAssigments(assignments)
     const vpl = await this.getVplModuleInfo({ closeOnEnd: false })
-    console.log(vpl)
     const { TABLE_PREFIX } = this
     const sql = `
       SELECT 
