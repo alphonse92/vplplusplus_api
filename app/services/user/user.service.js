@@ -1,4 +1,5 @@
 import * as GoogleService from './google/google.service'
+import { pick } from 'lodash'
 
 const _ = require("lodash");
 const jwt = require('jsonwebtoken');
@@ -307,14 +308,23 @@ function get(query) {
 }
 Service.getMyStudents = getMyStudents
 async function getMyStudents(CurrentUser) {
-	// return []
 	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
 	const moodle_ids = students.map(({ id }) => id)
 	const query = { id: { $in: moodle_ids } }
-
-	return User.find(query)
+	const results = await User.find(query)
+	const fieldsToReturn = [
+		'_id',
+		'id',
+		'username',
+		'firstname',
+		'lastname',
+		'email',
+		'email_linked',
+		'description'
+	]
+	return results.map(data => pick(data, fieldsToReturn))
 }
 
 module.exports = Service

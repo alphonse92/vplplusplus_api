@@ -69,22 +69,6 @@ module.exports = {
 			type: "Boolean",
 			default: false
 		},
-		token_counter: {
-			type: "Number",
-			default: 0,
-			min: 0
-		},
-		tokens: [{
-			client: {
-				type: "String",
-				trim: true,
-				maxlength: 64
-			},
-			token: {
-				type: "String",
-				trim: true,
-			},
-		}],
 		roles: [{}],
 		groups: [{ type: "String" }],
 		base_path: {

@@ -22,6 +22,10 @@ module.exports = {
 			type: "Boolean",
 			required: true
 		},
+		activity: {
+			type: "Number",
+			required: true
+		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
