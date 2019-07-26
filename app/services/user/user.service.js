@@ -1,17 +1,16 @@
 import * as GoogleService from './google/google.service'
 
+const _ = require("lodash");
+const jwt = require('jsonwebtoken');
+
 const Config = global.Config;
 const Util = require(Config.paths.utils);
 const User = require(Config.paths.models + "/user/user.mongo");
 const UserErrors = require(Config.paths.errors + "/user.errors");
-const Policy = require(Config.paths.models + "/policy/policy.mongo");
 const PolicyService = require(Config.paths.services + "/policy/policy.service");
-const MoodleWebservice = require(Config.paths.webservices + "/moodle.client");
-const jwt = require('jsonwebtoken');
-const _ = require("lodash");
-
 
 const Service = {}
+
 Service.User = User;
 Service.AuthTypeMap = {
 	single: AuthSingle,
@@ -305,6 +304,17 @@ function getUserTypes() {
 Service.get = get
 function get(query) {
 	return User.findOne(query)
+}
+Service.getMyStudents = getMyStudents
+async function getMyStudents(CurrentUser) {
+	// return []
+	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
+	const MCourseService = new MoodleCourseServiceClass()
+	const students = await MCourseService.getMyStudents(CurrentUser)
+	const moodle_ids = students.map(({ id }) => id)
+	const query = { id: { $in: moodle_ids } }
+
+	return User.find(query)
 }
 
 module.exports = Service

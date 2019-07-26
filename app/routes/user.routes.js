@@ -6,9 +6,9 @@ const UserCtr = require(Config.paths.controllers + "/user.controller");
 
 
 Router.get("/health", (req, res) => res.send("ok"));
-Router.get("/:id?", UserCtr.list);
 Router.post("/auth", UserCtr.auth);
 Router.get("/students/", UserCtr.listStudents);
+Router.get("/:id?", UserCtr.list);
 
 // Router.post("/", UserCtr.create);
 

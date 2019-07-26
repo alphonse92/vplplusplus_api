@@ -63,6 +63,8 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// students
+			{ resource: "service:api:system:user.student.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
 			{ resource: "service:api:system:project.compile" },
@@ -100,6 +102,8 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// students
+			{ resource: "service:api:system:user.student.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
 			{ resource: "service:api:system:project.compile" },
@@ -137,6 +141,8 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			// students
+			{ resource: "service:api:system:user.teacher.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
 			// tests cases

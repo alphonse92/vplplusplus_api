@@ -18,8 +18,9 @@ async function auth(req, res, next) {
 controller.listStudents = listStudents
 async function listStudents(req, res, next) {
 	try {
-		const list = await UserService.list(res.locals.__mv__.user, req, { roles: { $include: ['default/student'] } })
-		res.send(list)
+		const CurrentUser = res.locals.__mv__.user
+		const students = await UserService.getMyStudents(CurrentUser)
+		res.send(students)
 	} catch (e) { next(e) }
 
 }

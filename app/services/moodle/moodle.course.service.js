@@ -1,13 +1,11 @@
 
-const MoodleServiceBaseClass = require("./moodle.class.service")
-module.exports = class MoodleService extends MoodleServiceBaseClass {
+const MoodleService = require("./moodle.class.service")
 
-  constructor() {
-    super.createConnection()
-  }
+class CourseService extends MoodleService {
 
   async getMyStudents(CurrentUser, opts = { closeOnEnd: true }) {
-    const assignments = await getUserAssignments(CurrentUser, { closeOnEnd: false })
+
+    const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
     const { editingteacher, teacher } = assignments
 
     if (!editingteacher && !teacher) return []
@@ -19,24 +17,21 @@ module.exports = class MoodleService extends MoodleServiceBaseClass {
     const archetype = 'student'
     const contexts = assigmentsAsEditingTeacher
       .concat(assigmentsAsTeacher)
-      .map(({ contextid }) => contextid)
+      .map(({ context }) => context)
 
     const { TABLE_PREFIX } = this
 
+
     const sql = `
-      SELECT
-        user.id,
-        user.email
-      FROM ${TABLE_PREFIX}role_assignments ra
-        INNER JOIN ${TABLE_PREFIX}user user ra.userid = user.id
-        INNER JOIN ${TABLE_PREFIX}role role ra.roleid = role.id
-      WHERE 
-        role.archetype in (?) 
-        AND ra.contextid in (?)
+      SELECT user.id as 'id' , user.email as 'email'
+      FROM ${TABLE_PREFIX}role_assignments ra 
+        INNER JOIN ${TABLE_PREFIX}user user ON ra.userid = user.id 
+        INNER JOIN ${TABLE_PREFIX}role role ON ra.roleid = role.id
+      WHERE role.archetype in (?) AND ra.contextid in (?)
     `
     const preparedValues = [archetype, contexts.join(',')]
-    
-    return this.execute(sql, preparedValues, opts)
+
+    return super.execute(sql, preparedValues, opts)
 
   }
 
@@ -60,7 +55,8 @@ module.exports = class MoodleService extends MoodleServiceBaseClass {
     const { id } = CurrentUser
     const preparedValues = [id]
 
-    const results = await super.execute(sql, preparedValues, { closeOnEnd: opts.closeOnEnd })
+    const results = await super.execute(sql, preparedValues, opts)
+
     return results
       .reduce((out, role_assigments) => {
         const { role } = role_assigments
@@ -71,3 +67,4 @@ module.exports = class MoodleService extends MoodleServiceBaseClass {
   }
 }
 
+module.exports = CourseService
