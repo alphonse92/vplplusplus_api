@@ -20,5 +20,12 @@ module.exports = {
 			message: "Exporter type does not exist"
 		}
 	},
+	activity_does_not_exist: {
+		http_code: 400,
+		error: {
+			code: -4,
+			message: "Cant create the project because the activity does not exist"
+		}
+	},
 
 }

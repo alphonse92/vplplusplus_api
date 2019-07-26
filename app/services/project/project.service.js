@@ -2,8 +2,10 @@ import { pick } from 'lodash'
 
 const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
+const CourseServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
+
 
 const TestService = require('./project.test.service');
 const TestCaseService = require('./project.test.case.service');
@@ -35,8 +37,15 @@ class ProjectService extends BaseService {
 
 	async create(CurrentUser, data) {
 		const { _id, tests = [], ...payloadProject } = data
+		const { activity: activity_id } = payloadProject
 		const isUpdate = !!_id
 		const project = !isUpdate ? payloadProject : pick(payloadProject, Project.getPublicFields())
+		const CourseModule = new CourseServiceClass()
+		const activities = await CourseModule.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
+		const activity = activities.find(({ course_module_id }) => course_module_id === activity_id)
+		
+		if (!activity) throw new Util.Error(Errors.activity_does_not_exist)
+
 		const ProjectDoc = isUpdate
 			? await super.update({ _id, owner: CurrentUser._id }, project)
 			: await super.create({ ...project, owner: CurrentUser._id })
