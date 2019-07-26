@@ -31,9 +31,7 @@ module.exports = {
 			{ resource: "service:api:system:configuration.read" },
 			{ resource: "service:api:system:configuration.update" },
 			{ resource: "service:api:system:user.token" },
-			//courses
-			{ resource: "service:api:system:course.list" },
-			{ resource: "service:api:system:activity.list" },
+
 		]
 	},
 	manager: {
@@ -88,6 +86,8 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			//activities
+			{ resource: "service:api:system:course.activity.list" },
 			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.lab:show" },
@@ -95,6 +95,7 @@ module.exports = {
 			{ resource: "client:web:system:webclient.configuration:show" },
 			{ resource: "client:web:system:webclient.help:show" },
 			{ resource: "client:web:system:webclient.logout:show" },
+
 		]
 	},
 	teacher: {
@@ -127,6 +128,8 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			//activities
+			{ resource: "service:api:system:course.activity.list" },
 			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.lab:show" },
@@ -151,6 +154,8 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			//activities
+			{ resource: "service:api:system:course.activity.list" },
 			// web client
 			{ resource: "client:web:system:webclient.dashboard:show" },
 			{ resource: "client:web:system:webclient.configuration:show" },

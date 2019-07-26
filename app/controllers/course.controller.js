@@ -1,10 +1,18 @@
 const Config = global.Config;
-const Util = require(Config.paths.utils);
-const CourseService = require(Config.paths.services + "/course/course.service")
+const UserService = require(Config.paths.services + "/user/user.service")
 
-module.exports.getCourses = getCourses;
-function getCourses(req, res, next){
-	CourseService.getMoodleCourses(res.locals.__mv__.user)
-		.then((result) => res.send(result))
-		.catch(err => Util.response.handleError(err, res))
+
+module.exports.getActivities = getActivities;
+async function getActivities(req, res, next) {
+	try {
+		const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
+		const MCourseService = new MoodleCourseServiceClass()
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const MyActivities = await MCourseService.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
+		res.send(MyActivities)
+	} catch (e) {
+		next(e)
+	}
 }
+
+

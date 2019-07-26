@@ -327,31 +327,17 @@ fixtures.createTestSummary = {
 	]
 };
 
-
-
-// courses
-fixtures.listCourses = {
-	resource: "service:api:system:course.list",
-	name: "course.list",
-	slug: "List current courses",
-	type: DefaultPolicyService.types.default,
-	description: "Policy for list courses for a person",
-	extends: [], depends: [],
-	actions: [
-		{ path: "GET/api/v1/course/", scopes: ["listCourse"] }
-	]
-};
-
 //activities
+
 fixtures.listActivities = {
-	resource: "service:api:system:activity.list",
+	resource: "service:api:system:course.activity.list",
 	name: "activity.list",
 	slug: "List current course activities",
 	type: DefaultPolicyService.types.default,
-	description: "Policy for list activities for a course",
+	description: "Policy for list activities",
 	extends: [], depends: [],
 	actions: [
-		{ path: "GET/api/v1/course/:course_id/activity", scopes: ["listActivities"] }
+		{ path: "GET/api/v1/course/activities", scopes: ["listMoodleActivities"] }
 	]
 };
 

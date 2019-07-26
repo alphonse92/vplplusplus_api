@@ -1,11 +1,9 @@
 
 const MoodleService = require("./moodle.class.service")
-
+const opts_def = { closeOnEnd: true }
 class CourseService extends MoodleService {
 
-  async getMyStudents(CurrentUser, opts = { closeOnEnd: true }) {
-
-    const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
+  getContextsByAssigments(assignments) {
     const { editingteacher, teacher } = assignments
 
     if (!editingteacher && !teacher) return []
@@ -13,15 +11,58 @@ class CourseService extends MoodleService {
     const assigmentsAsTeacher = teacher || []
     const assigmentsAsEditingTeacher = editingteacher || []
 
-
-    const archetype = 'student'
     const contexts = assigmentsAsEditingTeacher
       .concat(assigmentsAsTeacher)
       .map(({ context }) => context)
+    return contexts
+  }
 
+  async getVplModuleInfo(opts = opts_def) {
     const { TABLE_PREFIX } = this
+    const sql = `
+      SELECT *
+      FROM ${TABLE_PREFIX}modules module
+      WHERE module.name = "vpl"
+      LIMIT 1 
+    `
+    const module = await super.execute(sql, opts)
+    return module[0]
+  }
+
+  async getMyVPLActivitiesWhereImTheTeacher(CurrentUser, opts = opts_def) {
+    const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
+    const contextAsATeacher = this.getContextsByAssigments(assignments)
+    const vpl = await this.getVplModuleInfo({ closeOnEnd: false })
+    console.log(vpl)
+    const { TABLE_PREFIX } = this
+    const sql = `
+      SELECT 
+        course.id as 'course_id' ,
+        course.fullname as 'course_name' ,
+        activity.id as 'course_module_id' ,
+        vpl.id as 'vpl_id' ,
+        vpl.name as 'name' ,
+        vpl.shortdescription as 'description'
+      FROM         ${TABLE_PREFIX}context context
+        INNER JOIN ${TABLE_PREFIX}course            course           ON   context.instanceid  = course.id
+        INNER JOIN ${TABLE_PREFIX}course_modules    activity         ON   activity.course     = course.id 
+        INNER JOIN ${TABLE_PREFIX}vpl               vpl              ON   vpl.id              = activity.instance
+      WHERE 
+        context.id in (?)
+        AND activity.module = ${vpl.id}
+    ` 
+    const preparedValues = [contextAsATeacher.join(',')]
+    return super.execute(sql, preparedValues, opts)
+  }
 
 
+
+  async getMyStudents(CurrentUser, opts = { closeOnEnd: true }) {
+
+    const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
+    const contexts = this.getContextsByAssigments(assignments)
+    const archetype = 'student'
+    const { TABLE_PREFIX } = this
     const sql = `
       SELECT user.id as 'id' , user.email as 'email'
       FROM ${TABLE_PREFIX}role_assignments ra 
