@@ -3,6 +3,56 @@ const MoodleService = require("./moodle.class.service")
 const opts_def = { closeOnEnd: true }
 class CourseService extends MoodleService {
 
+  /**
+   * Class to get users from a course activity.
+   * You can use it to validate if user is enroled in a course activity
+   * @param {*} activity_id mdl_course_module id
+   * @param {*} user_id_array array of user ids, or just a user id
+   * @param {*} opts opts
+   */
+  async getUsersFromActivityId(activity_id, user_id_array = [], opts = opts_def) {
+    const Vpl = await this.getVplModuleInfo({ closeOnEnd: false })
+    const vpl_module_id = Vpl.id
+    const { TABLE_PREFIX } = this
+    // if should filter by users
+    const user_ids = Array.isArray(user_id_array) // creare the array if is needing
+      ? user_id_array
+      : [user_id_array]
+    const shouldFilterByUsers = !!user_ids.length // if length > 0 should filter by users
+    const whereSQLForFilterByUsers = shouldFilterByUsers // create the SQL statement
+      ? 'user.id IN (?)'
+      : ''
+    // merge all SQL statement in a single one
+    const sql = `
+      SELECT 
+        user.id,
+        user.email,
+        user.username,
+        user.firstname,
+        user.lastname
+      FROM ${TABLE_PREFIX}course_modules activity
+        INNER JOIN ${TABLE_PREFIX}context          context    ON context.instanceid   = activity.course
+        INNER JOIN ${TABLE_PREFIX}role_assignments ra         ON context.id           = ra.contextid
+        INNER JOIN ${TABLE_PREFIX}user             user       ON ra.userid            = user.id
+        INNER JOIN ${TABLE_PREFIX}role             role       ON ra.roleid            = role.id
+      WHERE 
+        context.contextlevel         = 50
+          AND role.archetype         = "student"
+          AND activity.module        = ? 
+          AND activity.id            = ?
+          AND ${whereSQLForFilterByUsers}
+    `
+    // prepare statements to prevent sql injection
+    const preparedValues = [vpl_module_id, activity_id]
+    if (shouldFilterByUsers) preparedValues.push(user_ids.join(','))
+    // execute and return
+    const results = await super.execute(sql, preparedValues, opts)
+
+    return results
+  }
+
+
+
   getContextsByAssigments(assignments) {
     const { editingteacher, teacher } = assignments
 

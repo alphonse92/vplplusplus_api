@@ -2,11 +2,12 @@ import { pick } from 'lodash'
 
 const Config = global.Config;
 const Util = require(Config.paths.utils);
-const Projectservice = require('./project.service');
 const TestCaseService = require('./project.test.case.service');
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.summary.errors');
+const TestCaseErrors = require(Config.paths.errors + '/project.test.case.errors');
 const UserService = require(Config.paths.services + '/user/user.service');
+const CourseMoodleServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
 
 /**
@@ -25,38 +26,40 @@ const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
  */
 class SummaryService extends BaseService {
 
+
   constructor() {
     super(Summary)
-  }
-
-  async createAll(ProjectDoc, TestCaseDoc, data) {
-    const array = Array.isArray(data) ? data : [data]
-    const result = Promise.all(array.map(summary => this.create(ProjectDoc, TestCaseDoc, summary)))
-    return result
   }
 
   /**
    * Create a Summary related to a project and test case
    * @canExecute Client Runners, users that belongs to the group default/runner
-   * @param {*} ProjectDoc 
-   * @param {*} TestCaseDoc 
+   * @param {*} project_id 
+   * @param {*} test_case_id 
    * @param {*} data 
    */
-  async create(ProjectDoc, TestCaseDoc, data) {
-    const { id: test_case } = TestCaseDoc
-    const { id: project } = ProjectDoc
+  async create(moodle_user, test_case_id, data) {
+    const CourseMoodleService = new CourseMoodleServiceClass()
+    const TestCase = TestCaseService.getModel()
+    const TestCaseDoc = await TestCase
+      .findById(test_case_id)
+      .populate('project')
+    
+    // return an exception if testcase does not exist
+    if (!TestCaseDoc) throw new Util.Error(TestCaseErrors.test_case_does_not_exist)
 
-    const UserDoc = await UserService.get({ id: data.moodle_user })
-    // const TestCaseDoc = await TestCaseService.get({ _id: test_case })
+    const Project = TestCaseDoc.project
+    const activity = Project.activity
+    const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
+    const isUserInActivity = UserFromActivity.lenght === 1
 
-    const user = !UserDoc ? null : UserDoc._id
+    // user should be enroled in the activity
+    if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
 
-    return super.create({
-      ...data,
-      project,
-      test_case,
-      user
-    })
+    const createSummariesPromise = Promise.all(data.map(({ approved, output }) => ({ moodle_user, approved, output })))
+    const results = await createSummariesPromise
+
+    return results
   }
 
   /**

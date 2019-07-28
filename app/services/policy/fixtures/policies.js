@@ -323,7 +323,7 @@ fixtures.createTestSummary = {
 	description: "Policy for create a user summary for a test case resolution",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/:id/test/:id/case/:id/summary/", scopes: ["createSummary"] }
+		{ path: "POST/api/v1/project/test/:test_case_id/summary/", scopes: ["createSummary"] }
 	]
 };
 

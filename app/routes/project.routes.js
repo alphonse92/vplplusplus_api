@@ -28,9 +28,6 @@ Router.post("/:project_id/test/:test_id/case/", TestCaseController.create);
 Router.patch("/:project_id/test/:test_id/case/:id", TestCaseController.update);
 Router.delete("/:project_id/test/:test_id/case/:id", TestCaseController.delete);
 
-Router.get("/:id/test/:id/case/:id/summary/:id?", SummaryController.get);
-Router.post("/:project_id/test/:test_id/case/:test_case_id/summary/", SummaryController.create);
-
 // project reports
 Router.get('/report') // get report of all projects
 Router.get('/:id/report') // get report of especific project
@@ -44,6 +41,13 @@ Router.get('/:id/report/user') // get report of all users of specific project
 Router.get('/:id/report/user/:id') // get report of specific user of specific project
 
 
+// this routes will be used by the runner, im not following the REST
+// especification because we need add to the vpl ++ jlib
+// the annotations to set the project, test and test case.
+// So we adding a entrypoint to the summary controller
+Router.get("/test/case/summary/:id?", SummaryController.get);
+Router.get("/test/:test_case_id/summary/:id?", SummaryController.get);
+Router.post("/test/:test_case_id/summary/", SummaryController.create);
 
 
 
