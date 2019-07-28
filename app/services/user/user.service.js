@@ -9,7 +9,6 @@ const Util = require(Config.paths.utils);
 const User = require(Config.paths.models + "/user/user.mongo");
 const UserErrors = require(Config.paths.errors + "/user.errors");
 const PolicyService = require(Config.paths.services + "/policy/policy.service");
-
 const Service = {}
 
 Service.User = User;
@@ -307,13 +306,17 @@ function get(query) {
 	return User.findOne(query)
 }
 Service.getMyStudents = getMyStudents
-async function getMyStudents(CurrentUser) {
+async function getMyStudents(CurrentUser, req) {
 	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
 	const moodle_ids = students.map(({ id }) => id)
 	const query = { id: { $in: moodle_ids } }
-	const results = await User.find(query)
+
+	const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
+	const queryPaginator = Util.mongoose.getQueryFromRequest(req);
+	const results = await Util.mongoose.list(User, null, { ...queryPaginator, ...query }, paginator)
+	const { docs } = results
 	const fieldsToReturn = [
 		'_id',
 		'id',
@@ -324,7 +327,9 @@ async function getMyStudents(CurrentUser) {
 		'email_linked',
 		'description'
 	]
-	return results.map(data => pick(data, fieldsToReturn))
+	results.docs = docs.map(data => pick(data, fieldsToReturn))
+	
+	return results
 }
 
 module.exports = Service

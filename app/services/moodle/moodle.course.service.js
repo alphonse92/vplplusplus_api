@@ -25,7 +25,7 @@ class CourseService extends MoodleService {
       WHERE module.name = "vpl"
       LIMIT 1 
     `
-    const module = await super.execute(sql, opts)
+    const module = await super.execute(sql, [], opts)
     return module[0]
   }
 
@@ -49,7 +49,7 @@ class CourseService extends MoodleService {
       WHERE 
         context.id in (?)
         AND activity.module = ${vpl.id}
-    ` 
+    `
     const preparedValues = [contextAsATeacher.join(',')]
     return super.execute(sql, preparedValues, opts)
   }

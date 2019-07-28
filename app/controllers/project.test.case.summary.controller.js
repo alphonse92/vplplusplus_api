@@ -15,7 +15,7 @@ async function create(req, res, next) {
 
 	const project = { _id: project_id }
 	const testCase = { _id: test_case_id }
-	const SummaryDoc = await SummaryService.create(project, testCase, req.body)
+	const SummaryDoc = await SummaryService.createAll(project, testCase, req.body)
 	res.send(SummaryDoc)
 }
 

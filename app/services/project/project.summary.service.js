@@ -29,6 +29,12 @@ class SummaryService extends BaseService {
     super(Summary)
   }
 
+  async createAll(ProjectDoc, TestCaseDoc, data) {
+    const array = Array.isArray(data) ? data : [data]
+    const result = Promise.all(array.map(summary => this.create(ProjectDoc, TestCaseDoc, summary)))
+    return result
+  }
+
   /**
    * Create a Summary related to a project and test case
    * @canExecute Client Runners, users that belongs to the group default/runner

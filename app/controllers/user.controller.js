@@ -19,7 +19,7 @@ controller.listStudents = listStudents
 async function listStudents(req, res, next) {
 	try {
 		const CurrentUser = res.locals.__mv__.user
-		const students = await UserService.getMyStudents(CurrentUser)
+		const students = await UserService.getMyStudents(CurrentUser, req)
 		res.send(students)
 	} catch (e) { next(e) }
 

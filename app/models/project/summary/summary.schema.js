@@ -26,7 +26,7 @@ module.exports = {
 			required: true
 		},
 		moodle_user: {
-			type: "String",
+			type: "Number",
 			required: true
 		},
 		user: {
