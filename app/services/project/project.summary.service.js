@@ -48,6 +48,9 @@ class SummaryService extends BaseService {
     // return an exception if testcase does not exist
     if (!TestCaseDoc) throw new Util.Error(TestCaseErrors.test_case_does_not_exist)
 
+    const TestCaseSolved = await TestCase.findOne({ moodle_user, test_case, approved: true })
+    if(TestCaseSolved) throw new Util.Error(TestCaseErrors.test_case_already_solved_for_you)
+
     const Project = TestCaseDoc.project
     const activity = Project.activity
     const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })

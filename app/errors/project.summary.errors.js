@@ -13,5 +13,12 @@ module.exports = {
 			message: "Cant create the summary because the user is not enroled to the activity related to the project"
 		}
 	},
+	test_case_already_solved_for_you: {
+		http_code: 400,
+		error: {
+			code: -1,
+			message: "The test case already solved for you"
+		}
+	},
 
 }
