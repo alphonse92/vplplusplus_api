@@ -47,7 +47,7 @@ Router.get('/:id/report/user/:id') // get report of specific user of specific pr
 // So we adding a entrypoint to the summary controller
 Router.get("/test/case/summary/:id?", SummaryController.get);
 Router.get("/test/:test_case_id/summary/:id?", SummaryController.get);
-Router.post("/test/:test_case_id/summary/", SummaryController.create);
+Router.post("/test/case/summary/", SummaryController.create);
 
 
 

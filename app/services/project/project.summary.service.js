@@ -5,7 +5,7 @@ const Util = require(Config.paths.utils);
 const TestCaseService = require('./project.test.case.service');
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.summary.errors');
-const TestCaseErrors = require(Config.paths.errors + '/project.test.case.errors');
+
 const UserService = require(Config.paths.services + '/user/user.service');
 const CourseMoodleServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
@@ -26,11 +26,46 @@ const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
  */
 class SummaryService extends BaseService {
 
-
   constructor() {
     super(Summary)
   }
 
+
+  async createAll(project_id, moodle_user, summary_array_to_save) {
+    const ProjectService = require('./project.service');
+    const Project = ProjectService.getModel()
+    const ProjectDoc = await Project.findById(project_id)
+    const { _id: project, activity } = ProjectDoc
+    const CourseMoodleService = new CourseMoodleServiceClass()
+    const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
+    const isUserInActivity = UserFromActivity.length === 1
+    // user should be enroled in the activity
+    if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
+    const SummariesApproved = await Summary.find({ project, moodle_user, approved: true })
+    // maps of references to find duplicates and approved test_cases
+    const mapToFindDuplicates = {}
+    const TestCasesApprovedMap = SummariesApproved.reduce(
+      (map, summaryApproved) => ({ ...map, [summaryApproved.test_case]: summaryApproved }),
+      {}
+    )
+    const results = await Promise.all(
+      summary_array_to_save
+        .filter(summaryToSave => {
+          // filter if is twice in the array of summaries to save
+          // or if there is a summary approved to the summary test case 
+          const { test_case } = summaryToSave
+          const shouldAdd = !TestCasesApprovedMap[test_case] && !mapToFindDuplicates[test_case]
+          // if the summary should be added, then add the test_case id to the map to find duplicates
+          if (shouldAdd) mapToFindDuplicates[test_case] = true
+          return shouldAdd
+        })
+        //create payload
+        .map(summaryToSave => ({ moodle_user, project, ...summaryToSave }))
+        // return the promises
+        .map(data => this.create(data))
+    )
+    return results.concat(Object.values(TestCasesApprovedMap))
+  }
   /**
    * Create a Summary related to a project and test case
    * @canExecute Client Runners, users that belongs to the group default/runner
@@ -38,44 +73,13 @@ class SummaryService extends BaseService {
    * @param {*} test_case 
    * @param {*} data 
    */
-  async create(moodle_user, test_case, data) {
-    const CourseMoodleService = new CourseMoodleServiceClass()
-    const TestCase = TestCaseService.getModel()
-    const TestCaseDoc = await TestCase
-      .findById(test_case)
-      .populate('project')
-
-    // return an exception if testcase does not exist
-    if (!TestCaseDoc) throw new Util.Error(TestCaseErrors.test_case_does_not_exist)
-
-    const TestCaseSolved = await TestCase.findOne({ moodle_user, test_case, approved: true })
-    if(TestCaseSolved) throw new Util.Error(TestCaseErrors.test_case_already_solved_for_you)
-
-    const Project = TestCaseDoc.project
-    const activity = Project.activity
-    const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
-    const isUserInActivity = UserFromActivity.length === 1
-
-    // user should be enroled in the activity
-    if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
-
+  async create(summary) {
     const User = UserService.getModel()
-    const UserDoc = await User.findOne({ id: moodle_user })
+    const UserDoc = await User.findOne({ id: summary.moodle_user })
     const user = UserDoc ? UserDoc._id : null
-
-    const createSummariesPromise = Promise.all(
-      data.map(({ approved, output }) =>
-        super.create({
-          user,
-          project: TestCaseDoc.project._id,
-          moodle_user,
-          test_case,
-          approved,
-          output
-        })))
-    const results = await createSummariesPromise
-
-    return results
+    const data = { ...summary, user }
+    console.log('creating summary', data)
+    return await super.create(data)
   }
 
   /**

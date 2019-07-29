@@ -5,11 +5,8 @@ const BaseService = require(Config.paths.services + '/service');
 const CourseServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 const Errors = require(Config.paths.errors + '/project.errors');
 const Project = require(Config.paths.models + "/project/project/project.mongo");
-
-
 const TestService = require('./project.test.service');
 const TestCaseService = require('./project.test.case.service');
-const SummaryService = require('./project.summary.service');
 const Util = require(Config.paths.utils);
 
 class ProjectService extends BaseService {
@@ -43,7 +40,7 @@ class ProjectService extends BaseService {
 		const CourseModule = new CourseServiceClass()
 		const activities = await CourseModule.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
 		const activity = activities.find(({ course_module_id }) => course_module_id === activity_id)
-		
+
 		if (!activity) throw new Util.Error(Errors.activity_does_not_exist)
 
 		const ProjectDoc = isUpdate
@@ -55,7 +52,7 @@ class ProjectService extends BaseService {
 
 	async delete(CurrentUser, projectId) {
 
-		await this.validateHasSummaries()
+		await this.validateHasSummaries(projectid)
 		const { _id: owner } = CurrentUser
 		const query = { owner, _id: projectId }
 		const ProjectDocument = await super.delete(query)
@@ -66,8 +63,9 @@ class ProjectService extends BaseService {
 
 	}
 
-	async validateHasSummaries(projectId) {
-		const ProjectSummaries = await SummaryService.list({ project: projectId })
+	async validateHasSummaries(project) {
+		const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
+		const ProjectSummaries = await Summary.find({ project })
 		if (ProjectSummaries.docs.total) throw new Util.Error(Errors.project_blocked)
 	}
 

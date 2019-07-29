@@ -38,7 +38,7 @@ const Util = require(Config.paths.utils);
   6. Valid values of S:  1 >= S >= 0
  
  */
-class SummaryService extends BaseService {
+class SummaryReportService extends BaseService {
 
   constructor() {
     super(Summary)
@@ -206,4 +206,4 @@ class SummaryService extends BaseService {
 
 }
 
-module.exports = new SummaryService()
+module.exports = new SummaryReportService()
