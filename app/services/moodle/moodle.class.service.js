@@ -4,18 +4,26 @@ class MoodleService {
 
   constructor() {
     this.TABLE_PREFIX = Config.moodle.db.table_prefix
-    this.createConnection()
   }
 
   async createConnection() {
     this.conn = await require(Config.paths.db + "/mysql")();
+    Util.log('New MYSQL connection created successfully')
     return this.conn
   }
-
-
-  closeConnection() {
-    this.conn.end()
+  
+  destroyConnection() {
+    this.conn.destroy()
     delete this.conn
+  }
+  closeConnection() {
+    return new Promise((resolve, reject) => {
+      this.conn.end(err => {
+        err ? reject(err) : resolve(err)
+        delete this.conn
+        Util.log('Closing MYSQL connection')
+      })
+    })
   }
 
   async getConnection() {
@@ -32,10 +40,10 @@ class MoodleService {
     })
     try {
       const result = await promise
-      if (opts.closeOnEnd) this.closeConnection()
+      if (opts.closeOnEnd) await this.closeConnection()
       return result
     } catch (e) {
-      this.closeConnection()
+      await this.destroyConnection()
       throw e
     }
   }

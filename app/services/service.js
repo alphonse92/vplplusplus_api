@@ -38,7 +38,6 @@ class BaseService {
 
   async create(data) {
     try {
-      console.log(this)
       return await this.Model.create(data)
     } catch (e) { throw new Util.Error(e) }
 
