@@ -29,8 +29,9 @@ const defaultConfig = {
 			policy: process.env.INIT_USER_TYPE || "reset",
 		},
 		paginator: {
-			limit: +process.env.APP_PAGINATION || 10,
-			page: +process.env.APP_PAGE || 1,
+			limit: +process.env.APP_PAGINATION_LIMIT_DEFAULT|| 10,
+			limitMax: +process.env.APP_PAGINATION_LIMIT_MAX_DEFAULT || 75,
+			page: +process.env.APP_PAGE_DEFAULT || 1,
 		}
 	},
 	system: {

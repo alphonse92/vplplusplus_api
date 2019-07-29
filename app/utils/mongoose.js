@@ -49,8 +49,8 @@ function parsePathsToPopulates(arrayOfPaths, selects = {}) {
 module.exports.getPaginatorFromRequest = getPaginatorFromRequest;
 function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 	const {
-		limit = defaults[paginationAttributes.limit],
-		page = defaults[paginationAttributes.page]
+		limit: limit4q = defaults[paginationAttributes.limit],
+		page: page4q = defaults[paginationAttributes.page]
 	} = req.query
 	const reqPopulate = req.query.populate
 	const arrayOfPopulates = populates || reqPopulate
@@ -58,8 +58,10 @@ function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 			? reqPopulate
 			: [reqPopulate]
 		: []
+	const limit = (+limit4q) > defaults.limitMax ? defaults.limitMax : +limit4q
+	const page = +page4q
 	const populate = parsePathsToPopulates(arrayOfPopulates, selects)
-	const paginator = { limit: +limit, page: +page, populate }
+	const paginator = { limit, page, populate }
 	cleanPaginatorAttributesFromRequest(req);
 	return paginator
 }

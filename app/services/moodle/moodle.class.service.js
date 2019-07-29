@@ -16,6 +16,7 @@ class MoodleService {
     this.conn.destroy()
     delete this.conn
   }
+  
   closeConnection() {
     return new Promise((resolve, reject) => {
       this.conn.end(err => {
