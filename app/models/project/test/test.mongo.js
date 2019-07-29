@@ -7,6 +7,7 @@ const increment = require('mongoose-auto-increment');
 const paginator = require('mongoose-paginate');
 const timestamps = require('mongoose-timestamp');
 const ModelSchema = require("./test.schema");
+const SkillService = require(Config.paths.services + '/project/project.test.skill.service');
 const Schema = new mongoose.Schema(ModelSchema.schema, { toJSON: { virtuals: true } });
 
 Schema.virtual('test_cases', {
@@ -22,6 +23,36 @@ increment.initialize(mongoose.connection);
 Schema.plugin(increment.plugin, { model: ModelSchema.name, field: 'cursor' });
 
 Util.mongoose.addStatics(Schema, ModelSchema)
+
+Schema.methods.getSkills = async function () {
+
+  const testCasesLoaded = Array.isArray(this.test_cases) && this.test_cases[0].summaries
+  const topicsLoaded = testCasesLoaded && Array.isArray(this.testCases[0].topics[0].name)
+  const shouldPopulateTestCases = !testCasesLoaded || !topicsLoaded
+
+  if (shouldPopulateTestCases) await this.populate([{ path: 'test_cases', populate: [{ path: topics }, { path: 'summaries' }] }]).execPopulate()
+
+  return this
+    .test_cases
+    .reduce((topicMap, TestCaseDoc) => {
+      const { topics: TopicDocs } = TestCaseDoc
+      TopicDocs.forEach(TopicDoc => {
+        const { name, description, _id } = TopicDoc
+        const TopicFromMap = topicMap[name] || { _id, name, description, test_cases: [] }
+        TopicFromMap.test_cases.push(TestCaseDoc)
+        topicMap[name] = TopicFromMap
+      })
+      return topicMap
+    }, {})
+    .map(topicWithTestCases => {
+      const { _id, name, description, test_cases } = topicWithTestCases
+      const skillReport = SkillService.getSkill(test_cases)
+      console.log(topicWithTestCases)
+      console.log(skillReport)
+      return { _id, name, description, ...skillReport }
+    })
+
+}
 
 Schema.methods.compile = async function () {
   if (!this.test_cases) await this.populate('test_cases').execPopulate()

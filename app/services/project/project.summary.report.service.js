@@ -20,7 +20,8 @@ const Util = require(Config.paths.utils);
   R: Total of test cases that the studen solved
   N: Total of test cases that the studen not solved
   C: negative coefiecent, more not solved tests, more penalization
-  E: The ammount of all attempts to solve a test_case (∑a)
+  s: total of summaries of a test case
+  E: The ammount of all attempts to solve a test_case (s/∑a)
   S: Student skill level
 
   a: attemp to solve a test case
@@ -38,11 +39,9 @@ const Util = require(Config.paths.utils);
   6. Valid values of S:  1 >= S >= 0
  
  */
-class SummaryReportService extends BaseService {
+class SummaryReportService {
 
-  constructor() {
-    super(Summary)
-  }
+  
 
   /**
    * Project is related to an moodle activity
