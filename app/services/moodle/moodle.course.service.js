@@ -1,4 +1,4 @@
-
+const Config = global.Config;
 const MoodleService = require("./moodle.class.service")
 const opts_def = { closeOnEnd: true }
 class CourseService extends MoodleService {
@@ -107,13 +107,13 @@ class CourseService extends MoodleService {
 
 
   async getMyStudents(CurrentUser, opts = { closeOnEnd: true }) {
-
     const assignments = await this.getUserAssignments(CurrentUser, { closeOnEnd: false })
     const contexts = this.getContextsByAssigments(assignments)
     const archetype = 'student'
     const { TABLE_PREFIX } = this
     const sql = `
-      SELECT user.id as 'id' , user.email as 'email'
+      SELECT 
+        user.*
       FROM ${TABLE_PREFIX}role_assignments ra 
         INNER JOIN ${TABLE_PREFIX}user user ON ra.userid = user.id 
         INNER JOIN ${TABLE_PREFIX}role role ON ra.roleid = role.id

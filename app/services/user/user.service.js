@@ -27,12 +27,12 @@ async function AuthGoogle({ token }) {
 	const TokenInformation = await GoogleService.verifyAuthToken(token, client_id)
 	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	const MoodleUserData = await MoodleAuthStrategy(TokenInformation.email, undefined, false)
+
 	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
+
 	const type = User.getUserTypes().person
-	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
-	const UserDoc = await updateOrCreate(query, data)
-	await addGroupsToUser(UserDoc)
+	const UserDoc = await updateOrCreate(data)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getJWTConfig())
 }
@@ -41,13 +41,12 @@ async function AuthSingle({ username, email, password }) {
 	const usernameOrEmail = username || email
 	const MoodleAuthStrategy = require("./moodle/auth/" + Config.moodle.auth.type);
 	const MoodleUserData = await MoodleAuthStrategy(usernameOrEmail, password)
+
 	if (MoodleUserData.suspended) throw new Error(UserErrors.user_suspended);
 
 	const type = User.getUserTypes().person
-	const query = { $or: [{ id: MoodleUserData.id }, { email: MoodleUserData.email }] }
 	const data = { ...MoodleUserData, type }
-	const UserDoc = await updateOrCreate(query, data)
-	await addGroupsToUser(UserDoc)
+	const UserDoc = await updateOrCreate(data)
 	const UserWithPolicies = await getUserWithPolicies(UserDoc)
 	return addTokenToUserObject(UserWithPolicies, getJWTConfig())
 }
@@ -69,11 +68,18 @@ function getAuthTokenFromUser(UserDoc, opt) {
 }
 
 Service.updateOrCreate = updateOrCreate;
-async function updateOrCreate(query, data) {
+async function updateOrCreate(data) {
+	const { id, email } = data
+	const $or = []
+	if (id) $or.push({ id })
+	if (email) $or.push({ email })
+	const query = { $or }
 	const currentUser = await User.findOne(query).exec()
-	return !currentUser
+	const UserDoc = await !currentUser
 		? User.create(data)
 		: User.findByIdAndUpdate({ _id: currentUser._id }, data, { new: true })
+	await addGroupsToUser(UserDoc)
+	return UserDoc
 }
 
 function addGroupsToUser(UserDoc) {
@@ -310,8 +316,10 @@ async function getMyStudents(CurrentUser, req) {
 	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
-	const moodle_ids = students.map(({ id }) => id)
-	const query = { id: { $in: moodle_ids } }
+	const promises = Promise.all(students.map(updateOrCreate))
+	const UsersDoc = await promises
+	const user_docs_ids = UserDocs.map(({ _id }) => _id)
+	const query = { _id: { $in: user_docs_ids } }
 
 	const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	const queryPaginator = Util.mongoose.getQueryFromRequest(req);
