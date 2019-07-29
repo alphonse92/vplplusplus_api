@@ -1,5 +1,3 @@
-import { pick } from 'lodash'
-
 const Config = global.Config;
 const Util = require(Config.paths.utils);
 const TestCaseService = require('./project.test.case.service');
@@ -78,7 +76,6 @@ class SummaryService extends BaseService {
     const UserDoc = await User.findOne({ id: summary.moodle_user })
     const user = UserDoc ? UserDoc._id : null
     const data = { ...summary, user }
-    console.log('creating summary', data)
     return await super.create(data)
   }
 
