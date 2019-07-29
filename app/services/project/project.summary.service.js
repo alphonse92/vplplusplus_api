@@ -35,28 +35,41 @@ class SummaryService extends BaseService {
    * Create a Summary related to a project and test case
    * @canExecute Client Runners, users that belongs to the group default/runner
    * @param {*} project_id 
-   * @param {*} test_case_id 
+   * @param {*} test_case 
    * @param {*} data 
    */
-  async create(moodle_user, test_case_id, data) {
+  async create(moodle_user, test_case, data) {
     const CourseMoodleService = new CourseMoodleServiceClass()
     const TestCase = TestCaseService.getModel()
     const TestCaseDoc = await TestCase
-      .findById(test_case_id)
+      .findById(test_case)
       .populate('project')
-    
+
     // return an exception if testcase does not exist
     if (!TestCaseDoc) throw new Util.Error(TestCaseErrors.test_case_does_not_exist)
 
     const Project = TestCaseDoc.project
     const activity = Project.activity
     const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
-    const isUserInActivity = UserFromActivity.lenght === 1
+    const isUserInActivity = UserFromActivity.length === 1
 
     // user should be enroled in the activity
     if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
 
-    const createSummariesPromise = Promise.all(data.map(({ approved, output }) => ({ moodle_user, approved, output })))
+    const User = UserService.getModel()
+    const UserDoc = await User.findOne({ id: moodle_user })
+    const user = UserDoc ? UserDoc._id : null
+
+    const createSummariesPromise = Promise.all(
+      data.map(({ approved, output }) =>
+        super.create({
+          user,
+          project: TestCaseDoc.project._id,
+          moodle_user,
+          test_case,
+          approved,
+          output
+        })))
     const results = await createSummariesPromise
 
     return results

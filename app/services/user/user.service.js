@@ -328,8 +328,9 @@ async function getMyStudents(CurrentUser, req) {
 		'description'
 	]
 	results.docs = docs.map(data => pick(data, fieldsToReturn))
-	
+
 	return results
 }
 
+Service.getModel = () => User
 module.exports = Service
