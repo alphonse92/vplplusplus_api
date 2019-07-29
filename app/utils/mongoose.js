@@ -59,7 +59,7 @@ function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 			: [reqPopulate]
 		: []
 	const populate = parsePathsToPopulates(arrayOfPopulates, selects)
-	const paginator = { limit, page, populate }
+	const paginator = { limit: +limit, page: +page, populate }
 	cleanPaginatorAttributesFromRequest(req);
 	return paginator
 }

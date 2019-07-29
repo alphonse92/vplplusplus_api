@@ -69,7 +69,10 @@ module.exports = {
 			type: "Boolean",
 			default: false
 		},
-		roles: [{}],
+		roles: {
+			type: [{}],
+			default: []
+		},
 		groups: [{ type: "String" }],
 		base_path: {
 			type: "String",

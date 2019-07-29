@@ -69,15 +69,10 @@ function getAuthTokenFromUser(UserDoc, opt) {
 
 Service.updateOrCreate = updateOrCreate;
 async function updateOrCreate(data) {
-	const { id, email } = data
-	const $or = []
-	if (id) $or.push({ id })
-	if (email) $or.push({ email })
-	const query = { $or }
-	const currentUser = await User.findOne(query).exec()
-	const UserDoc = await !currentUser
-		? User.create(data)
-		: User.findByIdAndUpdate({ _id: currentUser._id }, data, { new: true })
+	const { email } = data
+	const query = { email}
+	const opts = { upsert: true, new: true, runValidators: true }
+	const UserDoc = await User.findOneAndUpdate(query, data, opts)
 	await addGroupsToUser(UserDoc)
 	return UserDoc
 }
@@ -317,10 +312,9 @@ async function getMyStudents(CurrentUser, req) {
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
 	const promises = Promise.all(students.map(updateOrCreate))
-	const UsersDoc = await promises
+	const UserDocs= await promises
 	const user_docs_ids = UserDocs.map(({ _id }) => _id)
 	const query = { _id: { $in: user_docs_ids } }
-
 	const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	const queryPaginator = Util.mongoose.getQueryFromRequest(req);
 	const results = await Util.mongoose.list(User, null, { ...queryPaginator, ...query }, paginator)
