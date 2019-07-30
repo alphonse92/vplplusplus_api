@@ -1,5 +1,8 @@
-module.exports.getEffort = getEffort
-function getEffort(TestCaseDocs) {
+/**
+ * Static methods for mongo model 
+ */
+
+export function getEffort(TestCaseDocs) {
   const SummaryDocs = TestCaseDocs.reduce((array, testCase) => array.concat(testCase.summaries), [])
   const s = TestCaseDocs.length
   const a = SummaryDocs.length
@@ -8,18 +11,24 @@ function getEffort(TestCaseDocs) {
 
   return s / a
 }
-module.exports.getNegativeCoefficient = getNegativeCoefficient
-function getNegativeCoefficient(TestCaseDocs) {
+
+export function getNegativeCoefficient(TestCaseDocs) {
   const CasesResolved = AllCasesOfTest.filter((TestCase) => !!TestCase.isApproved)
   const T = TestCaseDocs.length
   const R = CasesResolved.length
   return (T + 1) / (R + 1)
 }
 
-module.exports.getSkill = getSkill
-function getSkill(TestCaseDocs) {
+
+export function getSkill(TestCaseDocs) {
   const T = TestCase.length
   const C = SummaryReportService.getNegativeCoefficient(TestCaseDocs)
   const E = SummaryReportService.getEffort(TestCaseDocs)
-  return T / (E * C)
+  const S = T / (E * C)
+  return {
+    cases: T,
+    negativeCoefficient: C,
+    effort: E,
+    level: S,
+  }
 }

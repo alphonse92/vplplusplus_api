@@ -70,7 +70,7 @@ function getAuthTokenFromUser(UserDoc, opt) {
 Service.updateOrCreate = updateOrCreate;
 async function updateOrCreate(data) {
 	const { email } = data
-	const query = { email}
+	const query = { email }
 	const opts = { upsert: true, new: true, runValidators: true }
 	const UserDoc = await User.findOneAndUpdate(query, data, opts)
 	await addGroupsToUser(UserDoc)
@@ -306,13 +306,19 @@ Service.get = get
 function get(query) {
 	return User.findOne(query)
 }
+
+Service.getUserMoodle = getUserMoodle
+async function getUserMoodle(moodle_id){
+
+}
+
 Service.getMyStudents = getMyStudents
 async function getMyStudents(CurrentUser, req) {
 	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
 	const promises = Promise.all(students.map(updateOrCreate))
-	const UserDocs= await promises
+	const UserDocs = await promises
 	const user_docs_ids = UserDocs.map(({ _id }) => _id)
 	const query = { _id: { $in: user_docs_ids } }
 	const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);

@@ -6,6 +6,7 @@ const ProjectController = require(Config.paths.controllers + "/project.controlle
 const TestController = require(Config.paths.controllers + "/project.test.controller");
 const TestCaseController = require(Config.paths.controllers + "/project.test.case.controller");
 const SummaryController = require(Config.paths.controllers + "/project.test.case.summary.controller");
+const SummaryReportController = require(Config.paths.controllers + "/project.test.case.summary.controller");
 
 Router.get("/health", (req, res) => res.send("ok"));
 
@@ -28,18 +29,18 @@ Router.post("/:project_id/test/:test_id/case/", TestCaseController.create);
 Router.patch("/:project_id/test/:test_id/case/:id", TestCaseController.update);
 Router.delete("/:project_id/test/:test_id/case/:id", TestCaseController.delete);
 
-// project reports
-Router.get('/report') // get report of all projects
-Router.get('/:id/report') // get report of especific project
 
-// user reports
-Router.get('/report/user') // get report of all users
-Router.get('/report/user/:id') // get report of specific user
-Router.get('/report/user/evolution') // get report of students evolution (how the skill level student change along the time)
-Router.get('/report/user/:id/evolution') // get report of students evolution (how the skill level student change along the time)
-Router.get('/:id/report/user') // get report of all users of specific project
-Router.get('/:id/report/user/:id') // get report of specific user of specific project
+// from all projects
+Router.get('/report', SummaryReportController.getReportProject) // get report of all projects
+Router.get('/report/user', SummaryReportController.getUserReports) // get report of all users
+Router.get('/report/user/:moodle_student_id', SummaryReportController.getUserReports) // get report of specific user
+Router.get('/report/user/evolution',SummaryReportController.getUserEvolution) // get report of students evolution (how the skill level student change along the time)
+Router.get('/report/user/:moodle_student_id/evolution',SummaryReportController.getUserEvolution) // get report of students evolution (how the skill level student change along the time)
 
+//  select a project and create a report from it
+Router.get('/:id/report', SummaryReportController.getReportProject) // get report of especific project
+Router.get('/:id/report/user',SummaryReportController.getUserReports) // get report of all users of specific project
+Router.get('/:id/report/user/:moodle_student_id',SummaryReportController.getUserReports) // get report of specific user of specific project
 
 // this routes will be used by the runner, im not following the REST
 // especification because we need add to the vpl ++ jlib

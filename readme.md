@@ -1,159 +1,41 @@
-#Moodle
-
-##Configuration
-
-1. add capabilities to auth users for moodle/webservice:createtoken and moodle/webservice:createmobiletoken
-
-##Current functionalities and WebServices
-
-If you want to see the Api Doc please visit: 
-
-### General users:
-1. Login: You must have a Moodle account, according to you role you will grant some access to some resources
-
-### Moodle administrator :
-Moodle's administrator can:
-1. Create a runner client for Jlib. This client grant access to endpoints to manage Vpl Jlib reports
-2. Create a token for a runner client for JLib.
-3. List him Runner Clients.
-4. Remove Runner Clients
+#Moodle Vpl Plus Plus
 
 
-### Moodle Teacher
-Moodle's teacher can:
-1. Create an a vpl activity
+This api belongs to the VPl++ microservices ecosystem.
+#Glosary
 
+1. Test case: is a method of a unit test
+2. Test: is a JUnit Class with test cases (methods)
+3. Project: is a set of tests (JUnit classes) and is related to an moodle vpl activity
 
-### Runner Clients:
-The runner clients can:
-1. Store a user suite test report.
+#FAQ
 
+## How to calculate the student skill of a topic?
+ The skill of a student is calculated by the next formulas:
+```
+Effort      (E)       =  s / ∑a  
+Coefficient (C)       =  ( T + 1 ) / ( R + 1 )
+Skill       (S)       =  T / (E*C)
+```
 
-###Moodle Configuration 
+Variables:
+```
+s: Total of summaries of a test case
+a: attemp to solve a test case
+T: Total of test cases  
+R: Total of test cases that the student solved
+N: Total of test cases that the student not solved
+C: Negative coefiecent, more not solved tests, more penalization
+E: The ammount of all attempts to solve a test_case 
+S: Student skill level
+```
 
-1. Add the capability "webservice/rest:use" to authenticate users 
-2. Add the next capabilities to Teacher: 
-    - moodle/badges:viewotherbadges,
-    - moodle/calendar:manageownentries,
-    - moodle/competency:competencyview,
-    - moodle/competency:evidencedelete,
-    - moodle/competency:competencymanage,
-    - moodle/competency:coursecompetencyview,
-    - moodle/category:viewhiddencategories,
-    - moodle/course:view,
-    - moodle/user:update,
-    - moodle/site:deleteownmessage,
-    - moodle/user:editownmessageprofile,
-    - moodle/site:sendmessage,
-    - moodle/user:manageownfiles,
-    - moodle/user:editownprofile,
-    - moodle/user:editprofile,
-    - moodle/user:editmessageprofile,
-    - gradereport/overview:view,
-    - message/airnotifier:managedevice,
-    - mod/feedback:complete,
-    - mod/folder:view,
-    - mod/imscp:view,
-    - mod/label:view,
-    - mod/lesson:view,
-    - mod/page:view,
-    - mod/quiz:attempt,
-    - mod/quiz:reviewmyattempts,
-    - mod/resource:view,
-    - mod/url:view,
-    - mod/workshop:submit,
-    - moodle/competency:planviewown,
-    - moodle/competency:planview,
-    - moodle/competency:userevidenceview
-    - moodle/webservice:createtoken
-    - webservice/rest:use
-
-
-###Login
-You need set the capabilites from each role. First the token generation and rest use.
-
-METHOD: POST
-PATH: http://www.domain.me/login/token.php?username=username&password=password&service=moodle_mobile_app
-
-
-
-
-
-###Usefull functions
-
-####core_course_get_courses
-#####Description
-List all courses
-
-
-
-####core_course_view_course
-#####Description
-Get info about a course
-#####parameters:
-1. courseid
-
-####core_enrol_get_users_courses
-#####Description
-Get all courses where user belongs.
-#####parameters:
-1. userid
-
-
-
-###flows
-1. Listar todos mis cursos
-   function   core_enrol_get_users_courses
-   params:    userid
-2. Listar todos los usuarios de un curso mio.
-   function:   core_enrol_get_enrolled_users
-   params:     courseid
-
-
-
-
-"moodle/badges:viewotherbadges","moodle/calendar:manageownentries","moodle/competency:competencyview","moodle/competency:evidencedelete","moodle/competency:competencymanage","moodle/competency:coursecompetencyview","moodle/category:viewhiddencategories","moodle/course:view","moodle/user:update","moodle/site:deleteownmessage","moodle/user:editownmessageprofile","moodle/site:sendmessage","moodle/user:manageownfiles","moodle/user:editownprofile","moodle/user:editprofile","moodle/user:editmessageprofile","gradereport/overview:view","message/airnotifier:managedevice","mod/feedback:complete","mod/folder:view","mod/imscp:view","mod/label:view","mod/lesson:view","mod/page:view","mod/quiz:attempt","mod/quiz:reviewmyattempts","mod/resource:view","mod/url:view","mod/workshop:submit","moodle/competency:planviewown","moodle/competency:planview","moodle/competency:userevidenceview"
-
-Teacher requires the next role capabilities:
-VALUES
-(1,3,"moodle/badges:viewotherbadges",1,1533143978,0),
-(1,3,"moodle/calendar:manageownentries",1,1533143978,0),
-(1,3,"moodle/competency:competencyview",1,1533143978,0),
-(1,3,"moodle/competency:evidencedelete",1,1533143978,0),
-(1,3,"moodle/competency:competencymanage",1,1533143978,0),
-(1,3,"moodle/competency:coursecompetencyview",1,1533143978,0),
-(1,3,"moodle/category:viewhiddencategories",1,1533143978,0),
-(1,3,"moodle/course:view",1,1533143978,0),
-(1,3,"moodle/user:update",1,1533143978,0),
-(1,3,"moodle/site:deleteownmessage",1,1533143978,0),
-(1,3,"moodle/user:editownmessageprofile",1,1533143978,0),
-(1,3,"moodle/site:sendmessage",1,1533143978,0),
-(1,3,"moodle/user:manageownfiles",1,1533143978,0),
-(1,3,"moodle/user:editownprofile",1,1533143978,0),
-(1,3,"moodle/user:editprofile",1,1533143978,0),
-(1,3,"moodle/user:editmessageprofile",1,1533143978,0),
-(1,3,"gradereport/overview:view",1,1533143978,0),
-(1,3,"message/airnotifier:managedevice",1,1533143978,0),
-(1,3,"mod/feedback:complete",1,1533143978,0),
-(1,3,"mod/folder:view",1,1533143978,0),
-(1,3,"mod/imscp:view",1,1533143978,0),
-(1,3,"mod/label:view",1,1533143978,0),
-(1,3,"mod/lesson:view",1,1533143978,0),
-(1,3,"mod/page:view",1,1533143978,0),
-(1,3,"mod/quiz:attempt",1,1533143978,0),
-(1,3,"mod/quiz:reviewmyattempts",1,1533143978,0),
-(1,3,"mod/resource:view",1,1533143978,0),
-(1,3,"mod/url:view",1,1533143978,0),
-(1,3,"mod/workshop:submit",1,1533143978,0),
-(1,3,"moodle/competency:planviewown",1,1533143978,0),
-(1,3,"moodle/competency:planview",1,1533143978,0),
-(1,3,"moodle/competency:userevidenceview",1,1533143978,0),
-
-
-
-
-#issues found in vpl:
-
-### as teacher (in a nutshell with teacher's cookies):
-   1. i can use the POST/mod/vpl/forms/executionfiles.json.php?id=7&action=save to save any file (there is not validation for it)
-    
+Conditions:
+```
+1. Valid values of T : T >= R && T >= N && T > 0
+2. Valid values of R : T >= R >= 0
+3. Valid values of N : T >= N => 0
+4. Valid values of C:  C >= 1
+5. valid values of E:  E >= R => 0
+6. Valid values of S:  1 >= S >= 0
+```

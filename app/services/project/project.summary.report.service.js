@@ -1,64 +1,87 @@
-import { pick } from 'lodash'
-
+import moment from 'moment'
+import { capitalize, camelCase } from 'lodash'
 const Config = global.Config;
-const BaseService = require(Config.paths.services + '/service');
+
+
+// import { pick } from 'lodash'
+
+// const BaseService = require(Config.paths.services + '/service');
+// const Errors = require(Config.paths.errors + '/project.summary.errors');
+// const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
+// const Util = require(Config.paths.utils);
+
 const UserService = require(Config.paths.services + '/user/user.service');
-const Projectservice = require(Config.paths.services + '/project/project.service');
-const Errors = require(Config.paths.errors + '/project.summary.errors');
-const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
-const Util = require(Config.paths.utils);
-
+const Projectservice = require('./project.service');
 /*
- This class create summaries reports.
- -----------------------------------------------------
-  How to calculate the student skill of a topic 
- -----------------------------------------------------
 
-  Variables:
-
-  T: Total of test_cases 
-  R: Total of test cases that the studen solved
-  N: Total of test cases that the studen not solved
-  C: negative coefiecent, more not solved tests, more penalization
-  s: total of summaries of a test case
-  E: The ammount of all attempts to solve a test_case (s/∑a)
-  S: Student skill level
-
-  a: attemp to solve a test case
-
-  C = (T+1) / (R+1)
-  S =  T / (E*C)
-
-  Ranges:
-
-  1. Valid values of T : T >= R && T >= N && T > 0
-  2. Valid values of R : T >= R >= 0
-  3. Valid values of N : T >= N => 0
-  4. Valid values of C:  C >= 1
-  5. valid values of E:  E >= R => 0
-  6. Valid values of S:  1 >= S >= 0
  
  */
 class SummaryReportService {
 
-  
+  getPopulateToSelectProjectWithUserSummaries(moodle_user) {
+    return [
+      {
+        path: 'tests',
+        populate: {
+          path: 'test_cases',
+          populate: {
+            path: 'summaries',
+            match: moodle_user ? { moodle_user } : {}
+          }
+        }
+      }
+    ]
+  }
 
-  /**
-   * Project is related to an moodle activity
-   * @param {*} CurrentUser 
-   * @param {*} user_id 
-   */
-  getUserReportProject(CurrentUser, user_id) {
+  async extractUserReportsFromProject(ProjectDoc) {
 
   }
 
-  // any teacher can see the user reports
-  getUsersReport(CurrentUser, user_ids) {
-    return Promise.all(user_ids.map(id => this.getUserReport(CurrentUser, id)))
+  async createProjectReport(Report) {
+
   }
 
+  createProjectReports(ArrayOfProjectDoc) {
+    const array = Array.isArrray(ArrayOfProjectDoc)
+      ? ArrayOfProjectDoc
+      : [ArrayOfProjectDoc]
+    return Promise.all(array.map(this.createProjectReport))
+
+  }
+  getDatesFromOptions(ProjectDoc, opts, format = "YYYY-MM-DD") {
+    const {
+      from = moment(ProjectDoc.created_at).format(format),
+      to = moment().format(format)
+    } = opts
+    return { from, to }
+  }
+
+  createName(ProjectDoc, StudentUserDoc, opts) {
+    const dates = this.getDatesFromOptions(ProjectDoc, opts)
+    const { from, to } = dates
+    const stamp = [from, to].join('-')
+    const { _id: project_id } = ProjectDoc
+    return UserDoc
+      ? `VplReport ${project_id} of student: ${StudentUserDoc.id}-${capitalize(camelCase(StudentUserDoc.firstname + ' ' + StudentUserDoc.lastname))}-${stamp}`
+      : project_id
+        ? `VplReport ${project_id}-${stamp}`
+        : `VplReport all-${stamp}`
+  }
   //can be used by owner student, and a teacher
-  getUserReport() {
+  async getUserReport(CurrentUser, project_id, moodle_user, opts) {
+    let UserDoc;
+    const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user)
+    const { from, to } = opts
+    const created_by = CurrentUser
+    const projectQuery = {}
+
+    if (project_id) projectQuery._id = project_id
+    if (moodle_user) UserDoc = await UserService.getUserMoodle(moodle_user)
+    const ProjectDoc = await Projectservice.get(CurrentUser, projectQuery, ProjectPopulates)
+    const name = this.createName(ProjectDoc, UserDoc)
+    const reports = await this.createProjectReports(ProjectDoc)
+
+
     /**
      * This report allow to me to know the 
      * level of a user and him skills, 
@@ -121,6 +144,19 @@ class SummaryReportService {
     */
   }
 
+  /**
+   * Project is related to a moodle activity
+   * @param {*} CurrentUser 
+   * @param {*} user_id 
+   */
+  getUserReportProject(CurrentUser, project_id, student_id, opts) {
+
+  }
+
+  // any teacher can see the user reports
+  getUsersReport(CurrentUser, user_ids) {
+    return Promise.all(user_ids.map(id => this.getUserReport(CurrentUser, id)))
+  }
   /**
    * The project includes the tests with the cases,
    * the summaries by test cases and who passed the test case

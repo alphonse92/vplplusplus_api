@@ -15,6 +15,15 @@ class ProjectService extends BaseService {
 		super(Project)
 	}
 
+	async get(CurrentUser, query, populates = [], opts = { throwErrorIfNotExist: true }) {
+		try {
+
+			return await super.get({ ...query, owner: CurrentUser._id }, populates, opts)
+		} catch (e) {
+			throw new Util.Error(Errors.project_doesnt_exist)
+		}
+	}
+
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
 			const queryByOwner = { owner: CurrentUser._id }
