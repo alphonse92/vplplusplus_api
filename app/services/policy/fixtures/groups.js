@@ -86,6 +86,12 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			// reports
+			{ resource: "service:api:system:project.report.list" },
+			{ resource: "service:api:system:project.report.user.list" },
+			{ resource: "service:api:system:project.report.user.get" }, ,
+			{ resource: "service:api:system:project.report.user.evolution.list" },
+			{ resource: "service:api:system:project.report.user.evolution.get" },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
@@ -128,6 +134,12 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			// reports
+			{ resource: "service:api:system:project.report.list" },
+			{ resource: "service:api:system:project.report.user.list" },
+			{ resource: "service:api:system:project.report.user.get" }, ,
+			{ resource: "service:api:system:project.report.user.evolution.list" },
+			{ resource: "service:api:system:project.report.user.evolution.get" },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
@@ -154,6 +166,12 @@ module.exports = {
 			{ resource: "service:api:system:test.case.summary.list" },
 			// Topics
 			{ resource: "service:api:system:topic.list" },
+			// reports
+			{ resource: "service:api:system:project.report.list" },
+			{ resource: "service:api:system:project.report.user.list" },
+			{ resource: "service:api:system:project.report.user.get" }, ,
+			{ resource: "service:api:system:project.report.user.evolution.list" },
+			{ resource: "service:api:system:project.report.user.evolution.get" },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client

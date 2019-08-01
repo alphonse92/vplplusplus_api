@@ -313,6 +313,65 @@ fixtures.deleteTestCase = {
 	]
 };
 
+// project reports
+
+fixtures.getReportProjects = {
+	resource: "service:api:system:project.report.list",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/report", scopes: ["getReportProjects"] }
+	]
+};
+fixtures.getReportProjectUsers = {
+	resource: "service:api:system:project.report.user.list",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/report/user", scopes: ["getReportProjectUsers"] }
+	]
+};
+
+fixtures.getReportProjectUser = {
+	resource: "service:api:system:project.report.user.get",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/report/user/:moodle_student_id", scopes: ["getReportProjectUser"] }
+	]
+};
+fixtures.getReportProjectUsersEvolution = {
+	resource: "service:api:system:project.report.user.evolution.list",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/report/user/evolution", scopes: ["getReportProjectUsersEvolution"] }
+	]
+};
+fixtures.getReportProjectUserEvolution = {
+	resource: "service:api:system:project.report.user.evolution.get",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "POST/api/v1/project/report/user/:moodle_student_id/evolution", scopes: ["getReportProjectUserEvolution"] }
+	]
+};
+
 // test summaries
 
 fixtures.createTestSummary = {

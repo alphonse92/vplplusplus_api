@@ -1,5 +1,5 @@
 import * as  InstanceMethods from './test.methods'
-import * as  InstanceMethods from './test.statics'
+import * as  StaticMethods from './test.statics'
 
 const Config = global.Config;
 const Util = require(Config.paths.utils)

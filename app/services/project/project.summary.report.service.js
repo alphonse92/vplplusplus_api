@@ -1,5 +1,7 @@
 import moment from 'moment'
 import { capitalize, camelCase } from 'lodash'
+import { ProjectAggregator } from './agregators/project.summary.report.agregator';
+
 const Config = global.Config;
 
 
@@ -96,204 +98,41 @@ class SummaryReportService {
         ? moodle_user
         : [moodle_user]
     const querySummary = {}
-    const projectQuery = project_id_array.length
+
+    const projectFindQuery = project_id_array.length
       ? { _id: { $in: project_id_array } }
       : {}
-
+    const projectOwnerQuery = { owner: CurrentUser._id }
+    const projectQuery = { ...projectFindQuery, ...projectOwnerQuery }
     if (moodle_user_array.length) querySummary.moodle_user = { $in: moodle_user_array }
     if (from || to) querySummary.created_at = { $gte, $lte }
 
-    const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user, summary_query)
-    const ProjectDocs = await ProjectService.list(CurrentUser, projectQuery, ProjectPopulates)
+    const queries = {
+      project: projectQuery,
+      summary: querySummary
+    }
+    const Report = await Projectservice
+      .getModel()
+      .aggregate(ProjectAggregator(queries))
 
-    const relationTable = ProjectDocs
-      .reduce((array, ProjectDoc) => {
-        ProjectDoc.tests.forEach(TestDoc => {
-          TestDoc.test_cases.forEach(TestCaseDoc => {
-            TestCaseDoc.summaries.forEach(SummaryDoc => {
+    return Report
 
-              const { user: UserDoc } = SummaryDoc
-              const { _id, firstname, lastname, email, id } = user
-              map[_id] = map[_id] || {
-                _id,
-                fristname,
-                lastname,
-                email,
-                id,
-                topic_map: {},
-              }
-              array.push({ UserDoc, ProjectDoc, TestDoc, TestCaseDoc, })
-
-            })
-          })
-        })
-      }, [])
-
-    // const SummariesByUser = await SummaryService.groupBy(CurrentUser, querySummary, 'moodle_user')
-
-    /**
-     * 1. Find all the summaries for the project selected (if is selected)
-     */
-
-    // let UserDoc;
-    // const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user)
-    // const { from, to } = opts
-    // const created_by = CurrentUser
-    // const projectQuery = {}
-
-    // if (project_id) projectQuery._id = project_id
-    // if (moodle_user) UserDoc = await UserService.getUserMoodle(moodle_user)
-    // const ProjectDoc = await Projectservice.get(CurrentUser, projectQuery, ProjectPopulates)
-    // const name = this.createName(ProjectDoc, UserDoc)
-    // const reports = await this.createProjectReports(ProjectDoc,moodle_user)
-
-
-    /**
-     * This report allow to me to know the 
-     * level of a user and him skills, 
-     * with the 
-     */
-    /*
-
-    each item is a user report
-      {
-        name: report name
-        from: date,
-        to: date
-        created_by:
-        reports:[
-          {
-              id:...
-              firstname:...
-              lastname:...
-              email:...
-              projects:[
-                {
-                  link: http://moodle/myactivity ... bla bla
-                  project: {...project data}
-                }
-              ]
-              skills:[ 
-                {
-                  name: razonamiento matemático
-                  cases: 20
-                  effort: 24
-                  level: 83.3 
-                },
-                {
-                  name: lógica
-                  cases: 15
-                  effort: 28
-                  level: 53.57 
-                },
-              ],
-              skill: // avg of all skill levels
-              solved: [{... array of test cases (name,objective) ...}],
-              not_solved: [{... array of test cases (name,objective)...}]
-              submissions:[
-                {
-                  effort: count of summaries
-                  test_case:{
-                    name,
-                    objective
-                  }
-                  summaries:[ (order by created_at)
-                    approved
-                    created_at,
-                  ]
-                }
-              ]
-          }
-        ]
-      }
-     
-    */
   }
 
-  /**
-   * Project is related to a moodle activity
-   * @param {*} CurrentUser 
-   * @param {*} user_id 
-   */
   getUserReportProject(CurrentUser, project_id, student_id, opts) {
 
   }
 
-  // any teacher can see the user reports
+
   getUsersReport(CurrentUser, user_ids) {
     return Promise.all(user_ids.map(id => this.getUserReport(CurrentUser, id)))
   }
-  /**
-   * The project includes the tests with the cases,
-   * the summaries by test cases and who passed the test case
-   * and him effort.
-   * @param {*} CurrentUser 
-   * @param {*} project_id 
-   */
+
   getProjectReport(CurrentUser, project_id) {
-    /*
-    
-    each item is a project report
-      {
-        name
-        from
-        to
-        reports:[
-          {
-            name,
-            description
-            tests:[
-              {
-                name,
-                objective
-                test_cases:[
-                  {
-                    name
-                    objective,
-                    solved:
-                    not_solved
-                  }
-                ]
-              }
-            ]
-            users:[
-              {
-                _id,
-                id,
-                firstname
-                lastname
-                link_user_profile
-                link_user_report
-                skills:[ 
-                  {
-                    name: razonamiento matemático
-                    cases: 20
-                    effort: 24
-                    level: 83.3 
-                  },
-                  {
-                    name: lógica
-                    cases: 15
-                    effort: 28
-                    level: 53.57 
-                  },
-                ],
-                skill: // avg of all skill levels
-              }
-            ]
-          }
-        ]
-      }
-      
-      
-     */
+
   }
 
-  /**
-   * 
-   * @param {*} CurrentUser 
-   * @param {*} project_id 
-   */
+
   getUserKnowledge(CurrentUser, project_id) {
 
   }
