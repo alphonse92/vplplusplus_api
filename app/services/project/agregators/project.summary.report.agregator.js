@@ -1,4 +1,4 @@
-export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user = {}, report = {} }) =>
+export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user = {}, report = {}, custom = [] }) =>
   [
     { $match: project }, //filter by Project
     {
@@ -329,6 +329,7 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
     {
       $match: report
     },
+    ...custom,
     {
       $project: {
         topics: 0,
