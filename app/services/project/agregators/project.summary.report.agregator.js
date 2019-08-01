@@ -1,4 +1,4 @@
-export const ProjectAggregator = ({ project, topic, summary, user }) =>
+export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user = {}, report = {} }) =>
   [
     { $match: project }, //filter by Project
     {
@@ -312,6 +312,22 @@ export const ProjectAggregator = ({ project, topic, summary, user }) =>
           }
         }
       }
+    },
+    {
+      $addFields: {
+        skill: {
+          $avg: {
+            $map: {
+              input: "$skills",
+              as: "skill",
+              in: "$$skill.info.level"
+            }
+          }
+        }
+      }
+    },
+    {
+      $match: report
     },
     {
       $project: {
