@@ -323,7 +323,7 @@ fixtures.getReportProjects = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/report", scopes: ["getReportProjects"] }
+		{ path: "GET/api/v1/project/report/", scopes: ["getReportProjects"] }
 	]
 };
 fixtures.getReportProjectUsers = {
@@ -334,7 +334,7 @@ fixtures.getReportProjectUsers = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/report/user", scopes: ["getReportProjectUsers"] }
+		{ path: "GET/api/v1/project/report/user/", scopes: ["getReportProjectUsers"] }
 	]
 };
 
@@ -346,7 +346,7 @@ fixtures.getReportProjectUser = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/report/user/:moodle_student_id", scopes: ["getReportProjectUser"] }
+		{ path: "GET/api/v1/project/report/user/:moodle_student_id/", scopes: ["getReportProjectUser"] }
 	]
 };
 fixtures.getReportProjectUsersEvolution = {
@@ -357,7 +357,7 @@ fixtures.getReportProjectUsersEvolution = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/report/user/evolution", scopes: ["getReportProjectUsersEvolution"] }
+		{ path: "GET/api/v1/project/report/user/evolution/", scopes: ["getReportProjectUsersEvolution"] }
 	]
 };
 fixtures.getReportProjectUserEvolution = {
@@ -368,7 +368,7 @@ fixtures.getReportProjectUserEvolution = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/project/report/user/:moodle_student_id/evolution", scopes: ["getReportProjectUserEvolution"] }
+		{ path: "GET/api/v1/project/report/user/:moodle_student_id/evolution/", scopes: ["getReportProjectUserEvolution"] }
 	]
 };
 
