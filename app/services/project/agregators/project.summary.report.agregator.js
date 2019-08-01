@@ -9,6 +9,17 @@ export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
         as: "test"
       }
     },
+    {
+      $project: {
+        test: "$test",
+        project: {
+          name: "$name",
+          _id: "$_id",
+          description: "$description",
+          activity: "$activity"
+        }
+      }
+    },
     { $unwind: { path: "$test" } },
     {
       $lookup: {
@@ -57,10 +68,8 @@ export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
         lastname: { $first: "$user.lastname" },
         email: { $first: "$user.email" },
         description: { $first: "$user.description" },
-        //user: { $first: "$user" },
         topics: { $addToSet: '$topic' },
-        //projects: { $addToSet:"$project"},            
-        //tests : { $addToSet: '$test' },
+        projects: { $addToSet: "$project" },
         test_cases: { $addToSet: '$testcase' },
         summaries: { $addToSet: "$summary" }
       }
