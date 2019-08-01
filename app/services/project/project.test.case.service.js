@@ -13,6 +13,10 @@ class TestCaseService extends BaseService {
 		super(TestCase)
 	}
 
+	async list(CurrentUser, query, populates) {
+		return super.list(query, populates)
+	}
+
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
 			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })

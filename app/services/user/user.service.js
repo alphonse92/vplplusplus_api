@@ -302,14 +302,20 @@ function getUserTypes() {
 	return User.getUserTypes()
 }
 
-Service.get = get
-function get(query) {
-	return User.findOne(query)
-}
-
-Service.getUserMoodle = getUserMoodle
-async function getUserMoodle(moodle_id){
-
+Service.getByMoodleId = getByMoodleId
+async function getByMoodleId(moodle_id) {
+	// find the user
+	let UserDoc = await User.findOne({ id: moodle_id })
+	// if user does not exist find in moodle table
+	if (!UserDoc) {
+		const MoodleUserServiceClass = require(Config.paths.services + "/moodle/moodle.user.service") // get the moodle user service class
+		const MoodleUserService = new MoodleUserServiceClass() // Create an instance of the service
+		const MoodleUser = await MoodleUserService.getUserByMoodleId(moodle_id) // find in moodle database
+		if (!MoodleUser) throw new Util.Error(UserErrors.user_does_not_exist_in_moodle)
+		UserDoc = await updateOrCreate(MoodleUser) // store in user collection
+	}
+	// return the user document 
+	return UserDoc
 }
 
 Service.getMyStudents = getMyStudents

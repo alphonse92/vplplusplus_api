@@ -32,7 +32,7 @@ module.exports = {
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			default: null
+			required: true
 		},
 		approved: {
 			type: "Boolean",

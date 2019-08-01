@@ -35,6 +35,12 @@ class ProjectService extends BaseService {
 		}
 	}
 
+	list(CurrentUser, query, populates) {
+		return super
+			.list({ ...query, owner: CurrentUser._id })
+			.populate(populates)
+	}
+
 	compile(CurrentUser, _id) {
 		const { _id: owner } = CurrentUser
 		const ProjectDoc = super.get({ owner, _id })

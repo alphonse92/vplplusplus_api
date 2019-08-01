@@ -18,16 +18,31 @@ const Projectservice = require('./project.service');
  */
 class SummaryReportService {
 
-  getPopulateToSelectProjectWithUserSummaries(moodle_user) {
+  getPopulateToSelectProjectWithUserSummaries(moodle_user, summary_query) {
+    const summaryMatch = { ...summary_query }
+    if (moodle_user) summaryMatch.moodle_user = moodle_user
     return [
       {
         path: 'tests',
         populate: {
           path: 'test_cases',
-          populate: {
-            path: 'summaries',
-            match: moodle_user ? { moodle_user } : {}
-          }
+          populate: [
+            { path: 'topics' },
+            {
+              path: 'summaries',
+              match: summaryMatch,
+              populate: {
+                path: 'user',
+                select: {
+                  _id: 1,
+                  id: 1,
+                  firstname: 1,
+                  lastname: 1,
+                  email: 1,
+                }
+              }
+            }
+          ]
         }
       }
     ]
@@ -50,8 +65,8 @@ class SummaryReportService {
   }
   getDatesFromOptions(ProjectDoc, opts, format = "YYYY-MM-DD") {
     const {
-      from = moment(ProjectDoc.created_at).format(format),
-      to = moment().format(format)
+      from = moment(ProjectDoc.created_at),
+      to = moment()
     } = opts
     return { from, to }
   }
@@ -69,17 +84,68 @@ class SummaryReportService {
   }
   //can be used by owner student, and a teacher
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
-    let UserDoc;
-    const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user)
-    const { from, to } = opts
-    const created_by = CurrentUser
-    const projectQuery = {}
+    const { from: $gte, to: $lte } = opts
+    const project_id_array = project_id
+      ? []
+      : Array.isArray(project_id)
+        ? project_id
+        : [project_id]
+    const moodle_user_array = moodle_user
+      ? []
+      : Array.isArray(moodle_user)
+        ? moodle_user
+        : [moodle_user]
+    const querySummary = {}
+    const projectQuery = project_id_array.length
+      ? { _id: { $in: project_id_array } }
+      : {}
 
-    if (project_id) projectQuery._id = project_id
-    if (moodle_user) UserDoc = await UserService.getUserMoodle(moodle_user)
-    const ProjectDoc = await Projectservice.get(CurrentUser, projectQuery, ProjectPopulates)
-    const name = this.createName(ProjectDoc, UserDoc)
-    const reports = await this.createProjectReports(ProjectDoc)
+    if (moodle_user_array.length) querySummary.moodle_user = { $in: moodle_user_array }
+    if (from || to) querySummary.created_at = { $gte, $lte }
+
+    const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user, summary_query)
+    const ProjectDocs = await ProjectService.list(CurrentUser, projectQuery, ProjectPopulates)
+
+    const relationTable = ProjectDocs
+      .reduce((array, ProjectDoc) => {
+        ProjectDoc.tests.forEach(TestDoc => {
+          TestDoc.test_cases.forEach(TestCaseDoc => {
+            TestCaseDoc.summaries.forEach(SummaryDoc => {
+
+              const { user: UserDoc } = SummaryDoc
+              const { _id, firstname, lastname, email, id } = user
+              map[_id] = map[_id] || {
+                _id,
+                fristname,
+                lastname,
+                email,
+                id,
+                topic_map: {},
+              }
+              array.push({ UserDoc, ProjectDoc, TestDoc, TestCaseDoc, })
+
+            })
+          })
+        })
+      }, [])
+
+    // const SummariesByUser = await SummaryService.groupBy(CurrentUser, querySummary, 'moodle_user')
+
+    /**
+     * 1. Find all the summaries for the project selected (if is selected)
+     */
+
+    // let UserDoc;
+    // const ProjectPopulates = this.getPopulateToSelectProjectWithUserSummaries(moodle_user)
+    // const { from, to } = opts
+    // const created_by = CurrentUser
+    // const projectQuery = {}
+
+    // if (project_id) projectQuery._id = project_id
+    // if (moodle_user) UserDoc = await UserService.getUserMoodle(moodle_user)
+    // const ProjectDoc = await Projectservice.get(CurrentUser, projectQuery, ProjectPopulates)
+    // const name = this.createName(ProjectDoc, UserDoc)
+    // const reports = await this.createProjectReports(ProjectDoc,moodle_user)
 
 
     /**

@@ -28,6 +28,13 @@ class SummaryService extends BaseService {
     super(Summary)
   }
 
+  groupBy(CurrentUser, query, field) {
+    const accumulators = {
+      user: { $first: "$user" },
+    }
+    const result = await super.groupBy(query, field, accumulators)
+    return result.map(({ moodle_user, user, summaries }) => ({ moodle_user, user: user[0], summaries }))
+  }
 
   async createAll(project_id, moodle_user, summary_array_to_save) {
     const ProjectService = require('./project.service');
@@ -64,6 +71,7 @@ class SummaryService extends BaseService {
     )
     return results.concat(Object.values(TestCasesApprovedMap))
   }
+
   /**
    * Create a Summary related to a project and test case
    * @canExecute Client Runners, users that belongs to the group default/runner
@@ -72,9 +80,8 @@ class SummaryService extends BaseService {
    * @param {*} data 
    */
   async create(summary) {
-    const User = UserService.getModel()
-    const UserDoc = await User.findOne({ id: summary.moodle_user })
-    const user = UserDoc ? UserDoc._id : null
+    const UserDoc = await UserService.getByMoodleId(moodle_user)
+    const user = UserDoc._id
     const data = { ...summary, user }
     return await super.create(data)
   }

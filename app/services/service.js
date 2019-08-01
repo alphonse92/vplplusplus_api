@@ -8,6 +8,31 @@ class BaseService {
     this.Model = Model
   }
 
+  groupBy(query, field, accumulators = {}) {
+    const fieldForArrayOfIds = `${field}_ids`
+    const modelName = this.Model.collection.collectionName
+    return this
+      .Model
+      .find(query)
+      .aggregate([
+        {
+          $group: {
+            _id: `$${field}`,
+            [fieldForArrayOfIds]: { $addToSet: '$_id' },
+            ...accumulators
+          }
+        },
+        {
+          $lookup: {
+            from: modelName,
+            localField: fieldForArrayOfIds,
+            foreignField: "_id",
+            as: modelName
+          }
+        }
+      ])
+  }
+
   getModel() {
     return this.Model
   }
@@ -19,7 +44,7 @@ class BaseService {
   }
 
   list(query) {
-    return Util.mongoose.list(this.Model, query._id, query, {})
+    return this.Model.find(query)
   }
 
   async listUsingTheRequest(requestData, MapOfSelectFieldFromPopulates, baseQuery) {
