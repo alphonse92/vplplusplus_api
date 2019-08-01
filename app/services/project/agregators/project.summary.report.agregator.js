@@ -1,6 +1,6 @@
-export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
+export const ProjectAggregator = ({ project, topic, summary, user }) =>
   [
-    // { $match: {"owner": ObjectId("bla bla bla")} }, // the match condition to filter by project fields
+    { $match: project }, //filter by Project
     {
       $lookup: {
         from: "tests",
@@ -39,7 +39,7 @@ export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
       },
     },
     { $unwind: { path: "$topic" } },
-    // { $match: {"topic.name":{$in:["t001"] } } }, // the match condition to filter by  topic name
+    { $match: topic }, // filter by topic
     {
       $lookup: {
         from: "summaries",
@@ -49,7 +49,7 @@ export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
       },
     },
     { $unwind: { path: "$summary" } },
-    // { $match: {"summary.created_at":{$gte:"", $lte:""} } }, // the match condition to filter by summary fields
+    { $match: summary }, // the match condition to filter by summary fields
     {
       $lookup: {
         from: "users",
@@ -59,7 +59,7 @@ export const ProjectAggregator = (QueryProject, QueryTopic, QuerySummary) =>
       },
     },
     { $unwind: { path: "$user" } },
-    // { $match: {"user.id":{$in:[13] } } }, // the match condition to filter by user
+    { $match: user }, // the match condition to filter by user
     {
       $group: {
         _id: "$user._id",
