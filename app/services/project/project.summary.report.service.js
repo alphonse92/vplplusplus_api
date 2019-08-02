@@ -41,7 +41,6 @@ class SummaryReportService {
   }
 
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
-    console.log('find by', { project_id, moodle_user, opts })
     const { from, to } = this.getDatesFromOptions(opts)
     const $gte = this.safeToDate(from)
     const $lte = this.safeToDate(to)
@@ -76,7 +75,7 @@ class SummaryReportService {
       project: projectQuery,
       summary: querySummary
     }
-    console.log(JSON.stringify(queries, null, 2))
+
     const aggregator = ProjectAggregator(queries)
     const Report = await Projectservice
       .getModel()
