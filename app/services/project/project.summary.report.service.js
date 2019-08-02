@@ -3,21 +3,8 @@ import { capitalize, camelCase } from 'lodash'
 import { ProjectAggregator } from './agregators/project.summary.report.agregator';
 
 const Config = global.Config;
-
-
-// import { pick } from 'lodash'
-
-// const BaseService = require(Config.paths.services + '/service');
-// const Errors = require(Config.paths.errors + '/project.summary.errors');
-// const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
-// const Util = require(Config.paths.utils);
-
-const UserService = require(Config.paths.services + '/user/user.service');
 const Projectservice = require('./project.service');
-/*
 
- 
- */
 class SummaryReportService {
 
   getPopulateToSelectProjectWithUserSummaries(moodle_user, summary_query) {
@@ -65,12 +52,13 @@ class SummaryReportService {
     return Promise.all(array.map(this.createProjectReport))
 
   }
-  getDatesFromOptions(ProjectDoc, opts, format = "YYYY-MM-DD") {
-    const {
-      from = moment(ProjectDoc.created_at),
-      to = moment()
-    } = opts
-    return { from, to }
+  getDatesFromOptions(opts) {
+    const { from, to } = opts
+    const dates = {}
+    if (from) dates.from = moment(from)
+    if (to) dates.to = moment(to)
+
+    return dates
   }
 
   createName(ProjectDoc, StudentUserDoc, opts) {
@@ -84,19 +72,29 @@ class SummaryReportService {
         ? `VplReport ${project_id}-${stamp}`
         : `VplReport all-${stamp}`
   }
-  //can be used by owner student, and a teacher
+
+  safeToDate(momentDate) {
+    return momentDate
+      ? momentDate.toDate()
+      : undefined
+  }
+
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
-    const { from: $gte, to: $lte } = opts
-    const project_id_array = project_id
+    const { from, to } = this.getDatesFromOptions(opts)
+    const $gte = this.safeToDate(from)
+    const $lte = this.safeToDate(to)
+
+    const project_id_array = !project_id
       ? []
       : Array.isArray(project_id)
         ? project_id
         : [project_id]
-    const moodle_user_array = moodle_user
+    const moodle_user_array = !moodle_user
       ? []
       : Array.isArray(moodle_user)
         ? moodle_user
         : [moodle_user]
+
     const querySummary = {}
 
     const projectFindQuery = project_id_array.length
@@ -104,22 +102,30 @@ class SummaryReportService {
       : {}
     const projectOwnerQuery = { owner: CurrentUser._id }
     const projectQuery = { ...projectFindQuery, ...projectOwnerQuery }
-    if (moodle_user_array.length) querySummary.moodle_user = { $in: moodle_user_array }
-    if (from || to) querySummary.created_at = { $gte, $lte }
+    if (moodle_user_array.length) querySummary["summary.moodle_user"] = { $in: moodle_user_array }
+    if ($gte || $lte) {
+      const dates = {}
+      if ($gte) dates.$gte = $gte
+      if ($lte) dates.$lte = $lte
+      querySummary["summary.createdAt"] = dates
+    }
 
     const queries = {
       project: projectQuery,
       summary: querySummary
     }
+
+    console.log(JSON.stringify(queries, null, 2))
+    const aggregator = ProjectAggregator(queries)
     const Report = await Projectservice
       .getModel()
-      .aggregate(ProjectAggregator(queries))
+      .aggregate(aggregator)
 
     return Report
 
   }
 
-  getUserReportProject(CurrentUser, project_id, student_id, opts) {
+  asyncgetUserReportProject(CurrentUser, project_id, student_id, opts) {
 
   }
 

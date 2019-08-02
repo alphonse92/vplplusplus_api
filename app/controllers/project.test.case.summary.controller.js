@@ -1,5 +1,6 @@
 const Config = global.Config;
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
+const UserService = require(Config.paths.services + '/user/user.service');
 
 
 module.exports.create = create;
@@ -28,7 +29,8 @@ async function getUserReports(req, res, next) {
 		const { moodle_student_id, id: project_id } = req.params
 		const { from, to } = req.query
 		const opts = { from, to }
-		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, moodle_student_id, opts)
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts)
 		res.send(report)
 	} catch (e) { next(e) }
 }
