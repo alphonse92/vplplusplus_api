@@ -87,11 +87,15 @@ module.exports = {
 			// Topics
 			{ resource: "service:api:system:topic.list" },
 			// reports
-			{ resource: "service:api:system:project.report.list" },
-			{ resource: "service:api:system:project.report.user.list" },
-			{ resource: "service:api:system:project.report.user.get" }, ,
-			{ resource: "service:api:system:project.report.user.evolution.list" },
-			{ resource: "service:api:system:project.report.user.evolution.get" },
+			{ resource: "service:api:system:projects.report.list" },
+			{ resource: "service:api:system:projects.report.user.list" },
+			{ resource: "service:api:system:projects.report.user.get" }, ,
+			{ resource: "service:api:system:projects.report.user.evolution.list" },
+			{ resource: "service:api:system:projects.report.user.evolution.get" },
+			{ resource: "service:api:system:project.report.get", },
+			{ resource: "service:api:system:project.report.user.get", },
+			{ resource: "service:api:system:project.report.user.list", },
+
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
@@ -135,11 +139,14 @@ module.exports = {
 			// Topics
 			{ resource: "service:api:system:topic.list" },
 			// reports
-			{ resource: "service:api:system:project.report.list" },
-			{ resource: "service:api:system:project.report.user.list" },
-			{ resource: "service:api:system:project.report.user.get" }, ,
-			{ resource: "service:api:system:project.report.user.evolution.list" },
-			{ resource: "service:api:system:project.report.user.evolution.get" },
+			{ resource: "service:api:system:projects.report.list" },
+			{ resource: "service:api:system:projects.report.user.list" },
+			{ resource: "service:api:system:projects.report.user.get" }, ,
+			{ resource: "service:api:system:projects.report.user.evolution.list" },
+			{ resource: "service:api:system:projects.report.user.evolution.get" },
+			{ resource: "service:api:system:project.report.get", },
+			{ resource: "service:api:system:project.report.user.get", },
+			{ resource: "service:api:system:project.report.user.list", },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
@@ -167,11 +174,14 @@ module.exports = {
 			// Topics
 			{ resource: "service:api:system:topic.list" },
 			// reports
-			{ resource: "service:api:system:project.report.list" },
-			{ resource: "service:api:system:project.report.user.list" },
-			{ resource: "service:api:system:project.report.user.get" }, ,
-			{ resource: "service:api:system:project.report.user.evolution.list" },
-			{ resource: "service:api:system:project.report.user.evolution.get" },
+			{ resource: "service:api:system:projects.report.list" },
+			{ resource: "service:api:system:projects.report.user.list" },
+			{ resource: "service:api:system:projects.report.user.get" }, ,
+			{ resource: "service:api:system:projects.report.user.evolution.list" },
+			{ resource: "service:api:system:projects.report.user.evolution.get" },
+			{ resource: "service:api:system:project.report.get", },
+			{ resource: "service:api:system:project.report.user.get", },
+			{ resource: "service:api:system:project.report.user.list", },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client

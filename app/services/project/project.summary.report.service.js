@@ -2,62 +2,23 @@ import moment from 'moment'
 import { capitalize, camelCase } from 'lodash'
 import { ProjectAggregator } from './agregators/project.summary.report.agregator';
 
-const Config = global.Config;
+const mongoose = require('mongoose')
 const Projectservice = require('./project.service');
 
 class SummaryReportService {
-
-  getPopulateToSelectProjectWithUserSummaries(moodle_user, summary_query) {
-    const summaryMatch = { ...summary_query }
-    if (moodle_user) summaryMatch.moodle_user = moodle_user
-    return [
-      {
-        path: 'tests',
-        populate: {
-          path: 'test_cases',
-          populate: [
-            { path: 'topics' },
-            {
-              path: 'summaries',
-              match: summaryMatch,
-              populate: {
-                path: 'user',
-                select: {
-                  _id: 1,
-                  id: 1,
-                  firstname: 1,
-                  lastname: 1,
-                  email: 1,
-                }
-              }
-            }
-          ]
-        }
-      }
-    ]
-  }
-
-  async extractUserReportsFromProject(ProjectDoc) {
-
-  }
-
-  async createProjectReport(Report) {
-
-  }
 
   createProjectReports(ArrayOfProjectDoc) {
     const array = Array.isArrray(ArrayOfProjectDoc)
       ? ArrayOfProjectDoc
       : [ArrayOfProjectDoc]
     return Promise.all(array.map(this.createProjectReport))
-
   }
+
   getDatesFromOptions(opts) {
     const { from, to } = opts
     const dates = {}
     if (from) dates.from = moment(from)
     if (to) dates.to = moment(to)
-
     return dates
   }
 
@@ -80,6 +41,7 @@ class SummaryReportService {
   }
 
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
+    console.log('find by', { project_id, moodle_user, opts })
     const { from, to } = this.getDatesFromOptions(opts)
     const $gte = this.safeToDate(from)
     const $lte = this.safeToDate(to)
@@ -98,7 +60,7 @@ class SummaryReportService {
     const querySummary = {}
 
     const projectFindQuery = project_id_array.length
-      ? { _id: { $in: project_id_array } }
+      ? { _id: { $in: project_id_array.map(id => new mongoose.Types.ObjectId(id)) } }
       : {}
     const projectOwnerQuery = { owner: CurrentUser._id }
     const projectQuery = { ...projectFindQuery, ...projectOwnerQuery }
@@ -114,7 +76,7 @@ class SummaryReportService {
       project: projectQuery,
       summary: querySummary
     }
-
+    console.log(JSON.stringify(queries, null, 2))
     const aggregator = ProjectAggregator(queries)
     const Report = await Projectservice
       .getModel()
@@ -123,31 +85,6 @@ class SummaryReportService {
     return Report
 
   }
-
-  asyncgetUserReportProject(CurrentUser, project_id, student_id, opts) {
-
-  }
-
-
-  getUsersReport(CurrentUser, user_ids) {
-    return Promise.all(user_ids.map(id => this.getUserReport(CurrentUser, id)))
-  }
-
-  getProjectReport(CurrentUser, project_id) {
-
-  }
-
-
-  getUserKnowledge(CurrentUser, project_id) {
-
-  }
-
-  getUserUnawareness(CurrentUser, user_id) {
-
-  }
-
-
-
 
 }
 

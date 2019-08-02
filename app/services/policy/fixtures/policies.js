@@ -316,7 +316,7 @@ fixtures.deleteTestCase = {
 // project reports
 
 fixtures.getReportProjects = {
-	resource: "service:api:system:project.report.list",
+	resource: "service:api:system:projects.report.list",
 	name: "project.report.user",
 	slug: "Create a user report from summaries",
 	type: DefaultPolicyService.types.default,
@@ -324,6 +324,64 @@ fixtures.getReportProjects = {
 	extends: [], depends: [],
 	actions: [
 		{ path: "GET/api/v1/project/report/", scopes: ["getReportProjects"] }
+	]
+};
+fixtures.getReportProjectsUsers = {
+	resource: "service:api:system:projects.report.user.list",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/report/user/", scopes: ["getReportProjectsUsers"] }
+	]
+};
+
+fixtures.getReportProjectsUser = {
+	resource: "service:api:system:projects.report.user.get",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/report/user/:moodle_student_id/", scopes: ["getReportProjectsUser"] }
+	]
+};
+fixtures.getReportProjectsUsersEvolution = {
+	resource: "service:api:system:projects.report.user.evolution.list",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/report/user/evolution/", scopes: ["getReportProjectsUsersEvolution"] }
+	]
+};
+fixtures.getReportProjectsUserEvolution = {
+	resource: "service:api:system:projects.report.user.evolution.get",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/report/user/:moodle_student_id/evolution/", scopes: ["getReportProjectsUserEvolution"] }
+	]
+};
+
+
+fixtures.getReportProject = {
+	resource: "service:api:system:project.report.get",
+	name: "project.report.user",
+	slug: "Create a user report from summaries",
+	type: DefaultPolicyService.types.default,
+	description: "Create user report from the all projects",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/report/", scopes: ["getReportProject"] }
 	]
 };
 fixtures.getReportProjectUsers = {
@@ -334,10 +392,9 @@ fixtures.getReportProjectUsers = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "GET/api/v1/project/report/user/", scopes: ["getReportProjectUsers"] }
+		{ path: "GET/api/v1/project/:id/report/user/", scopes: ["getReportProjectUsers"] }
 	]
 };
-
 fixtures.getReportProjectUser = {
 	resource: "service:api:system:project.report.user.get",
 	name: "project.report.user",
@@ -346,29 +403,7 @@ fixtures.getReportProjectUser = {
 	description: "Create user report from the all projects",
 	extends: [], depends: [],
 	actions: [
-		{ path: "GET/api/v1/project/report/user/:moodle_student_id/", scopes: ["getReportProjectUser"] }
-	]
-};
-fixtures.getReportProjectUsersEvolution = {
-	resource: "service:api:system:project.report.user.evolution.list",
-	name: "project.report.user",
-	slug: "Create a user report from summaries",
-	type: DefaultPolicyService.types.default,
-	description: "Create user report from the all projects",
-	extends: [], depends: [],
-	actions: [
-		{ path: "GET/api/v1/project/report/user/evolution/", scopes: ["getReportProjectUsersEvolution"] }
-	]
-};
-fixtures.getReportProjectUserEvolution = {
-	resource: "service:api:system:project.report.user.evolution.get",
-	name: "project.report.user",
-	slug: "Create a user report from summaries",
-	type: DefaultPolicyService.types.default,
-	description: "Create user report from the all projects",
-	extends: [], depends: [],
-	actions: [
-		{ path: "GET/api/v1/project/report/user/:moodle_student_id/evolution/", scopes: ["getReportProjectUserEvolution"] }
+		{ path: "GET/api/v1/project/:id/report/user/:moodle_student_id", scopes: ["getReportProjectUser"] }
 	]
 };
 
