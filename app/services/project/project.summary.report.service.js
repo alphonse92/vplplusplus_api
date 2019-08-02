@@ -115,7 +115,6 @@ class SummaryReportService {
       summary: querySummary
     }
 
-    console.log(JSON.stringify(queries, null, 2))
     const aggregator = ProjectAggregator(queries)
     const Report = await Projectservice
       .getModel()
