@@ -12,7 +12,7 @@ const Schema = new mongoose.Schema(ModelSchema.schema, { toJSON: { virtuals: tru
 Schema.virtual('summaries', {
   ref: 'Summary',
   localField: '_id',
-  foreignField: 'test',
+  foreignField: 'test_case',
   justOne: false
 });
 

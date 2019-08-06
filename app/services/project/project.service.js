@@ -4,6 +4,7 @@ const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
 const CourseServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 const Errors = require(Config.paths.errors + '/project.errors');
+const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
 const Project = require(Config.paths.models + "/project/project/project.mongo");
 const TestService = require('./project.test.service');
 const TestCaseService = require('./project.test.case.service');
@@ -31,6 +32,7 @@ class ProjectService extends BaseService {
 			const query = { $or: [queryByOwner, queryByPublic] }
 			return await super.listUsingTheRequest(req, {}, query)
 		} catch (e) {
+			console.log(e)
 			throw new Util.Error(Errors.project_doesnt_exist)
 		}
 	}

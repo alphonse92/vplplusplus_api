@@ -10,9 +10,9 @@ const SummaryReportController = require(Config.paths.controllers + "/project.tes
 
 Router.get("/health", (req, res) => res.send("ok"));
 
-Router.get("/:id?", ProjectController.get);
 Router.get("/:id/compile", ProjectController.compile);
 Router.get("/:id/export/:type", ProjectController.export);
+Router.get("/:id?", ProjectController.get);
 Router.post("/", ProjectController.create);
 Router.patch("/:id", ProjectController.update);
 Router.delete("/:id", ProjectController.delete);

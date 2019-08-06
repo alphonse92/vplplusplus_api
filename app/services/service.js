@@ -22,10 +22,10 @@ class BaseService {
     return this.Model.find(query)
   }
 
-  async listUsingTheRequest(requestData, MapOfSelectFieldFromPopulates, baseQuery) {
-    const id = requestData.params.id;
-    const paginator = Util.mongoose.getPaginatorFromRequest(requestData, Config.app.paginator, MapOfSelectFieldFromPopulates);
-    const query = { ...Util.mongoose.getQueryFromRequest(requestData), ...baseQuery };
+  async listUsingTheRequest(req, MapOfSelectFieldFromPopulates, baseQuery) {
+    const id = req.params.id;
+    const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator, MapOfSelectFieldFromPopulates);
+    const query = { ...Util.mongoose.getQueryFromRequest(req), ...baseQuery };
     const data = await Util.mongoose.list(this.Model, id, query, paginator)
     if (id && !data) throw new Util.Error(Errors.document_does_not_exist)
     return data
