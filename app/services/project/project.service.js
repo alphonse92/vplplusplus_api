@@ -80,8 +80,8 @@ class ProjectService extends BaseService {
 
 	async validateHasSummaries(project) {
 		const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
-		const ProjectSummaries = await Summary.find({ project })
-		if (ProjectSummaries.docs.total) throw new Util.Error(Errors.project_blocked)
+		const ProjectSummaryDoc = await Summary.findOne({ project })
+		if (ProjectSummaryDoc) throw new Util.Error(Errors.project_blocked)
 	}
 
 
