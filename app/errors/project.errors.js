@@ -7,7 +7,7 @@ module.exports = {
 		}
 	},
 	project_blocked: {
-		http_code: 401,
+		http_code: 400,
 		error: {
 			code: -2,
 			message: "Project cant be updated or deleted because it was executed before"
