@@ -62,6 +62,12 @@ function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 	const page = +page4q
 	const populate = parsePathsToPopulates(arrayOfPopulates, selects)
 	const paginator = { limit, page, populate }
+	const querySort = req.query.sort
+	if (querySort) {
+		paginator.sort = Array.isArray(querySort)
+			? querySort.join("")
+			: querySort.toString()
+	}
 	cleanPaginatorAttributesFromRequest(req);
 	return paginator
 }

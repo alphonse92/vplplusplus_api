@@ -67,7 +67,7 @@ class ProjectService extends BaseService {
 
 	async delete(CurrentUser, projectId) {
 
-		await this.validateHasSummaries(projectid)
+		await this.validateHasSummaries(projectId)
 		const { _id: owner } = CurrentUser
 		const query = { owner, _id: projectId }
 		const ProjectDocument = await super.delete(query)
