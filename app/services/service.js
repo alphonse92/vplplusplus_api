@@ -22,6 +22,18 @@ class BaseService {
     return this.Model.find(query)
   }
 
+  async listUsingTheRequest2(req, MapOfSelectFieldFromPopulates, baseQuery = {}) {
+    const id = req.params.id;
+    const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator, MapOfSelectFieldFromPopulates);
+    const optionalParametersPassedByQuery = Util.mongoose.getQueryFromRequest(req, true)
+    const query = { $and: [baseQuery].concat(optionalParametersPassedByQuery ? optionalParametersPassedByQuery : []) }
+
+    console.log(JSON.stringify(query, null, 2))
+    const data = await Util.mongoose.list(this.Model, id, query, paginator)
+    if (id && !data) throw new Util.Error(Errors.document_does_not_exist)
+    return data
+  }
+
   async listUsingTheRequest(req, MapOfSelectFieldFromPopulates, baseQuery) {
     const id = req.params.id;
     const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator, MapOfSelectFieldFromPopulates);

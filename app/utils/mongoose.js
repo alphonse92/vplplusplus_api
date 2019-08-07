@@ -74,9 +74,25 @@ function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 
 
 module.exports.getQueryFromRequest = getQueryFromRequest;
-function getQueryFromRequest(req) {
-	let query = Object.assign({}, req.query)
-	return query;
+function getQueryFromRequest(req, strict) {
+	if (!strict) return { ...req.query }
+	const $orArray = Object
+		.keys(req.query)
+		.reduce(($OrQuery, docAttribute) => {
+			const value = req.query[docAttribute]
+			const posibleNumber = !isNaN(value)
+			const posibleBoolean = value === "true" || value === "false"
+			const $or = []
+			$or.push({ [docAttribute]: { $regex: value.toLowerCase(), $options: 'i' } })// by default uses a regex
+			if (posibleNumber) $or.push({ [docAttribute]: { $eq: Number(value) } }) // it coulde be a number so find by primitive number
+			else if (posibleBoolean) $or.push({ [docAttribute]: { $eq: JSON.parse(value) } }) //the same, but with booleans
+			return [...$OrQuery, ...$or]
+		}, [])
+
+
+	return $orArray.length
+		? { $or: $orArray }
+		: null
 }
 
 module.exports.list = list;

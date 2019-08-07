@@ -14,8 +14,9 @@ class TopicService extends BaseService {
 
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest(req, {}, { deleted_at: null })
+			return await super.listUsingTheRequest2(req, {}, { deleted_at: null })
 		} catch (e) {
+			console.log(e)
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
 	}
