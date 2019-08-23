@@ -18,7 +18,7 @@ class BaseService {
     return document
   }
 
-  list(query) {
+  list(query={}) {
     return this.Model.find(query)
   }
 

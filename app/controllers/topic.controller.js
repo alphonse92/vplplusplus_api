@@ -6,9 +6,10 @@ const Util = require(Config.paths.utils)
 module.exports.get = get;
 async function get(req, res, next) {
   try {
-    const CurrentUser = UserService.getUserFromResponse(res)
-    const Topics = await TopicService.listUsingTheRequest(CurrentUser, req)
-    res.send(Topics)
+    const Topics = await TopicService.list()
+    res.send(Topics.map(
+      ({ _id, name, description, owner }) => ({ _id, name, description, owner })
+    ))
   } catch (e) {
     next(e)
   }
