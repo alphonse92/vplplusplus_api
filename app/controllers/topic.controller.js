@@ -7,9 +7,11 @@ module.exports.get = get;
 async function get(req, res, next) {
   try {
     const Topics = await TopicService.list()
-    res.send(Topics.map(
-      ({ _id, name, description, owner }) => ({ _id, name, description, owner })
-    ))
+    res.send(Topics
+      .filter(({ deleted_at }) => !deleted_at)
+      .map(
+        ({ _id, name, description, owner }) => ({ _id, name, description, owner })
+      ))
   } catch (e) {
     next(e)
   }
