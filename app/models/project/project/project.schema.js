@@ -20,7 +20,7 @@ module.exports = {
 		},
 		is_public: {
 			type: "Boolean",
-			required: true
+			default: false
 		},
 		activity: {
 			type: "Number",

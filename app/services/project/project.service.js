@@ -52,6 +52,9 @@ class ProjectService extends BaseService {
 	async create(CurrentUser, data) {
 		const { _id, tests = [], ...payloadProject } = data
 		const { activity: activity_id } = payloadProject
+
+		if (!activity_id) throw new Util.Error(Errors.activity_does_selected)
+
 		const isUpdate = !!_id
 		const project = !isUpdate ? payloadProject : pick(payloadProject, Project.getPublicFields())
 		const CourseModule = new CourseServiceClass()

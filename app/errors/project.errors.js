@@ -27,5 +27,12 @@ module.exports = {
 			message: "Cant create the project because the activity does not exist"
 		}
 	},
+	activity_does_selected: {
+		http_code: 400,
+		error: {
+			code: -4,
+			message: "Please set the vpl moodle activity"
+		}
+	},
 
 }
