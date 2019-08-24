@@ -12,6 +12,7 @@ module.exports = {
 		name: {
 			type: "String",
 			required: true,
+			unique:true,
 			maxlength: 10,
 			_readOnly: true
 		},

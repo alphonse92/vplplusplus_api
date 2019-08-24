@@ -40,7 +40,6 @@
 		"mysql": "^2.16.0",
 		"npm": "^6.2.0",
 		"path-to-regexp": "^2.2.1",
-		"react-select": "^3.0.4",
 		"request": "^2.87.0",
 		"tar-fs": "^2.0.0",
 		"validator": "^11.1.0"
