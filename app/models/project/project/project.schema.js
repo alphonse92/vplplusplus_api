@@ -13,18 +13,22 @@ module.exports = {
 		name: {
 			type: "String",
 			required: true,
+			_editable: true
 		},
 		description: {
 			type: "String",
-			required: true
+			required: true,
+			_editable: true
 		},
 		is_public: {
 			type: "Boolean",
-			default: false
+			default: false,
+			_editable: true
 		},
 		activity: {
 			type: "Number",
-			required: true
+			required: true,
+			_editable: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,

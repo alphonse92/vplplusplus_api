@@ -68,7 +68,7 @@ class ProjectService extends BaseService {
 
 		if (!activity_id) throw new Util.Error(Errors.activity_does_selected)
 
-		const project = !isUpdate ? payloadProject : pick(payloadProject, Project.getPublicFields())
+		const project = pick(payloadProject, Project.getEditableFields())
 		const CourseModule = new CourseServiceClass()
 		const activities = await CourseModule.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
 		const activity = activities.find(({ course_module_id }) => course_module_id === activity_id)

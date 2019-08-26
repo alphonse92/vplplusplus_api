@@ -111,15 +111,17 @@ function extractFields(ModelSchema) {
 		.reduce((obj, docFieldName) => {
 			const fieldSchema = DataSchemaWithFields[docFieldName]
 			if (fieldSchema._readOnly) obj.privateFields.push(docFieldName)
+			else if (fieldSchema._editable) obj.publicFields.push(docFieldName)
 			else obj.publicFields.push(docFieldName)
 			return obj
-		}, { privateFields: ['_id'], publicFields: ['_id'] })
+		}, { privateFields: ['_id'], publicFields: ['_id'], editableFields: [] })
 }
 
 module.exports.addStatics = addStatics;
 function addStatics(Schema, ModelSchema) {
-	const { publicFields, privateFields } = extractFields(ModelSchema)
+	const { publicFields, privateFields, editableFields } = extractFields(ModelSchema)
 	Schema.statics.getPublicFields = () => publicFields
 	Schema.statics.getPrivateFields = () => privateFields
+	Schema.statics.getEditableFields = () => editableFields
 	return Schema
 }
