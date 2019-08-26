@@ -22,9 +22,10 @@ class ProjectService extends BaseService {
 				path: 'tests',
 				populate: {
 					path: 'test_cases',
-					populate: {
-						path: 'summaries'
-					}
+					populate: [
+						{ path: 'topic' },
+						{ path: 'summaries' }
+					]
 				}
 			}
 			return await super.get({ ...query, owner: CurrentUser._id }, populates, opts)
