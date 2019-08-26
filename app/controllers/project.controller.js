@@ -53,7 +53,10 @@ async function deleteProject(req, res, next) {
 module.exports.update = update;
 async function update(req, res, next) {
 	try {
-		res.send("ok project controller")
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const Project = await ProjectService.create(CurrentUser, req.body)
+		const ProjectWithAllData = await ProjectService.get(CurrentUser, { _id: Project.id })
+		res.send(ProjectWithAllData)
 	} catch (e) { next(e) }
 }
 
