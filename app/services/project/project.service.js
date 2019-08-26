@@ -18,16 +18,20 @@ class ProjectService extends BaseService {
 
 	async get(CurrentUser, query, opts = { throwErrorIfNotExist: true }) {
 		try {
-			const populates = {
-				path: 'tests',
-				populate: {
-					path: 'test_cases',
-					populate: [
-						{ path: 'topic' },
-						{ path: 'summaries' }
-					]
-				}
-			}
+			const populates = [
+				{
+					path: 'summaries'
+				},
+				{
+					path: 'tests',
+					populate: {
+						path: 'test_cases',
+						populate: [
+							{ path: 'topic' },
+							{ path: 'summaries' }
+						]
+					}
+				}]
 			return await super.get({ ...query, owner: CurrentUser._id }, populates, opts)
 		} catch (e) {
 			throw new Util.Error(Errors.project_doesnt_exist)
@@ -41,7 +45,6 @@ class ProjectService extends BaseService {
 			const query = { $or: [queryByOwner, queryByPublic] }
 			return await super.listUsingTheRequest(req, {}, query)
 		} catch (e) {
-			console.log(e)
 			throw new Util.Error(Errors.project_doesnt_exist)
 		}
 	}
@@ -113,7 +116,6 @@ class ProjectService extends BaseService {
 		const query = { _id: id, owner: CurrentUser._id }
 		const ProjectDoc = await super.get(query, [
 			{ path: 'owner' },
-			{ path: 'summaries' },
 			{
 				path: 'tests',
 				populate: {
