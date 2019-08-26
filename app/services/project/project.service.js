@@ -61,10 +61,13 @@ class ProjectService extends BaseService {
 	async create(CurrentUser, data) {
 		const { _id, tests = [], ...payloadProject } = data
 		const { activity: activity_id } = payloadProject
+		const isUpdate = !!_id
+
+		// prevent modify project if it has summaries
+		if (isUpdate) await this.validateHasSummaries(project)
 
 		if (!activity_id) throw new Util.Error(Errors.activity_does_selected)
 
-		const isUpdate = !!_id
 		const project = !isUpdate ? payloadProject : pick(payloadProject, Project.getPublicFields())
 		const CourseModule = new CourseServiceClass()
 		const activities = await CourseModule.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
