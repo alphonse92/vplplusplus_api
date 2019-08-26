@@ -84,7 +84,8 @@ module.exports = {
 		},
 		timeout: {
 			type: "String",
-			default: "Configurator.TIMEOUT_VERY_LONG"
+			default: "Configurator.TIMEOUT_VERY_LONG",
+			_editable: true
 		}
 	},
 }
