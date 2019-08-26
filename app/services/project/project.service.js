@@ -113,6 +113,7 @@ class ProjectService extends BaseService {
 		const query = { _id: id, owner: CurrentUser._id }
 		const ProjectDoc = await super.get(query, [
 			{ path: 'owner' },
+			{ path: 'summaries' },
 			{
 				path: 'tests',
 				populate: {
