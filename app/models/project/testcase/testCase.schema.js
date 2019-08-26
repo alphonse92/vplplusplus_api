@@ -73,7 +73,7 @@ module.exports = {
 		},
 		code: {
 			type: 'String',
-			required: true,,
+			required: true,
 			_editable: true
 		},
 		grade: {
