@@ -38,40 +38,49 @@ module.exports = {
 				ref: "Topic",
 			}],
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			_editable: true
 		},
 		name: {
 			type: 'String',
-			required: true
+			required: true,
+			_editable: true
 		},
 		objective: {
 			type: 'String',
-			required: true
+			required: true,
+			_editable: true
 		},
 		successMessage: {
 			type: "String",
-			required: true
+			required: true,
+			_editable: true
 		},
 		successMessageLink: {
 			type: "String",
-			required: true
+			required: true,
+			_editable: true
 		},
 		failureMessage: {
 			type: "String",
-			required: true
+			required: true,
+			_editable: true
 		},
 		failureMessageLink: {
 			type: "String",
-			required: true
+			required: true,
+			_editable: true
 		},
 		code: {
 			type: 'String',
-			required: true,
+			required: true,,
+			_editable: true
 		},
 		grade: {
 			type: 'Number',
 			default: 10,
 			min: 0,
+			_editable: true
 		},
 		timeout: {
 			type: "String",
