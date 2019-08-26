@@ -5,8 +5,11 @@ const ProjectService = require(Config.paths.services + '/project/project.service
 module.exports.get = get;
 async function get(req, res, next) {
 	try {
+		const { id } = req.params
 		const CurrentUser = UserService.getUserFromResponse(res)
-		const Projects = await ProjectService.listUsingTheRequest(CurrentUser, req)
+		const Projects = !id
+			? await ProjectService.listUsingTheRequest(CurrentUser, req)
+			: await ProjectService.get(CurrentUser, { _id: id })
 		res.send(Projects)
 	} catch (e) {
 		next(e)
