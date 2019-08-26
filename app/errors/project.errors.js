@@ -8,10 +8,11 @@ module.exports = {
 		}
 	},
 	project_blocked: {
-		http_code: 404,
+		http_code: 400,
 		error: {
 			code: -2,
 			error: { resource: 'project', message: "Project cant be updated or deleted because it was executed before" },
+			type: ERROR.TYPE.ACTION_CANT_PERFORM
 		}
 	},
 	exporter_does_not_exist: {
