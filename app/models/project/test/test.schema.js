@@ -18,18 +18,22 @@ module.exports = {
 		},
 		name: {
 			type: 'String',
-			required: true
+			required: true,
+			_editable: true
 		},
 		tags: {
 			type: [{ type: 'String' }],
+			_editable: true
 		},
 		description: {
 			type: 'String',
-			required: true
+			required: true,
+			_editable: true
 		},
 		objective: {
 			type: 'String',
-			required: true
+			required: true,
+			_editable: true
 		},
 		maxGrade: {
 			type: 'Number',
@@ -39,6 +43,7 @@ module.exports = {
 		code: {
 			type: 'String',
 			required: true,
+			_editable: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
