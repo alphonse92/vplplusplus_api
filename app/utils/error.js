@@ -1,12 +1,28 @@
 export class Error {
   constructor(e) {
     let { http_code, error } = e
-    if (e.errors) {
-      const errors = Object.values(e.errors).map(({ path: field, message, properties: { type } }) => ({ field, message, type }))
-      http_code = 401
+    const INSTANCE = e.constructor.name
+    if (INSTANCE === "MongooseError" && e.errors) {
+      const errors = Object
+        .values(e.errors)
+        .reduce((out, { path: field, message, properties: { type } }) => {
+          const arrayOfFields = out[type] || []
+          arrayOfFields.push({ field, message })
+          return { ...out, [type]: arrayOfFields }
+        }, {})
+
+      http_code = 400
       error = {
         code: -1,
-        message: errors.map(error => error.message).join('\n')
+        error: errors,
+        type: 'validation'
+      }
+
+      if (["development", "dev"].includes(process.env.NODE_ENV)) {
+        error.__development__ = {
+          raw: e.errors,
+          instance: INSTANCE
+        }
       }
 
     } else if (!http_code) {
@@ -15,9 +31,11 @@ export class Error {
         code: -1,
         message: "Server Error"
       }
-      console.log(e)
     }
 
-    Object.assign(this, { http_code, error })
+    const out = { http_code, error }
+
+
+    Object.assign(this, out)
   }
 }

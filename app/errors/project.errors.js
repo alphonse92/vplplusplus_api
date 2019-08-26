@@ -1,3 +1,4 @@
+const ERROR = require('./constants')
 module.exports = {
 	project_doesnt_exist: {
 		http_code: 404,
@@ -7,10 +8,10 @@ module.exports = {
 		}
 	},
 	project_blocked: {
-		http_code: 400,
+		http_code: 404,
 		error: {
 			code: -2,
-			message: "Project cant be updated or deleted because it was executed before"
+			error: { resource: 'project', message: "Project cant be updated or deleted because it was executed before" },
 		}
 	},
 	exporter_does_not_exist: {
@@ -28,10 +29,11 @@ module.exports = {
 		}
 	},
 	activity_does_selected: {
-		http_code: 400,
+		http_code: 404,
 		error: {
-			code: -4,
-			message: "Please set the vpl moodle activity"
+			code: -5,
+			error: { resource: 'project.activity', message: "Please set the vpl moodle activity" },
+			type: ERROR.TYPE.NOT_FOUND
 		}
 	},
 
