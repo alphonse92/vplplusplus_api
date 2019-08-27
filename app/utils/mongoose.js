@@ -111,7 +111,7 @@ function extractFields(ModelSchema) {
 		.reduce((obj, docFieldName) => {
 			const fieldSchema = DataSchemaWithFields[docFieldName]
 			if (fieldSchema._readOnly) obj.privateFields.push(docFieldName)
-			else if (fieldSchema._editable) obj.publicFields.push(docFieldName)
+			else if (fieldSchema._editable) obj.editableFields.push(docFieldName)
 			else obj.publicFields.push(docFieldName)
 			return obj
 		}, { privateFields: ['_id'], publicFields: ['_id'], editableFields: [] })
