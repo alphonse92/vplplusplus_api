@@ -1,14 +1,12 @@
 const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
-const TestService = require(Config.paths.services + '/project/project.test.service');
+const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 
 
 module.exports.get = get;
 async function get(req, res, next) {
 	try {
-		const CurrentUser = UserService.getUserFromResponse(res)
-		const Tests = await TestService.listUsingTheRequest(CurrentUser, req)
-		res.send(Tests)
+		res.send('ok')
 	} catch (e) {
 		next(e)
 	}
@@ -18,9 +16,7 @@ async function get(req, res, next) {
 module.exports.compile = compile
 async function compile(req, res, next) {
 	try {
-		const CurrentUser = UserService.getUserFromResponse(res)
-		const code = await TestService.compile(CurrentUser, req.params.id)
-		res.send(code)
+		res.send('ok')
 	} catch (e) {
 		next(e)
 	}
@@ -30,18 +26,18 @@ async function compile(req, res, next) {
 module.exports.create = create;
 async function create(req, res, next) {
 	try {
-		const CurrentUser = UserService.getUserFromResponse(res)
-		const testPayload = { ...req.body, owner: CurrentUser._id }
-		const Test = await TestService.create(testPayload)
-		res.send(Test)
+		res.send('ok')
 	} catch (e) { next(e) }
 
 }
 
-module.exports.delete = deleteTest;
-async function deleteTest(req, res, next) {
+module.exports.delete = deleteTestCase;
+async function deleteTestCase(req, res, next) {
 	try {
-		res.send("ok test controller")
+		const { project_id, test_id, id } = req.params
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const Test = await TestCaseService.delete(CurrentUser, project_id, test_id, id)
+		res.send(Test)
 	} catch (e) { next(e) }
 
 }
@@ -49,7 +45,7 @@ async function deleteTest(req, res, next) {
 module.exports.update = update;
 async function update(req, res, next) {
 	try {
-		res.send("ok test controller")
+		res.send('ok')
 	} catch (e) { next(e) }
 }
 
