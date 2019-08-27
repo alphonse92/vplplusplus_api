@@ -4,6 +4,7 @@ const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.test.case.errors');
 const TestCase = require(Config.paths.models + "/project/testCase/testCase.mongo");
+const ProjectService = require(Config.paths.services + '/project/project.service');
 const Util = require(Config.paths.utils);
 
 
@@ -14,7 +15,8 @@ class TestCaseService extends BaseService {
 	}
 
 	async list(CurrentUser, query, populates) {
-		return super.list(query, populates)
+
+		return super.list({ ...query, owner: CurrentUser._id }, populates)
 	}
 
 	async listUsingTheRequest(CurrentUser, req) {
@@ -48,9 +50,9 @@ class TestCaseService extends BaseService {
 		return TestCaseDoc
 	}
 
-	async deleteFromProject(project) {
-		await super.deleteMany({ project })
-		await TestCaseService.deleteMany({ project })
+	async delete(CurrentUser, project_id, test_id, _id) {
+		await ProjectService.validateHasSummaries(projectId)
+		return super.delete({ owner: CurrentUser._id, project: project_id, test: test_id, _id })
 	}
 
 }

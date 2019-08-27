@@ -1,5 +1,6 @@
 const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
+
 const TestService = require(Config.paths.services + '/project/project.test.service');
 
 
@@ -41,7 +42,10 @@ async function create(req, res, next) {
 module.exports.delete = deleteTest;
 async function deleteTest(req, res, next) {
 	try {
-		res.send("ok test controller")
+		const { project_id, id } = req.params
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const Test = await TestService.delete(CurrentUser, project_id, id, true )
+		res.send(Test)
 	} catch (e) { next(e) }
 
 }

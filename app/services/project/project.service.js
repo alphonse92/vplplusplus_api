@@ -91,8 +91,7 @@ class ProjectService extends BaseService {
 
 		await this.validateHasSummaries(projectId)
 		const { _id: owner } = CurrentUser
-		const query = { owner, _id: projectId }
-		const ProjectDocument = await super.delete(query)
+		const ProjectDocument = await super.delete({ owner, _id: projectId })
 		await TestService.deleteMany({ owner, project: projectId })
 		await TestCaseService.deleteMany({ owner, project: projectId })
 

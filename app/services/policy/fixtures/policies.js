@@ -201,6 +201,7 @@ fixtures.deleteProjects = {
 };
 
 
+
 // tests
 fixtures.listTest = {
 	resource: "service:api:system:test.list",
@@ -259,7 +260,7 @@ fixtures.deleteTest = {
 	description: "Policy to delete test in a project",
 	extends: [], depends: [],
 	actions: [
-		{ path: "PATCH/api/v1/project/:id/test/:id", scopes: ["deleteTest"] }
+		{ path: "DELETE/api/v1/project/:id/test/:id", scopes: ["deleteTest"] }
 	]
 };
 
@@ -309,7 +310,7 @@ fixtures.deleteTestCase = {
 	description: "Policy to delete test case from a project",
 	extends: [], depends: [],
 	actions: [
-		{ path: "PATCH/api/v1/project/:id/test/:id/case/:id", scopes: ["deleteTestCase"] }
+		{ path: "DELETE/api/v1/project/:id/test/:id/case/:id", scopes: ["deleteTestCase"] }
 	]
 };
 
