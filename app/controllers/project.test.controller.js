@@ -1,6 +1,5 @@
 const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
-
 const TestService = require(Config.paths.services + '/project/project.test.service');
 
 

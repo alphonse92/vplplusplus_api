@@ -51,6 +51,7 @@ class TestCaseService extends BaseService {
 	}
 
 	async delete(CurrentUser, project_id, test_id, _id) {
+		const ProjectService = require(Config.paths.services + '/project/project.service');
 		await ProjectService.validateHasSummaries(projectId)
 		return super.delete({ owner: CurrentUser._id, project: project_id, test: test_id, _id })
 	}
