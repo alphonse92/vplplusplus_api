@@ -54,14 +54,14 @@ class BaseService {
   }
 
   async update(query, data, opts = { throwErrorIfNotExist: true }) {
-    const document = await this.Model.findOneAndUpdate(query, data, { new: true })
-    if (!document) throw new Util.Error(Errors.document_does_not_exist)
+    const document = await this.Model.findOneAndUpdate(query, Util.mongoose.objectToSet(data), { new: true })
+    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist)
     return document
   }
 
   async delete(query, opts = { throwErrorIfNotExist: true }) {
     const document = await this.Model.findOneAndDelete(query)
-    if (!document) throw new Util.Error(Errors.document_does_not_exist)
+    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist)
     return document
   }
 

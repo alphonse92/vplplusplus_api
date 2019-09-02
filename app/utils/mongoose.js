@@ -125,3 +125,30 @@ function addStatics(Schema, ModelSchema) {
 	Schema.statics.getEditableFields = () => editableFields
 	return Schema
 }
+
+function objectToSet(ObjectToConvert, appendParam, currentArray, options)
+{
+
+	appendParam = appendParam ? appendParam : "";
+	for(let key in ObjectToConvert)
+	{
+		let attNotation = appendParam + key;
+
+		if((!Array.isArray(ObjectToConvert[key]) && typeof ObjectToConvert[key] !== "object")
+			|| (Array.isArray(ObjectToConvert[key]) && !options.array.evaluatIndexs))
+		{
+			currentArray[attNotation] = ObjectToConvert[key];
+		}
+		if((Array.isArray(ObjectToConvert[key]) && options.array.evaluatIndexs) ||
+			(!Array.isArray(ObjectToConvert[key]) && typeof ObjectToConvert[key] === "object"))
+		{
+			objectToSet(ObjectToConvert[key], attNotation + ".", currentArray, options);
+		}
+	}
+}
+
+module.exports.objectToSet = (obj, options) => {
+	var out = {};
+	objectToSet(obj, '', out, options);
+	return out;
+}
