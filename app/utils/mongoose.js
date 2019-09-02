@@ -110,8 +110,9 @@ function extractFields(ModelSchema) {
 		.keys(DataSchemaWithFields)
 		.reduce((obj, docFieldName) => {
 			const fieldSchema = DataSchemaWithFields[docFieldName]
-			if (fieldSchema._readOnly) obj.privateFields.push(docFieldName)
-			else if (fieldSchema._editable) obj.editableFields.push(docFieldName)
+			const { _readOnly: read = false, _editable: edit = false } = fieldSchema
+			if (read) obj.privateFields.push(docFieldName)
+			else if (edit) obj.editableFields.push(docFieldName)
 			else obj.publicFields.push(docFieldName)
 			return obj
 		}, { privateFields: ['_id'], publicFields: ['_id'], editableFields: [] })
@@ -126,23 +127,19 @@ function addStatics(Schema, ModelSchema) {
 	return Schema
 }
 
-function objectToSet(ObjectToConvert, appendParam, currentArray, options)
-{
+function objectToSet(ObjectToBeConverted, shouldAppendParameter, pathMap, options = { array: { evaluatIndexs: false } }) {
 
-	appendParam = appendParam ? appendParam : "";
-	for(let key in ObjectToConvert)
-	{
-		let attNotation = appendParam + key;
+	shouldAppendParameter = shouldAppendParameter ? shouldAppendParameter : "";
+	for (let key in ObjectToBeConverted) {
+		let attNotation = shouldAppendParameter + key;
 
-		if((!Array.isArray(ObjectToConvert[key]) && typeof ObjectToConvert[key] !== "object")
-			|| (Array.isArray(ObjectToConvert[key]) && !options.array.evaluatIndexs))
-		{
-			currentArray[attNotation] = ObjectToConvert[key];
+		if ((!Array.isArray(ObjectToBeConverted[key]) && typeof ObjectToBeConverted[key] !== "object")
+			|| (Array.isArray(ObjectToBeConverted[key]) && !options.array.evaluatIndexs)) {
+			pathMap[attNotation] = ObjectToBeConverted[key];
 		}
-		if((Array.isArray(ObjectToConvert[key]) && options.array.evaluatIndexs) ||
-			(!Array.isArray(ObjectToConvert[key]) && typeof ObjectToConvert[key] === "object"))
-		{
-			objectToSet(ObjectToConvert[key], attNotation + ".", currentArray, options);
+		if ((Array.isArray(ObjectToBeConverted[key]) && options.array.evaluatIndexs) ||
+			(!Array.isArray(ObjectToBeConverted[key]) && typeof ObjectToBeConverted[key] === "object")) {
+			objectToSet(ObjectToBeConverted[key], attNotation + ".", pathMap, options);
 		}
 	}
 }

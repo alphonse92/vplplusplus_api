@@ -38,7 +38,6 @@ module.exports = {
 				ref: "Topic",
 			}],
 			required: true,
-			_readOnly: true,
 			_editable: true
 		},
 		name: {
