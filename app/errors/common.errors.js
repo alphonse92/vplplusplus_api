@@ -3,8 +3,10 @@ module.exports = {
 		http_code: 404,
 		error: {
 			code: -1,
-			message: "Document does not exist"
+			error: { resource: 'project.activity', message: "Please set the vpl moodle activity" },
+			type: ERROR.TYPE.NOT_FOUND
 		}
+
 	}
 
 }
