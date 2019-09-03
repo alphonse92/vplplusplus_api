@@ -89,7 +89,7 @@ class ProjectService extends BaseService {
 			await TestService.createAll(CurrentUser, ProjectDoc, tests)
 			return ProjectDoc
 		} catch (e) {
-			await this.delete(CurrentUser, ProjectDoc._id)
+			if (!isUpdate) await this.delete(CurrentUser, ProjectDoc._id)
 			throw e
 		}
 

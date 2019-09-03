@@ -49,7 +49,7 @@ class TestService extends BaseService {
 			await TestCaseService.createAll(CurrentUser, ProjectDoc, TestDoc, test_cases)
 			return TestDoc
 		} catch (e) {
-			await this.delete(CurrentUser, ProjectDoc._id, TestDoc._id)
+			if (!isUpdate) await this.delete(CurrentUser, ProjectDoc._id, TestDoc._id)
 			throw e
 		}
 
