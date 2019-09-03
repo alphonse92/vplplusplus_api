@@ -49,16 +49,16 @@ class BaseService {
   async create(data) {
     try {
       return await this.Model.create(data)
-    } catch (e) { throw new Util.Error(e, { model: this.Model.collection.collectionName }, { model: this.Model.collection.collectionName }) }
+    } catch (e) { throw new Util.Error(e, { model: this.Model.collection.collectionName }) }
 
   }
 
   async update(query, data, opts = { throwErrorIfNotExist: true }) {
 
     let document
-    
+
     try { document = await this.Model.findOneAndUpdate(query, Util.mongoose.objectToSet(data), { new: true, runValidators: true }) }
-    catch (e) { throw new Util.Error(e, { model: this.Model.collection.collectionName }, { model: this.Model.collection.collectionName }) }
+    catch (e) { throw new Util.Error(e, { model: this.Model.collection.collectionName }) }
 
     if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return document
