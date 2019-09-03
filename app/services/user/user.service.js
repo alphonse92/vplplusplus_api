@@ -185,14 +185,16 @@ function getUserFromTokenByUserType(type) {
 Service.getGetUserMiddleware = getGetUserMiddleware;
 function getGetUserMiddleware() {
 	return (req, res, next) => {
-		let token = req.headers.authorization ? req.headers.authorization.split(" ")[1] : null;
+		const { authorization = '' } = req.headers
+		const [Bearer, token = req.query.token] = authorization.split(' ')
+
 		let userFindPromise = null;
 
 		if (!token) {
 			userFindPromise = User.findOne({ email: Config.client.email })
 		} else {
 			userFindPromise = new Promise((resolve, reject) => {
-				jwt.verify(req.headers.authorization.split(" ")[1], Config.security.token, function (err, payload) {
+				jwt.verify(token, Config.security.token, function (err, payload) {
 					return err ? reject(err) : resolve(payload)
 				});
 			}).then(payload => getUserFromTokenByUserType(payload.type)(payload))
