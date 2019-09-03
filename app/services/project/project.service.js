@@ -126,7 +126,10 @@ class ProjectService extends BaseService {
 			{
 				path: 'tests',
 				populate: {
-					path: 'test_cases'
+					path: 'test_cases',
+					populate: {
+						path: 'topic'
+					}
 				}
 			}
 		])

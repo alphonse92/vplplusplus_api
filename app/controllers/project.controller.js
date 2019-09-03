@@ -67,7 +67,9 @@ async function _export(req, res, next) {
 	try {
 		const projectExported = await ProjectService.export(type, CurrentUser, id)
 		const path = require('path')
-		res.sendFile(path.resolve(projectExported.path))
+		const isAFile = !!projectExported.path
+		if (isAFile) return res.sendFile(path.resolve(projectExported.path))
+		return res.send(projectExported)
 	} catch (e) { next(e) }
 
 }

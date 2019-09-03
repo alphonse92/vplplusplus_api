@@ -23,7 +23,6 @@ module.exports = {
 		is_public: {
 			type: "Boolean",
 			default: false,
-			_editable: true
 		},
 		activity: {
 			type: "Number",
