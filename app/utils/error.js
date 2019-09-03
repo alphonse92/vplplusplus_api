@@ -1,7 +1,8 @@
 export class Error {
-  constructor(e) {
+  constructor(e, extra = {}) {
     let { http_code, error } = e
     const INSTANCE = e.constructor.name
+
     if (INSTANCE === "MongooseError" && e.errors) {
       const errors = Object
         .values(e.errors)
@@ -32,6 +33,8 @@ export class Error {
         message: "Server Error"
       }
     }
+
+    error = { ...error, ...extra }
 
     const out = { http_code, error }
 

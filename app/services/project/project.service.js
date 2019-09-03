@@ -83,8 +83,16 @@ class ProjectService extends BaseService {
 		const ProjectDoc = isUpdate
 			? await super.update({ _id, owner: CurrentUser._id }, project)
 			: await super.create({ ...project, owner: CurrentUser._id })
-		await TestService.createAll(CurrentUser, ProjectDoc, tests)
-		return ProjectDoc
+
+		try {
+			// if something happend here, then remove the project
+			await TestService.createAll(CurrentUser, ProjectDoc, tests)
+			return ProjectDoc
+		} catch (e) {
+			await this.delete(CurrentUser, ProjectDoc._id)
+			throw e
+		}
+
 	}
 
 	async delete(CurrentUser, projectId) {

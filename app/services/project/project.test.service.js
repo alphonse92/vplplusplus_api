@@ -44,8 +44,15 @@ class TestService extends BaseService {
 		const TestDoc = isUpdate
 			? await super.update({ _id, owner }, test)
 			: await super.create({ ...test, owner, project })
-		await TestCaseService.createAll(CurrentUser, ProjectDoc, TestDoc, test_cases)
-		return TestDoc
+
+		try {
+			await TestCaseService.createAll(CurrentUser, ProjectDoc, TestDoc, test_cases)
+			return TestDoc
+		} catch (e) {
+			await this.delete(CurrentUser, ProjectDoc._id, TestDoc._id)
+			throw e
+		}
+
 	}
 
 
