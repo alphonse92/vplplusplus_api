@@ -7,6 +7,7 @@ export class Error {
       const errors = Object
         .values(e.errors)
         .reduce((out, { path: field, message, properties: { type } }) => {
+          type = type === "user defined" ? "validation" : type
           const arrayOfFields = out[type] || []
           arrayOfFields.push({ field, message })
           return { ...out, [type]: arrayOfFields }

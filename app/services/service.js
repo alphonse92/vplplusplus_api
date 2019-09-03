@@ -14,7 +14,7 @@ class BaseService {
 
   async get(query, populates = [], opts = { throwErrorIfNotExist: true }) {
     const document = await this.Model.findOne(query).populate(populates)
-    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist,{model:this.Model.collection.collectionName})
+    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return document
   }
 
@@ -28,7 +28,7 @@ class BaseService {
     const optionalParametersPassedByQuery = Util.mongoose.getQueryFromRequest(req, true)
     const query = { $and: [baseQuery].concat(optionalParametersPassedByQuery ? optionalParametersPassedByQuery : []) }
     const data = await Util.mongoose.list(this.Model, id, query, paginator)
-    if (id && !data) throw new Util.Error(Errors.document_does_not_exist,{model:this.Model.collection.collectionName})
+    if (id && !data) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return data
   }
 
@@ -37,7 +37,7 @@ class BaseService {
     const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator, MapOfSelectFieldFromPopulates);
     const query = { ...Util.mongoose.getQueryFromRequest(req), ...baseQuery };
     const data = await Util.mongoose.list(this.Model, id, query, paginator)
-    if (id && !data) throw new Util.Error(Errors.document_does_not_exist,{model:this.Model.collection.collectionName})
+    if (id && !data) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return data
   }
 
@@ -49,19 +49,19 @@ class BaseService {
   async create(data) {
     try {
       return await this.Model.create(data)
-    } catch (e) { throw new Util.Error(e,{model:this.Model.collection.collectionName},{model:this.Model.collection.collectionName}) }
+    } catch (e) { throw new Util.Error(e, { model: this.Model.collection.collectionName }, { model: this.Model.collection.collectionName }) }
 
   }
 
   async update(query, data, opts = { throwErrorIfNotExist: true }) {
-    const document = await this.Model.findOneAndUpdate(query, Util.mongoose.objectToSet(data), { new: true })
-    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist,{model:this.Model.collection.collectionName})
+    const document = await this.Model.findOneAndUpdate(query, Util.mongoose.objectToSet(data), { new: true, runValidators: true })
+    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return document
   }
 
   async delete(query, opts = { throwErrorIfNotExist: true }) {
     const document = await this.Model.findOneAndDelete(query)
-    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist,{model:this.Model.collection.collectionName})
+    if (!document && opts.throwErrorIfNotExist) throw new Util.Error(Errors.document_does_not_exist, { model: this.Model.collection.collectionName })
     return document
   }
 

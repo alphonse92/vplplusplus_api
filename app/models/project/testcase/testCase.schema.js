@@ -38,6 +38,10 @@ module.exports = {
 				ref: "Topic",
 			}],
 			required: true,
+			validate: {
+				validator: function (v) { return v.length > 0 },
+				message: 'Test schema requires at least one topic'
+			},
 			_editable: true
 		},
 		name: {
