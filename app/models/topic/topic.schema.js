@@ -14,13 +14,15 @@ module.exports = {
 			required: true,
 			unique:true,
 			maxlength: 10,
-			_readOnly: true
+			_readOnly: true,
+			_editable: true
 		},
 		description: {
 			type: "String",
 			required: true,
 			maxlength: 255,
-			_readOnly: true
+			_readOnly: true,
+			_editable: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
