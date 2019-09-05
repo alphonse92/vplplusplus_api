@@ -65,7 +65,7 @@ function getPaginatorFromRequest(req, defaults = {}, populates, selects) {
 	const querySort = req.query.sort
 	if (querySort) {
 		paginator.sort = Array.isArray(querySort)
-			? querySort.join("")
+			? querySort.join(" ")
 			: querySort.toString()
 	}
 	cleanPaginatorAttributesFromRequest(req);
