@@ -41,6 +41,15 @@ class SummaryReportService {
   }
 
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
+    const { topic } = opts
+    const topicQuery = topic
+      ? {
+        'topic.name': {
+          $in: Array.isArray(topic)
+            ? topic
+            : [topic]
+        }
+      } : {}
     const { from, to } = this.getDatesFromOptions(opts)
     const $gte = this.safeToDate(from)
     const $lte = this.safeToDate(to)
@@ -71,9 +80,12 @@ class SummaryReportService {
       querySummary["summary.createdAt"] = dates
     }
 
+
+
     const queries = {
       project: projectQuery,
-      summary: querySummary
+      summary: querySummary,
+      topic: topicQuery
     }
 
     const aggregator = ProjectAggregator(queries)

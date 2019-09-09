@@ -27,8 +27,8 @@ module.exports.getUserReports = getUserReports
 async function getUserReports(req, res, next) {
 	try {
 		const { moodle_student_id, id: project_id } = req.params
-		const { from, to } = req.query
-		const opts = { from, to }
+		const { from, to, topic } = req.query
+		const opts = { from, to, topic }
 		const CurrentUser = UserService.getUserFromResponse(res)
 		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts)
 		res.send(report)
