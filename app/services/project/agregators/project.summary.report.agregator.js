@@ -99,7 +99,17 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
             in: {
               $mergeObjects: [
                 {
-                  summaries: '$summaries',
+                  summaries: {
+                    $filter: {
+                      input: "$summaries",
+                      as: "summary",
+                      cond: {
+                        $and: [
+                          { $eq: ["$$testCase._id", "$$summary.test_case"] },
+                        ]
+                      }
+                    }
+                  },
                   summary_approved: {
                     $filter: {
                       input: "$summaries",
