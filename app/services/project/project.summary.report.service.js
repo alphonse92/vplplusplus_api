@@ -1,5 +1,5 @@
 import moment from 'moment'
-import { capitalize, camelCase } from 'lodash'
+import { capitalize, camelCase, orderBy } from 'lodash'
 import { ProjectAggregator } from './agregators/project.summary.report.agregator';
 
 const mongoose = require('mongoose')
@@ -96,6 +96,69 @@ class SummaryReportService {
     return Report
 
   }
+
+
+
+  getTestCasesByDifficult(report) {
+    const map = report
+      .reduce((testMap, userReport) => {
+
+        const { skills = [] } = userReport
+
+        skills.forEach(skill => {
+          const { tests } = skill
+          return tests.forEach(({ _id, name, objective, summaries_not_approved }) => {
+            testMap[_id] = testMap[_id]
+              ? { ...testMap[_id], summaries_not_approved: testMap[_id].summaries_not_approved + summaries_not_approved.length }
+              : { _id, name, objective, summaries_not_approved: summaries_not_approved.length }
+          })
+        })
+
+        return testMap
+
+      }, {})
+
+    return orderBy(Object.values(map), ['summaries_not_approved'], ['desc'])
+
+  }
+
+  getTheMostSkilledStudentByTopic(report) {
+
+    const map = report
+      // flat
+      .map(userReport => {
+        const { id, firstname, lastname, skills = [] } = userReport
+        const fullname = `${firstname} ${lastname}`
+        return skills.map(skill => {
+          const { name, description, info: { level } } = skill
+          return { student: { id, fullname }, topic: { name, description, level } }
+        })
+      })
+      // put all in a single array
+      .reduce((acc, arrayOfUserTopics) => acc.concat(arrayOfUserTopics), [])
+      // map the topics
+      .reduce((map, userReport) => {
+        const { student: studentTopic, topic } = userReport
+        const { id, fullname } = studentTopic
+        const { name, description, level: noFixedLevel } = topic
+        const level = +noFixedLevel.toFixed(2)
+        const student = { id, fullname }
+        const skillInMap = map[name]
+        if (!skillInMap || (skillInMap && level > skillInMap.level)) {
+          return { ...map, [name]: { name, description, level, students: [student] } }
+        } else if (level === skillInMap.level) {
+          const students = map[name].students.concat([student])
+          return { ...map, [name]: { name, description, level, students } }
+        } else {
+          return { ...map }
+        }
+
+      }, {})
+
+    return orderBy(Object.values(map), ['level'], ['desc'])
+  }
+
+
 
 }
 
