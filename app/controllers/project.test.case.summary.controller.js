@@ -33,13 +33,12 @@ async function getUserReports(req, res, next) {
 
 		if (moodle_student_id) return res.send(await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts))
 
-		const reports = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, opts)
-		const AllProjectReports = await SummaryReportService.getUserReport(CurrentUser, undefined, undefined, opts)
+		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, opts)
 		const stadistics = {
-			mostDifficultTest: SummaryReportService.getTestCasesByDifficult(reports),
-			mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(reports)
+			mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
+			mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
 		}
-		res.send({ reports, stadistics })
+		res.send({ report, stadistics })
 	} catch (e) { next(e) }
 }
 

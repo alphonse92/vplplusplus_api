@@ -28,7 +28,7 @@ class SummaryService extends BaseService {
     super(Summary)
   }
 
-  groupBy(CurrentUser, query, field) {
+  async groupBy(CurrentUser, query, field) {
     const accumulators = {
       user: { $first: "$user" },
     }

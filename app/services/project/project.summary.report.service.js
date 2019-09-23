@@ -5,6 +5,7 @@ import { ProjectAggregator } from './agregators/project.summary.report.agregator
 const mongoose = require('mongoose')
 const Projectservice = require('./project.service');
 
+
 class SummaryReportService {
 
   createProjectReports(ArrayOfProjectDoc) {
@@ -14,7 +15,7 @@ class SummaryReportService {
     return Promise.all(array.map(this.createProjectReport))
   }
 
-  getDatesFromOptions(opts) {
+  getMomentDatesFromOptions(opts) {
     const { from, to } = opts
     const dates = {}
     if (from) dates.from = moment(from)
@@ -23,7 +24,7 @@ class SummaryReportService {
   }
 
   createName(ProjectDoc, StudentUserDoc, opts) {
-    const dates = this.getDatesFromOptions(ProjectDoc, opts)
+    const dates = this.getMomentDatesFromOptions(ProjectDoc, opts)
     const { from, to } = dates
     const stamp = [from, to].join('-')
     const { _id: project_id } = ProjectDoc
@@ -34,10 +35,30 @@ class SummaryReportService {
         : `VplReport all-${stamp}`
   }
 
-  safeToDate(momentDate) {
+  momentToDateSafe(momentDate) {
     return momentDate
       ? momentDate.toDate()
       : undefined
+  }
+
+  async getProjectReports(CurrentUser, opts) {
+    const SummaryService = require('./project.summary.service');
+    const { from, to } = this.getMomentDatesFromOptions(opts)
+    const $gte = this.momentToDateSafe(from)
+    const $lte = this.momentToDateSafe(to)
+    const SummaryModel = SummaryService.getModel()
+    const querySummary = {}
+
+    if ($gte || $lte) {
+      const dates = {}
+      if ($gte) dates.$gte = $gte
+      if ($lte) dates.$lte = $lte
+      querySummary.createdAt = dates
+    }
+
+    const ArrayOfSummaryDocuments = await SummaryModel.find(querySummary).select('project').exec()
+    const arrayOfProjectIds = ArrayOfSummaryDocuments.map(({ project }) => project)
+    return this.getUserReport(CurrentUser, arrayOfProjectIds, undefined, opts)
   }
 
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
@@ -50,9 +71,9 @@ class SummaryReportService {
             : [topic]
         }
       } : {}
-    const { from, to } = this.getDatesFromOptions(opts)
-    const $gte = this.safeToDate(from)
-    const $lte = this.safeToDate(to)
+    const { from, to } = this.getMomentDatesFromOptions(opts)
+    const $gte = this.momentToDateSafe(from)
+    const $lte = this.momentToDateSafe(to)
 
     const project_id_array = !project_id
       ? []
@@ -97,6 +118,10 @@ class SummaryReportService {
 
   }
 
+
+  avg(ArrayReport) {
+    return ArrayReport.reduce((sum, userReport) => sum + userReport.skill, 0) / ArrayReport.length
+  }
 
 
   getTestCasesByDifficult(report) {
