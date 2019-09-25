@@ -1,4 +1,5 @@
 const Config = global.Config;
+const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
@@ -16,10 +17,39 @@ async function create(req, res, next) {
 	res.send(SummaryDoc)
 }
 
-module.exports.getProjectReportTimeline = getReportProject
-async function getReportProject(req, res, next) {
+module.exports.getProjectReportTimeline = getProjectReportTimeline
+async function getProjectReportTimeline(req, res, next) {
 	try {
-		res.send("ok project controller")
+		const {
+			from: fromQuery
+			, each: eachQuery // each 6 months is a semestre
+			, steps: stepsQuery  // take the first forth semestres
+			, id: project_id
+			, topic = []
+		} = req
+
+		const now = moment()
+		const fromMoment = !fromQuery ? now : moment()
+
+		let from, each, steps
+
+		if (now === fromMoment || fromMoment.isBefore(now)) from = now
+		if (!eachQuery || eachQuery <= 0) each = 6
+		if (!stepsQuery || stepsQuery <= 0) steps = 4
+
+		const reports = []
+		for (let i = each; i <= each * steps; i += each) {
+			const to = now.clone().add(i, 'months')
+			const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, { from, to, topic })
+			const stadistics = {
+				mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
+				mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
+				avg: report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length
+			}
+			reports.push(report)
+		}
+
+		res.send(reports)
 	} catch (e) { next(e) }
 }
 
@@ -41,16 +71,10 @@ async function getUserReports(req, res, next) {
 		const stadistics = {
 			mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
 			mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
+			avg: report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length
 		}
 
 		res.send({ report, stadistics, options: opts })
-	} catch (e) { next(e) }
-}
-
-module.exports.getProjectReportTimeline = getProjectReportTimeline
-async function getProjectReportTimeline(req, res, next) {
-	try {
-		res.send("ok project controller")
 	} catch (e) { next(e) }
 }
 

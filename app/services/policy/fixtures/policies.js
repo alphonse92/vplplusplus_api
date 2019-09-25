@@ -385,6 +385,17 @@ fixtures.getReportProject = {
 		{ path: "GET/api/v1/project/:id/report/", scopes: ["getReportProject"] }
 	]
 };
+fixtures.getReportProjectTimeline = {
+	resource: "service:api:system:project.report.timeline",
+	name: "project.report.user",
+	slug: "Get report project timeline",
+	type: DefaultPolicyService.types.default,
+	description: "Can create the timeline dataset for a project",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id/report/timeline/", scopes: ["getReportProjectTimeline"] }
+	]
+};
 fixtures.getReportProjectUsers = {
 	resource: "service:api:system:project.report.user.list",
 	name: "project.report.user",
