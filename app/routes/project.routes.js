@@ -39,6 +39,7 @@ Router.get('/report/user/:moodle_student_id/evolution/',SummaryReportController.
 
 //  select a project and create a report from it
 Router.get('/:id/report', SummaryReportController.getUserReports) // get report of especific project
+Router.get('/:id/report/timeline', SummaryReportController.getProjectReportTimeline) // get report of especific project
 Router.get('/:id/report/user',SummaryReportController.getUserReports) // get report of all users of specific project
 Router.get('/:id/report/user/:moodle_student_id',SummaryReportController.getUserReports) // get report of specific user of specific project
 

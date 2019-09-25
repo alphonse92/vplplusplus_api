@@ -16,7 +16,7 @@ async function create(req, res, next) {
 	res.send(SummaryDoc)
 }
 
-module.exports.getReportProject = getReportProject
+module.exports.getProjectReportTimeline = getReportProject
 async function getReportProject(req, res, next) {
 	try {
 		res.send("ok project controller")
@@ -44,6 +44,13 @@ async function getUserReports(req, res, next) {
 		}
 
 		res.send({ report, stadistics, options: opts })
+	} catch (e) { next(e) }
+}
+
+module.exports.getProjectReportTimeline = getProjectReportTimeline
+async function getProjectReportTimeline(req, res, next) {
+	try {
+		res.send("ok project controller")
 	} catch (e) { next(e) }
 }
 
