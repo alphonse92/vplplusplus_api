@@ -96,7 +96,7 @@ async function getProjectsTimeline(req, res, next) {
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const report = await getProjectTimelineHOC(req.query.project)(req, res)
+		const report = await getProjectTimelineHOC(req.params.project)(req, res)
 		res.send(report)
 	} catch (e) { next(e) }
 }
