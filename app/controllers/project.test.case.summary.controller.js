@@ -5,8 +5,6 @@ const SummaryService = require(Config.paths.services + '/project/project.summary
 const UserService = require(Config.paths.services + '/user/user.service');
 
 const getProjectTimelineHOC = (project) => {
-	
-	console.log(project)
 
 	return async (req, res) => {
 
@@ -24,14 +22,13 @@ const getProjectTimelineHOC = (project) => {
 		if (!fromQuery) {
 			const SummaryModel = SummaryService.getModel()
 			const summaryQuery = { project }
-			console.log(summaryQuery)
 			const SummaryDoc = await SummaryModel
 				.findOne(summaryQuery)
 				.sort({ createdAt: 'desc' })
 				.exec()
-			console.log(SummaryModel)
+
 			from = moment(SummaryDoc.createdAt)
-			
+
 		} else {
 			from = moment(fromQuery)
 		}
@@ -54,8 +51,8 @@ const getProjectTimelineHOC = (project) => {
 			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
 			const variation = skill - lastSkill
 			reports.push({
-				from: fromQuery,
-				to,
+				from: from,
+				to: toMoment.format(format),
 				tag: to,
 				skill,
 				variation
