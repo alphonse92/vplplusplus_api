@@ -3,8 +3,8 @@ const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
-const getProjectTimelineHOC = async (project) => {
-	return (req, res, next) => {
+const getProjectTimelineHOC =  (project) => {
+	return async (req, res, next) => {
 		try {
 			const {
 				from: fromQuery
