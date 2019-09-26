@@ -5,6 +5,9 @@ const SummaryService = require(Config.paths.services + '/project/project.summary
 const UserService = require(Config.paths.services + '/user/user.service');
 
 const getProjectTimelineHOC = (project) => {
+	
+	console.log(project)
+
 	return async (req, res) => {
 
 		const {
@@ -27,7 +30,7 @@ const getProjectTimelineHOC = (project) => {
 				.sort({ createdAt: 'desc' })
 				.exec()
 			from = moment(SummaryDoc.createdAt).format(format)
-			console.log(SummaryDoc)
+			
 		} else {
 			from = moment(fromQuery)
 		}
@@ -96,7 +99,7 @@ async function getProjectsTimeline(req, res, next) {
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const report = await getProjectTimelineHOC(req.params.project)(req, res)
+		const report = await getProjectTimelineHOC(req.params.id)(req, res)
 		res.send(report)
 	} catch (e) { next(e) }
 }
