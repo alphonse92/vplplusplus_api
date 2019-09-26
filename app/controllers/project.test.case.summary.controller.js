@@ -1,6 +1,7 @@
 const Config = global.Config;
 const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
+const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
 const getProjectTimelineHOC = (project) => {
@@ -15,8 +16,20 @@ const getProjectTimelineHOC = (project) => {
 			, type = 'months'
 		} = req.query
 
-		const now = moment()
-		const from = !fromQuery ? now : moment(fromQuery, format)
+		let from
+
+		if (!fromQuery) {
+			const SummaryModel = SummaryService.getModel()
+			const SummaryDoc = await SummaryModel
+				.findOne({ project })
+				.sort({ createdAt: 'desc' })
+				.exec()
+			from = moment(SummaryDoc.createdAt).format(format)
+			console.log(SummaryDoc, createdAt)
+		} else {
+			from = moment(fromQuery)
+		}
+
 		const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
 		const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
 		const CurrentUser = UserService.getUserFromResponse(res)
