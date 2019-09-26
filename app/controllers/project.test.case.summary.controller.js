@@ -12,6 +12,7 @@ const getProjectTimelineHOC = (project) => {
 			, steps: stepsQuery  // take the first forth semestres
 			, topic
 			, format = "YYYY-MM-DD"
+			, type = 'months'
 		} = req.query
 
 		const now = moment()
@@ -25,12 +26,7 @@ const getProjectTimelineHOC = (project) => {
 
 		while (monthsToSum <= limit) {
 
-			const toMoment = from.clone().add(monthsToSum, 'months')
-
-			const month = toMoment.get('month')
-			const year = toMoment.get('year')
-			const tag = `${month + 1}/${year}`
-
+			const toMoment = from.clone().add(monthsToSum, type)
 			const to = toMoment.format(format)
 
 			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from: fromQuery, to, topic })
@@ -41,7 +37,7 @@ const getProjectTimelineHOC = (project) => {
 			reports.push({
 				from: fromQuery,
 				to,
-				tag,
+				tag: to,
 				skill,
 				variation
 			})
