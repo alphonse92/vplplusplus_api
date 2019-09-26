@@ -29,7 +29,8 @@ const getProjectTimelineHOC = (project) => {
 				.findOne(summaryQuery)
 				.sort({ createdAt: 'desc' })
 				.exec()
-			from = moment(SummaryDoc.createdAt).format(format)
+			console.log(SummaryModel)
+			from = moment(SummaryDoc.createdAt)
 			
 		} else {
 			from = moment(fromQuery)
