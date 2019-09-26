@@ -20,12 +20,14 @@ const getProjectTimelineHOC = (project) => {
 
 		if (!fromQuery) {
 			const SummaryModel = SummaryService.getModel()
+			const summaryQuery = { project }
+			console.log(summaryQuery)
 			const SummaryDoc = await SummaryModel
-				.findOne({ project })
+				.findOne(summaryQuery)
 				.sort({ createdAt: 'desc' })
 				.exec()
 			from = moment(SummaryDoc.createdAt).format(format)
-			console.log(SummaryDoc, createdAt)
+			console.log(SummaryDoc)
 		} else {
 			from = moment(fromQuery)
 		}
