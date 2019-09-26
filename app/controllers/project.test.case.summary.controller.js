@@ -24,32 +24,47 @@ async function getProjectReportTimeline(req, res, next) {
 			from: fromQuery
 			, each: eachQuery // each 6 months is a semestre
 			, steps: stepsQuery  // take the first forth semestres
-			, id: project_id
-			, topic = []
-		} = req
+			, topic
+			, format = "YYYY-MM-DD"
+		} = req.query
+
+		const { id: project_id } = req.params
 
 		const now = moment()
-		const fromMoment = !fromQuery ? now : moment()
-
-		let from, each, steps
-
-		if (now === fromMoment || fromMoment.isBefore(now)) from = now
-		if (!eachQuery || eachQuery <= 0) each = 6
-		if (!stepsQuery || stepsQuery <= 0) steps = 4
-
+		const from = !fromQuery ? now : moment(fromQuery, format)
+		const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
+		const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
+		const CurrentUser = UserService.getUserFromResponse(res)
 		const reports = []
-		for (let i = each; i <= each * steps; i += each) {
-			const to = now.clone().add(i, 'months')
-			const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, { from, to, topic })
-			const stadistics = {
-				mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
-				mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
-				avg: report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length
-			}
-			reports.push(report)
+		const limit = each * steps
+		let monthsToSum = each
+
+		while (monthsToSum <= limit) {
+			const toMoment = from.clone().add(monthsToSum, 'months')
+
+			const month = toMoment.get('month')
+			const year = toMoment.get('year')
+			const tag = `${month + 1}/${year}`
+
+			const to = toMoment.format(format)
+
+			const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, { from: fromQuery, to,topic })
+			const [lastReport = { skill: 0 }] = reports
+			const { skill: lastSkill } = lastReport
+			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
+
+			reports.push({
+				from: fromQuery,
+				to,
+				tag,
+				skill,
+			})
+
+			monthsToSum += each
 		}
 
 		res.send(reports)
+
 	} catch (e) { next(e) }
 }
 
