@@ -73,7 +73,7 @@ async function getProjectsTimeline(req, res, next) {
 	try {
 		const { project: [] } = req.query
 		const projectArray = Array.isArray(project) ? project : [project]
-		const promises = projectArray.map(project_id => {
+		const promises = projectArray.map(async project_id => {
 			return { project_id, timeline: await getProjectTimelineHOC(project_id)(req, res) }
 		})
 		const report = await Promise.all(promises)
@@ -85,7 +85,7 @@ async function getProjectsTimeline(req, res, next) {
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const report = getProjectTimelineHOC(req.query.project)(req, res)
+		const report = await getProjectTimelineHOC(req.query.project)(req, res)
 		res.send(report)
 	} catch (e) { next(e) }
 }
