@@ -40,6 +40,7 @@ async function getProjectReportTimeline(req, res, next) {
 		let monthsToSum = each
 
 		while (monthsToSum <= limit) {
+
 			const toMoment = from.clone().add(monthsToSum, 'months')
 
 			const month = toMoment.get('month')
@@ -48,16 +49,17 @@ async function getProjectReportTimeline(req, res, next) {
 
 			const to = toMoment.format(format)
 
-			const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, { from: fromQuery, to,topic })
-			const [lastReport = { skill: 0 }] = reports
+			const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, { from: fromQuery, to, topic })
+			const lastReport = reports[reports.length - 1] || { skill: 0 }
 			const { skill: lastSkill } = lastReport
 			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
-
+			const variation = skill - lastSkill
 			reports.push({
 				from: fromQuery,
 				to,
 				tag,
 				skill,
+				variation
 			})
 
 			monthsToSum += each
