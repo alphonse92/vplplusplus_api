@@ -32,6 +32,7 @@ Router.delete("/:project_id/test/:test_id/case/:id", TestCaseController.delete);
 
 // from all projects
 Router.get('/report/', SummaryReportController.getUserReports) // get report of all projects
+Router.get('/report/timeline', SummaryReportController.getProjectReportTimeline) // get report of all projects
 Router.get('/report/user/', SummaryReportController.getUserReports) // get report of all users
 Router.get('/report/user/evolution/',SummaryReportController.getUserEvolution) // get report of students evolution (how the skill level student change along the time)
 Router.get('/report/user/:moodle_student_id/', SummaryReportController.getUserReports) // get report of specific user

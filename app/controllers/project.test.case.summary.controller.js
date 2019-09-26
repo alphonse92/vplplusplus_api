@@ -3,55 +3,54 @@ const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
-const getProjectTimelineHOC =  (project) => {
-	return async (req, res, next) => {
-		try {
-			const {
-				from: fromQuery
-				, each: eachQuery // each 6 months is a semestre
-				, steps: stepsQuery  // take the first forth semestres
-				, topic
-				, format = "YYYY-MM-DD"
-			} = req.query
+const getProjectTimelineHOC = (project) => {
+	return async (req, res) => {
 
-			const now = moment()
-			const from = !fromQuery ? now : moment(fromQuery, format)
-			const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
-			const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
-			const CurrentUser = UserService.getUserFromResponse(res)
-			const reports = []
-			const limit = each * steps
-			let monthsToSum = each
+		const {
+			from: fromQuery
+			, each: eachQuery // each 6 months is a semestre
+			, steps: stepsQuery  // take the first forth semestres
+			, topic
+			, format = "YYYY-MM-DD"
+		} = req.query
 
-			while (monthsToSum <= limit) {
+		const now = moment()
+		const from = !fromQuery ? now : moment(fromQuery, format)
+		const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
+		const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const reports = []
+		const limit = each * steps
+		let monthsToSum = each
 
-				const toMoment = from.clone().add(monthsToSum, 'months')
+		while (monthsToSum <= limit) {
 
-				const month = toMoment.get('month')
-				const year = toMoment.get('year')
-				const tag = `${month + 1}/${year}`
+			const toMoment = from.clone().add(monthsToSum, 'months')
 
-				const to = toMoment.format(format)
+			const month = toMoment.get('month')
+			const year = toMoment.get('year')
+			const tag = `${month + 1}/${year}`
 
-				const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from: fromQuery, to, topic })
-				const lastReport = reports[reports.length - 1] || { skill: 0 }
-				const { skill: lastSkill } = lastReport
-				const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
-				const variation = skill - lastSkill
-				reports.push({
-					from: fromQuery,
-					to,
-					tag,
-					skill,
-					variation
-				})
+			const to = toMoment.format(format)
 
-				monthsToSum += each
-			}
+			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from: fromQuery, to, topic })
+			const lastReport = reports[reports.length - 1] || { skill: 0 }
+			const { skill: lastSkill } = lastReport
+			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
+			const variation = skill - lastSkill
+			reports.push({
+				from: fromQuery,
+				to,
+				tag,
+				skill,
+				variation
+			})
 
-			res.send(reports)
+			monthsToSum += each
+		}
 
-		} catch (e) { next(e) }
+		return reports
+
 	}
 }
 
@@ -71,12 +70,24 @@ async function create(req, res, next) {
 
 module.exports.getProjectsTimeline = getProjectsTimeline
 async function getProjectsTimeline(req, res, next) {
-	getProjectTimelineHOC(req.query.project)(req, res, next)
+	try {
+		const { project: [] } = req.query
+		const projectArray = Array.isArray(project) ? project : [project]
+		const promises = projectArray.map(project_id => {
+			return { project_id, timeline: await getProjectTimelineHOC(project_id)(req, res) }
+		})
+		const report = await Promise.all(promises)
+		res.send(report)
+	} catch (e) { next(e) }
+
 }
 
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
-	getProjectTimelineHOC(req.params.project_id)(req, res, next)
+	try {
+		const report = getProjectTimelineHOC(req.query.project)(req, res)
+		res.send(report)
+	} catch (e) { next(e) }
 }
 
 module.exports.getUserReports = getUserReports
