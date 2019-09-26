@@ -52,7 +52,7 @@ const getProjectTimelineHOC = (project) => {
 			const variation = skill - lastSkill
 			reports.push({
 				from: from,
-				to: toMoment.format(format),
+				to: toMoment,
 				tag: to,
 				skill,
 				variation
