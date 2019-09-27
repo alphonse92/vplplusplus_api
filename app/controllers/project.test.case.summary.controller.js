@@ -8,6 +8,10 @@ const getProjectTimelineHOC = (project) => {
 
 	return async (req, res) => {
 
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const ProjectService = require(Config.paths.services + '/project/project.service');
+		const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
+
 		const {
 			from: fromQuery
 			, each: eachQuery // each 6 months is a semestre
@@ -35,7 +39,6 @@ const getProjectTimelineHOC = (project) => {
 
 		const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
 		const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
-		const CurrentUser = UserService.getUserFromResponse(res)
 		const reports = []
 		const limit = each * steps
 		let monthsToSum = each
@@ -61,7 +64,7 @@ const getProjectTimelineHOC = (project) => {
 			monthsToSum += each
 		}
 
-		return reports
+		return { project: ProjectDoc, reports }
 
 	}
 }
@@ -80,25 +83,11 @@ async function create(req, res, next) {
 	res.send(SummaryDoc)
 }
 
-module.exports.getProjectsTimeline = getProjectsTimeline
-async function getProjectsTimeline(req, res, next) {
-	try {
-		const { project: [] } = req.query
-		const projectArray = Array.isArray(project) ? project : [project]
-		const promises = projectArray.map(async project_id => {
-			return { project_id, timeline: await getProjectTimelineHOC(project_id)(req, res) }
-		})
-		const report = await Promise.all(promises)
-		res.send(report)
-	} catch (e) { next(e) }
-
-}
-
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const report = await getProjectTimelineHOC(req.params.id)(req, res)
-		res.send(report)
+		const { id: project } = req.params
+		res.send(await getProjectTimelineHOC(project)(req, res))
 	} catch (e) { next(e) }
 }
 

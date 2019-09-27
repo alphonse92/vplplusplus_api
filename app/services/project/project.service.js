@@ -16,7 +16,7 @@ class ProjectService extends BaseService {
 		super(Project)
 	}
 
-	async get(CurrentUser, query, opts = { throwErrorIfNotExist: true }) {
+	async get(CurrentUser, query, opts = { throwErrorIfNotExist: true, populate: true }) {
 		try {
 			const populates = [
 				{
@@ -32,7 +32,7 @@ class ProjectService extends BaseService {
 						]
 					}
 				}]
-			return await super.get({ ...query, owner: CurrentUser._id }, populates, opts)
+			return await super.get({ ...query, owner: CurrentUser._id }, opts.populate ? populates : [], opts)
 		} catch (e) {
 			throw new Util.Error(Errors.project_doesnt_exist)
 		}
