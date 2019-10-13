@@ -1,3 +1,5 @@
+//  docker exec -it api  npx babel-node cli
+
 import commander from 'commander'
 import { Cli } from './cli.class'
 import { PARTNER_TYPES, MERCHANT_TYPES } from './faker';
