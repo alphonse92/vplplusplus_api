@@ -44,6 +44,7 @@
 		"npm": "^6.2.0",
 		"path-to-regexp": "^2.2.1",
 		"request": "^2.87.0",
+		"request-promise-native": "^1.0.7",
 		"tar-fs": "^2.0.0",
 		"validator": "^11.1.0"
 	},
