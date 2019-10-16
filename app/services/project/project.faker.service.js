@@ -10,7 +10,7 @@ export const getFakeObjective = () => 'We want to test:' + getFakeName()
 export const getFakeTestCode = () => "private Calculadora test \n @Before \n   public void setUp(){ \n //the code \n }"
 export const getFakeTestCaseCodeBody = () => "// code body"
 
-export const getTestCaseMock = ({ From: createdAt }) => (topic) => {
+export const getTestCaseMock = ({ owner, createdAt }) => (topic) => {
   const { id, description } = topic
   const fakeTestcase = {
     name: `Fake test case for ${description}`,
@@ -22,33 +22,34 @@ export const getTestCaseMock = ({ From: createdAt }) => (topic) => {
     failureMessage: `Sorry, you dont know ${description}`,
     failureMessageLink: faker.internet.url(),
     code: getFakeTestCaseCodeBody(),
-    createdAt
+    createdAt,
+    owner
   }
   return fakeTestcase
 }
 
-export const getTestMock = ({ From: createdAt, Topics, minTestCases = 1, maxTestCases = 5 }) => () => {
+export const getTestMock = (data) => () => {
+  const { owner, createdAt, topics, minTestCases = 1, maxTestCases = 5 } = data
   const name = getFakeName()
   const description = getFakeDescription()
   const objective = getFakeObjective()
   const code = getFakeTestCode()
-  const takeTopic = number => Topics[number]
   const test_cases = Array
-    .from(Array(Math.floor(Math.random() * maxTestCases) + minTestCases), () => Math.floor(Math.random() * Topics.length))
-    .map(takeTopic)
-    .map(getTestMock({ From: createdAt }))
+    .from(Array(Math.floor(Math.random() * maxTestCases) + minTestCases), () => Math.floor(Math.random() * topics.length))
+    .map(number => topics[number])
+    .map(getTestCaseMock({ ...data }))
 
-  return { name, description, objective, tags: [], code, test_cases, createdAt, }
+  return { name, description, objective, tags: [], code, test_cases, createdAt, owner }
 }
 
-export const getProjectMock = ({ From: createdAt, Topics, activity, minTests = 1, maxTests = 5, minTestCases = 1, maxTestCases = 5 }) => {
+export const getProjectMock = (data) => {
+  const { maxTests, minTests, createdAt, owner, activity } = data
   const name = getFakeName()
   const description = getFakeName()
   const objective = getFakeObjective()
   const tests = Array
-    .from(
-      Array(Math.floor(Math.random() * maxTests) + minTests)
-    ).map(getTestMock({ From: createdAt, Topics, minTestCases, maxTestCases }))
+    .from(Array(Math.floor(Math.random() * maxTests) + minTests))
+    .map(getTestMock({ ...data }))
 
   return {
     name,
@@ -58,16 +59,21 @@ export const getProjectMock = ({ From: createdAt, Topics, activity, minTests = 1
     activity,
     tests,
     createdAt,
+    owner,
   }
 }
 
-export const getFakeProject = (From, To, activity) => {
+export const getFakeProject = async (data) => {
   const TopicService = require(Config.paths.services + '/topic/topic.service');
-  const Topics = await TopicService.list()
-  return getProjectMock({ From, Topics, activity })
+  const topics = await TopicService.list()
+  return getProjectMock({ ...data, topics })
 }
 
-export const createFakeProject = (owner, activity, opts = {}) => {
-  const { from, to, each, steps, createSummaries = false } = opts
-  return getFakeProject(from, to, activity)
+export const createFakeProject = (currentUser, data = {}) => {
+  const { _id: owner } = currentUser
+  return getFakeProject({
+    ...data,
+    owner,
+    createdAt: data.from
+  })
 }

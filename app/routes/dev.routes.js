@@ -8,7 +8,6 @@ console.log(DevController)
 
 if (Config.env === "dev" || Config.env === "development") {
 	Router.get("/health", (req, res) => res.send("ok"));
-	// route to create a fake project with fake tests, testes cases and summaries
 	Router.post('/projects/fake/', DevController.createFakeProject)
 	Util.log(Base)
 }
