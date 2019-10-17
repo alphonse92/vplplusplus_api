@@ -54,7 +54,8 @@ const getArrayOfAttempsByStudent = (maxStudentAttemps, nTestCases) => student =>
 // END OF : aletory functions
 //
 
-async function createSummariesToTheProject(CurrentUser, ProjectDoc, data) {
+async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
+  const { body: data } = req
   const CourseMoodleService = new CourseMoodleServiceClass()
   const extractMoodleId = ({ id }) => id
   const { _id: project } = ProjectDoc
@@ -97,7 +98,7 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, data) {
         createdAt: createdAtMoment.toDate()
       }
       // 11. Create the summaries according the project, moodle user, and data, disable validations to improve the performance
-      const Summary = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, opts = { valideEnroledStudents: false })
+      const Summary = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, { valideEnroledStudents: false })
       SummaryDocs.push(Summary)
       // next student item attemp
     }
@@ -107,7 +108,8 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, data) {
   return SummaryDocs
 }
 
-async function createAndSaveFakeProject(CurrentUser, data) {
+async function createAndSaveFakeProject(CurrentUser, req) {
+  const { body: data } = req
   const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, data)
   // if teacher of current user is not teacher of the activity related, it should throw an error even if the fake project is mocked
   const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
@@ -116,10 +118,9 @@ async function createAndSaveFakeProject(CurrentUser, data) {
 
 export const createFakeProject = async (req, res, next) => {
   try {
-    const { body = {} } = req
     const CurrentUser = UserService.getUserFromResponse(res)
-    const ProjectDoc = await createAndSaveFakeProject(CurrentUser, body)
-    const summariesDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, body)
+    const ProjectDoc = await createAndSaveFakeProject(CurrentUser, req)
+    const summariesDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, req)
     res.send(summariesDocs)
   } catch (e) {
 
