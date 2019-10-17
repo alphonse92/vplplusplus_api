@@ -31,7 +31,7 @@ const getArrayOfAttempsByStudent = student => {
   if (hasStudentPassed) return attemps
 
   const randomNumber = faker.random.number({ min: 1, max: 10 })
-  const shouldTheStudentPass = randomNumber > 7
+  const shouldTheStudentPass = randomNumber > 7 // the 30% of students that cant pass the project, will pass the project
   if (shouldTheStudentPass) attemps[attemps.length - 1] = getSuccessfullAttemp(nTestCases)
 
   return attemps
