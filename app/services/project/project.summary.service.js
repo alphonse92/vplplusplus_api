@@ -45,14 +45,19 @@ class SummaryService extends BaseService {
     return UserFromActivity[0]
   }
 
-  async createAll(project_id, moodle_user, summary_array_to_save, opts = { valideEnroledStudents: true }) {
+  async createAll(project_id, moodle_user, summary_array_to_save, opts = { valideEnroledStudents: true, throwExceptions: true }) {
     const ProjectService = require('./project.service');
     const Project = ProjectService.getModel()
     const ProjectDoc = await Project.findById(project_id)
     const { _id: project, activity } = ProjectDoc
 
     // user should be enroled in the activity
-    opts.valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
+    try {
+      opts.valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
+    } catch (e) {
+      if (opts.throwExceptions) throw e
+      else return
+    }
 
     const SummariesApproved = await Summary.find({ project, moodle_user, approved: true })
     // maps of references to find duplicates and approved test_cases

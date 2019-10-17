@@ -5,7 +5,7 @@ const ProjectFakerService = require(Config.paths.services + '/project/project.fa
 const ProjectService = require(Config.paths.services + '/project/project.service');
 const ProjectTestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 const ProjectSummaryService = require(Config.paths.services + '/project/project.summary.service');
-
+const CourseMoodleServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 //
 // BEGIN OF : aletory functions
 //
@@ -55,34 +55,55 @@ const getArrayOfAttempsByStudent = (maxStudentAttemps, nTestCases) => student =>
 //
 
 async function createSummariesToTheProject(CurrentUser, ProjectDoc, data) {
+  const CourseMoodleService = new CourseMoodleServiceClass()
+  const extractMoodleId = ({ id }) => id
   const { _id: project } = ProjectDoc
-  const { from, type = "days", each = 1, maxStudentAttemps = 10 } = data
+  const { from, type = "days", each = 1, maxStudentAttemps = 10, activity } = data
+
   const TestCase = ProjectTestCaseService.getModel()
-  const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
+  // 1. get all teacher's students
+  const teacherStudents = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
+  // 2. take all the ids of the teacher  students
+  const arrayOfStudentMoodleIds = teacherStudents.map(extractMoodleId)
+  // 3. get studens from activity and take the students
+  const studentsInActivity = await CourseMoodleService.getUsersFromActivityId(activity, arrayOfStudentMoodleIds, { closeOnEnd: true })
+  // 4. take all the ids of students in activity
+  const studentsInActivityMoodleIds = studentsInActivity.map(extractMoodleId)
+  // 5. take the moodle students from the teacher students
+  const students = teacherStudents.filter(({ id }) => studentsInActivityMoodleIds.includes(id))
+  // 6, take the test cases related to the project
   const TestCaseDocs = await TestCase.find({ project })
   const nTestCases = TestCaseDocs.length
+  // 7, create an aleatory array of attemps related to the student
   const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
   const SummaryDocs = []
 
+  // start to create the summaries for each item attemp of array of students attemps
   for (let iAttempStudent in attempsStudent) {
     const attempStudent = attempsStudent[iAttempStudent]
     const { attemps, student } = attempStudent
     const { id: moodle_user } = student
+    // 8. take the initial date from the payload
     const pivot = moment(from)
+    // 9, iterate by attemp, for each value is a approved/rejected summary
     for (let iAttemp in attemps) {
       const attemp = attemps[iAttemp]
       const createdAtMoment = pivot.add(each, type)
+      // 10 create the payload
       const summaryPayload = {
         moodle_user,
         project,
         data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
         createdAt: createdAtMoment.toDate()
       }
-      const Summary = await ProjectSummaryService.createAll(summaryPayload.project, summaryPayload.moodle_user, summaryPayload.data, opts = { valideEnroledStudents: false })
+      // 11. Create the summaries according the project, moodle user, and data, disable validations to improve the performance
+      const Summary = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, opts = { valideEnroledStudents: false })
       SummaryDocs.push(Summary)
+      // next student item attemp
     }
+    // next attemp
   }
-
+  // return the array of summaries 
   return SummaryDocs
 }
 
