@@ -69,7 +69,7 @@ export const createFakeProject = async (req, res, next) => {
     const nTestCases = TestCaseDocs.length
     const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
 
-    attempsStudent.map(studentAttemp => {
+    const arrayOfPayloadsToCreteTheSummaries= attempsStudent.map(studentAttemp => {
       const { attemps, student } = studentAttemp
       const { id: moodle_user } = student
       const payloads = attemps.map(attemp => {
@@ -83,7 +83,7 @@ export const createFakeProject = async (req, res, next) => {
       return payloads
     })
 
-    res.send(attempsStudent)
+    res.send(arrayOfPayloadsToCreteTheSummaries)
     // students.map(student => {
 
     // })
