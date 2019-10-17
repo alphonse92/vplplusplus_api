@@ -61,16 +61,27 @@ export const createFakeProject = async (req, res, next) => {
     const { maxStudentAttemps = 10 } = body
     const CurrentUser = UserService.getUserFromResponse(res)
     const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
-
-    return res.send(students.map(getArrayOfAttempsByStudent(maxStudentAttemps, 5)))
-
     const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, body)
     const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
-
+    const { _id: project } = ProjectDoc
     const TestCase = ProjectTestCaseService.getModel()
     const TestCaseDocs = await TestCase.find({ project })
     const nTestCases = TestCaseDocs.length
     const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
+
+    attempsStudent.map(studentAttemp => {
+      const { attemps, passed, student } = attempsStudent
+      const { _id, id: moodle_user } = student
+      const payloads = attemps.map(attemp => {
+        const summaryPayload = {
+          moodle_user,
+          project,
+          data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' }))
+        }
+        return summaryPayoad
+      })
+      return payloads
+    })
 
     res.send(attempsStudent)
     // students.map(student => {
