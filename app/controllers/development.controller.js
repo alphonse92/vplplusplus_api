@@ -105,7 +105,7 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
     // next attemp
   }
   // return the array of summaries 
-  return SummaryDocs
+  return {students,teacherStudents,studentsInActivityMoodleIds,attempsStudent}
 }
 
 async function createAndSaveFakeProject(CurrentUser, req) {
