@@ -5,8 +5,8 @@ export const getFakeName = () => faker.company.catchPhraseAdjective() + " " +
   faker.company.catchPhrase() + " " +
   faker.company.catchPhraseDescriptor()
 
-export const getFakeDescription = () => 'description of:' + getFakeName()
-export const getFakeObjective = () => 'We want to test:' + getFakeName()
+export const getFakeDescription = () => 'description of: ' + getFakeName()
+export const getFakeObjective = () => 'We want to test: ' + getFakeName()
 export const getFakeTestCode = () => "private Calculadora test \n @Before \n   public void setUp(){ \n //the code \n }"
 export const getFakeTestCaseCodeBody = () => "// code body"
 
@@ -34,7 +34,8 @@ export const getTestMock = (data) => () => {
   const description = getFakeDescription()
   const objective = getFakeObjective()
   const code = getFakeTestCode()
-  const topics = allTopics.slice(0, topicsLimit)
+  const limit = topic.length < topicsLimit ? topics.length : topicsLimit
+  const topics = allTopics.slice(0, limit)
   const randomTestCasesAmount = Math.floor(Math.random() * maxTestCases) + minTestCases
   const pickRandomIndex = () => Math.floor(Math.random() * topics.length)
   const takeTopic = number => topics[number]
