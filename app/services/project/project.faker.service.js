@@ -34,7 +34,7 @@ export const getTestMock = (data) => () => {
   const description = getFakeDescription()
   const objective = getFakeObjective()
   const code = getFakeTestCode()
-  const limit = topic.length < topicsLimit ? topics.length : topicsLimit
+  const limit = allTopics.length < topicsLimit ? allTopics.length : topicsLimit
   const topics = allTopics.slice(0, limit)
   const randomTestCasesAmount = Math.floor(Math.random() * maxTestCases) + minTestCases
   const pickRandomIndex = () => Math.floor(Math.random() * topics.length)
@@ -48,7 +48,7 @@ export const getTestMock = (data) => () => {
 }
 
 export const getProjectMock = (data) => {
-  const { maxTests = 1, minTests = 5, createdAt, owner, activity } = data
+  const { minTests = 1, maxTests = 5, createdAt, owner, activity } = data
   const name = getFakeName()
   const description = getFakeName()
   const objective = getFakeObjective()
