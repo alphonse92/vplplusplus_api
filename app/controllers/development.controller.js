@@ -65,9 +65,9 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
   // 1. get all teacher's students
   const teacherStudents = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
   // 2. take all the ids of the teacher  students
-  const arrayOfStudentMoodleIds = teacherStudents.map(extractMoodleId)
+  const arrayOfTeacherStudentsMoodleIds = teacherStudents.map(extractMoodleId)
   // 3. get studens from activity and take the students
-  const studentsInActivity = await CourseMoodleService.getUsersFromActivityId(activity, arrayOfStudentMoodleIds, { closeOnEnd: true })
+  const studentsInActivity = await CourseMoodleService.getUsersFromActivityId(activity, arrayOfTeacherStudentsMoodleIds, { closeOnEnd: true })
   // 4. take all the ids of students in activity
   const studentsInActivityMoodleIds = studentsInActivity.map(extractMoodleId)
   // 5. take the moodle students from the teacher students
@@ -105,7 +105,7 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
     // next attemp
   }
   // return the array of summaries 
-  return {students,teacherStudents,studentsInActivityMoodleIds,attempsStudent}
+  return { students, teacherStudents, arrayOfTeacherStudentsMoodleIds, students, studentsInActivity, studentsInActivityMoodleIds, attempsStudent }
 }
 
 async function createAndSaveFakeProject(CurrentUser, req) {
