@@ -1,4 +1,5 @@
 const faker = require('faker')
+const moment = require('moment')
 const UserService = require(Config.paths.services + '/user/user.service');
 const ProjectFakerService = require(Config.paths.services + '/project/project.faker.service');
 const ProjectService = require(Config.paths.services + '/project/project.service');
@@ -57,7 +58,7 @@ const getArrayOfAttempsByStudent = (maxStudentAttemps, nTestCases) => student =>
 
 export const createFakeProject = async (req, res, next) => {
   try {
-    const { body = {} } = req
+    const { body = {}, from, type = "days", each = 1, } = req
     const { maxStudentAttemps = 10 } = body
     const CurrentUser = UserService.getUserFromResponse(res)
     const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
@@ -69,31 +70,27 @@ export const createFakeProject = async (req, res, next) => {
     const nTestCases = TestCaseDocs.length
     const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
 
-    const arrayOfPayloadsToCreteTheSummaries= attempsStudent.map(studentAttemp => {
+    const arrayOfPromisesToCreateSummaries = attempsStudent.reduce((acc, studentAttemp) => {
       const { attemps, student } = studentAttemp
       const { id: moodle_user } = student
-      const payloads = attemps.map(attemp => {
+      const pivot = moment(from)
+      const promises = attemps.map((attemp, idx) => {
+        const createdAtMoment = pivot.add(each, type)
         const summaryPayload = {
           moodle_user,
           project,
-          data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' }))
+          data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
+          createdAt: createdAtMoment.toDate()
         }
-        return summaryPayload
+        return ProjectSummaryService.createAll(summaryPayload.project, summaryPayload.moodle_user, summaryPayload.data)
       })
-      return payloads
-    })
+      return acc.concat(promises)
+    }, [])
 
-    res.send(arrayOfPayloadsToCreteTheSummaries)
-    // students.map(student => {
+    const responseOfCreateSummaries = await Promise.all(arrayOfPromisesToCreateSummaries)
 
-    // })
+    res.send(responseOfCreateSummaries)
 
-    // const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
-    // const {_id:project} = ProjectDoc
-
-    // students.map
-
-    // res.send(students)
   } catch (e) {
     next(e)
   }
