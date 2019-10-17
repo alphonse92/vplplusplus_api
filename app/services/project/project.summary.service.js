@@ -36,16 +36,24 @@ class SummaryService extends BaseService {
     return result.map(({ moodle_user, user, summaries }) => ({ moodle_user, user: user[0], summaries }))
   }
 
-  async createAll(project_id, moodle_user, summary_array_to_save) {
+  async  valideUserIsEnrolledInCourse(activity, moodle_user, ) {
+
+    const CourseMoodleService = new CourseMoodleServiceClass()
+    const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
+    const isUserInActivity = UserFromActivity.length === 1
+    if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
+    return UserFromActivity[0]
+  }
+
+  async createAll(project_id, moodle_user, summary_array_to_save, opts = { valideEnroledStudents: true }) {
     const ProjectService = require('./project.service');
     const Project = ProjectService.getModel()
     const ProjectDoc = await Project.findById(project_id)
     const { _id: project, activity } = ProjectDoc
-    const CourseMoodleService = new CourseMoodleServiceClass()
-    const UserFromActivity = await CourseMoodleService.getUsersFromActivityId(activity, moodle_user, { closeOnEnd: true })
-    const isUserInActivity = UserFromActivity.length === 1
+
     // user should be enroled in the activity
-    if (!isUserInActivity) throw new Util.Error(Errors.user_is_not_enroled_in_the_activity)
+    opts.valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
+
     const SummariesApproved = await Summary.find({ project, moodle_user, approved: true })
     // maps of references to find duplicates and approved test_cases
     const mapToFindDuplicates = {}

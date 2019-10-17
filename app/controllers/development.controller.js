@@ -54,44 +54,56 @@ const getArrayOfAttempsByStudent = (maxStudentAttemps, nTestCases) => student =>
 // END OF : aletory functions
 //
 
+async function createSummariesToTheProject(CurrentUser, ProjectDoc, data) {
+  const { _id: project } = ProjectDoc
+  const { from, type = "days", each = 1, maxStudentAttemps = 10 } = data
+  const TestCase = ProjectTestCaseService.getModel()
+  const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
+  const TestCaseDocs = await TestCase.find({ project })
+  const nTestCases = TestCaseDocs.length
+  const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
+  const SummaryDocs = []
 
+  for (let iAttempStudent in attempsStudent) {
+    const attempStudent = attempsStudent[iAttempStudent]
+    const { attemps, student } = attempStudent
+    const { id: moodle_user } = student
+    const pivot = moment(from)
+    for (let iAttemp in attemps) {
+      const attemp = attemps[iAttemp]
+      const createdAtMoment = pivot.add(each, type)
+      const summaryPayload = {
+        moodle_user,
+        project,
+        data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
+        createdAt: createdAtMoment.toDate()
+      }
+      const Summary = await ProjectSummaryService.createAll(summaryPayload.project, summaryPayload.moodle_user, summaryPayload.data, opts = { valideEnroledStudents: false })
+      SummaryDocs.push(Summary)
+    }
+  }
+
+  return SummaryDocs
+}
+
+async function createAndSaveFakeProject(CurrentUser, data) {
+  const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, data)
+  // if teacher of current user is not teacher of the activity related, it should throw an error even if the fake project is mocked
+  const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
+  return ProjectDoc
+}
 
 export const createFakeProject = async (req, res, next) => {
   try {
-    const { body = {}, from, type = "days", each = 1, } = req
-    const { maxStudentAttemps = 10 } = body
+    const { body = {} } = req
     const CurrentUser = UserService.getUserFromResponse(res)
-    const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
-    const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, body)
-    const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
-    const { _id: project } = ProjectDoc
-    const TestCase = ProjectTestCaseService.getModel()
-    const TestCaseDocs = await TestCase.find({ project })
-    const nTestCases = TestCaseDocs.length
-    const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
-
-    const arrayOfPromisesToCreateSummaries = attempsStudent.reduce((acc, studentAttemp) => {
-      const { attemps, student } = studentAttemp
-      const { id: moodle_user } = student
-      const pivot = moment(from)
-      const promises = attemps.map((attemp, idx) => {
-        const createdAtMoment = pivot.add(each, type)
-        const summaryPayload = {
-          moodle_user,
-          project,
-          data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
-          createdAt: createdAtMoment.toDate()
-        }
-        return ProjectSummaryService.createAll(summaryPayload.project, summaryPayload.moodle_user, summaryPayload.data)
-      })
-      return acc.concat(promises)
-    }, [])
-
-    const responseOfCreateSummaries = await Promise.all(arrayOfPromisesToCreateSummaries)
-
-    res.send(responseOfCreateSummaries)
-
+    const ProjectDoc = await createAndSaveFakeProject(CurrentUser, body)
+    const summariesDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, body)
+    res.send(summariesDocs)
   } catch (e) {
+
+    // should throw an error if user isnt a teacher to the related activity
+    // should throw an error if user isnt a teacher to the related activity
     next(e)
   }
 }
