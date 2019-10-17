@@ -77,7 +77,7 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
   const nTestCases = TestCaseDocs.length
   // 7, create an aleatory array of attemps related to the student
   const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
-  const SummaryDocs = []
+  let AllSummaryDocs = []
 
   // start to create the summaries for each item attemp of array of students attemps
   for (let iAttempStudent in attempsStudent) {
@@ -98,14 +98,14 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
         createdAt: createdAtMoment.toDate()
       }
       // 11. Create the summaries according the project, moodle user, and data, disable validations to improve the performance
-      const Summary = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, { valideEnroledStudents: false })
-      SummaryDocs.push(Summary)
+      const SummaryDocs = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, { valideEnroledStudents: false })
+      AllSummaryDocs = AllSummaryDocs.concat(SummaryDocs)
       // next student item attemp
     }
     // next attemp
   }
   // return the array of summaries 
-  return SummaryDocs
+  return AllSummaryDocs
 }
 
 async function createAndSaveFakeProject(CurrentUser, req) {
