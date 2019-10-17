@@ -44,7 +44,7 @@ class CourseService extends MoodleService {
     `
     // prepare statements to prevent sql injection
     const preparedValues = [vpl_module_id, activity_id]
-    if (shouldFilterByUsers) preparedValues.push(`[${user_ids.join(',')}]`)
+    if (shouldFilterByUsers) preparedValues.push(user_ids)
     // execute and return
     const results = await super.execute(sql, preparedValues, opts)
 

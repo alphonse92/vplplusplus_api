@@ -105,7 +105,7 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
     // next attemp
   }
   // return the array of summaries 
-  return { students, teacherStudents, arrayOfTeacherStudentsMoodleIds, students, studentsInActivity, studentsInActivityMoodleIds, attempsStudent }
+  return SummaryDocs
 }
 
 async function createAndSaveFakeProject(CurrentUser, req) {
@@ -123,7 +123,6 @@ export const createFakeProject = async (req, res, next) => {
     const summariesDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, req)
     res.send(summariesDocs)
   } catch (e) {
-
     // should throw an error if user isnt a teacher to the related activity
     // should throw an error if user isnt a teacher to the related activity
     next(e)
