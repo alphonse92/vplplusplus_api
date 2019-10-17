@@ -303,8 +303,6 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
                           $multiply: [
                             {
                               $divide: [
-
-
                                 "$$skill.info.approved",
                                 { $multiply: ["$$skill.info.effort", "$$skill.info.negative_coefficent"] },
                               ]
@@ -317,7 +315,6 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
                     ]
                   }
                 },
-
               ]
             }
           }

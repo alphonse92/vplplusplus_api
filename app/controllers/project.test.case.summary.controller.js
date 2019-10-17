@@ -43,6 +43,7 @@ const getProjectTimelineHOC = (project) => {
 			console.log('adding', period, type, 'to ', from)
 			const toMoment = from.clone().add(period, type)
 			const to = toMoment.format(format)
+			console.log('to: ', toMoment)
 
 			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
 			const lastReport = reports[reports.length - 1] || { skill: 0 }
