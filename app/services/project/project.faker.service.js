@@ -36,7 +36,7 @@ export const getTestMock = (data) => () => {
   const code = getFakeTestCode()
   const limit = allTopics.length < topicsLimit ? allTopics.length : topicsLimit
   const topics = allTopics.slice(0, limit)
-  const randomTestCasesAmount = Math.floor(Math.random() * maxTestCases) + minTestCases
+  const randomTestCasesAmount = Math.floor((Math.random() * maxTestCases) + minTestCases)
   const pickRandomIndex = () => Math.floor(Math.random() * topics.length)
   const takeTopic = number => topics[number]
   const test_cases = Array
