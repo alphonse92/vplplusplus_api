@@ -10,3 +10,8 @@ export const createFakeProject = async (req, res, next) => {
     next(e)
   }
 }
+
+
+export const updatePolicies = async (req, res, next) => {
+
+}

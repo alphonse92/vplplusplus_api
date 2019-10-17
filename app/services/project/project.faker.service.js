@@ -11,12 +11,12 @@ export const getFakeTestCode = () => "private Calculadora test \n @Before \n   p
 export const getFakeTestCaseCodeBody = () => "// code body"
 
 export const getTestCaseMock = ({ owner, createdAt }) => (topic) => {
-  const { id, description } = topic
+  const { _id, description } = topic
   const fakeTestcase = {
     name: `Fake test case for ${description}`,
     objective: `Test the topic ${description}`,
     grade: 1,
-    topic: [id],
+    topic: [_id],
     successMessage: `Congrats! you know: ${description}`,
     successMessageLink: faker.internet.url(),
     failureMessage: `Sorry, you dont know ${description}`,
@@ -43,7 +43,7 @@ export const getTestMock = (data) => () => {
 }
 
 export const getProjectMock = (data) => {
-  const { maxTests, minTests, createdAt, owner, activity } = data
+  const { maxTests = 1, minTests = 5, createdAt, owner, activity } = data
   const name = getFakeName()
   const description = getFakeName()
   const objective = getFakeObjective()
