@@ -30,23 +30,25 @@ class TestService extends BaseService {
 		return compiledCode.code
 	}
 
-	createAll(CurrentUser, ProjectDoc, ArrayOfTestData = []) {
-		return Promise.all(ArrayOfTestData.map(data => this.create(CurrentUser, ProjectDoc, data)))
+	createAll(CurrentUser, ProjectDoc, ArrayOfTestData = [], opts = { forceSetAttributes: false }) {
+		return Promise.all(ArrayOfTestData.map(data => this.create(CurrentUser, ProjectDoc, data, opts)))
 	}
 
-	async create(CurrentUser, ProjectDoc, data) { // test data
+	async create(CurrentUser, ProjectDoc, data, opts = { forceSetAttributes: false }) { // test data
 		const { _id: owner } = CurrentUser
 		const { _id: project } = ProjectDoc
 		const { _id, test_cases = [], ...testPayload } = data
 		const maxGrade = test_cases.reduce((sum, testCase) => (sum + testCase.grade), 0)
 		const isUpdate = !!_id
-		const test = { ...pick(testPayload, Test.getEditableFields()), maxGrade }
+		const test = opts.forceSetAttributes
+			? { ...testPayload }
+			: { ...pick(testPayload, Test.getEditableFields()), maxGrade }
 		const TestDoc = isUpdate
 			? await super.update({ _id, owner }, test)
 			: await super.create({ ...test, owner, project })
 
 		try {
-			await TestCaseService.createAll(CurrentUser, ProjectDoc, TestDoc, test_cases)
+			await TestCaseService.createAll(CurrentUser, ProjectDoc, TestDoc, test_cases, opts)
 			return TestDoc
 		} catch (e) {
 			if (!isUpdate) await this.delete(CurrentUser, ProjectDoc._id, TestDoc._id)

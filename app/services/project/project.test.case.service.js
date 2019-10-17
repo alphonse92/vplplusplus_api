@@ -33,17 +33,19 @@ class TestCaseService extends BaseService {
 		return TestCaseDoc.compile().code
 	}
 
-	createAll(CurrentUser, ProjectDoc, TestDoc, ArrayOfTestCases) {
-		return Promise.all(ArrayOfTestCases.map(data => this.create(CurrentUser, ProjectDoc, TestDoc, data)))
+	createAll(CurrentUser, ProjectDoc, TestDoc, ArrayOfTestCases, opts = { forceSetAttributes: false }) {
+		return Promise.all(ArrayOfTestCases.map(data => this.create(CurrentUser, ProjectDoc, TestDoc, data, opts)))
 	}
 
-	async create(CurrentUser, ProjectDoc, TestDoc, data) {
+	async create(CurrentUser, ProjectDoc, TestDoc, data, opts = { forceSetAttributes: false }) {
 		const { _id, ...testCasePayload } = data
 		const { _id: owner } = CurrentUser
 		const { _id: project } = ProjectDoc
 		const { _id: test } = TestDoc
 		const isUpdate = !!_id
-		const test_case = pick(testCasePayload, TestCase.getEditableFields())
+		const test_case = opts.forceSetAttributes
+			? { ...testCasePayload }
+			: pick(testCasePayload, TestCase.getEditableFields())
 		const TestCaseDoc = isUpdate
 			? await super.update({ _id, owner, project, test }, test_case)
 			: await super.create({ ...test_case, owner, project, test })

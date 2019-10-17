@@ -3,7 +3,6 @@ const ProjectFakerService = require(Config.paths.services + '/project/project.fa
 
 export const createFakeProject = async (req, res, next) => {
   try {
-
     const CurrentUser = UserService.getUserFromResponse(res)
     const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, req.body)
     res.send(FakeProject)

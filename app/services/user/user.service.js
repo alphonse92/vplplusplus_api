@@ -71,10 +71,14 @@ Service.updateOrCreate = updateOrCreate;
 async function updateOrCreate(data) {
 	const { email } = data
 	const query = { email }
-	const opts = { upsert: true, new: true, runValidators: true }
-	const UserDoc = await User.findOneAndUpdate(query, data, opts)
-	await addGroupsToUser(UserDoc)
-	return UserDoc
+
+	const UserDoc = await User.findOne(query)
+	const opts = { new: true, runValidators: true }
+	const newOrUpdatedUserDocument = UserDoc
+		? await User.findOneAndUpdate(query, data, opts)
+		: await User.create(data)
+	await addGroupsToUser(newOrUpdatedUserDocument)
+	return newOrUpdatedUserDocument
 }
 
 function addGroupsToUser(UserDoc) {
@@ -220,7 +224,7 @@ function getGetUserMiddleware() {
 
 /**
  * This function doesnt create a moodle user. The vpl API isnt a moodle client.
- * This function only creates a user for vpl api clients, and it api roles,
+ * This function just creates a user for vpl api clients, and it api roles,
  * for example, you can add a user for vpl-jlib.
  * 
  *

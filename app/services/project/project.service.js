@@ -61,7 +61,7 @@ class ProjectService extends BaseService {
 		return ProjectDoc.compile().code
 	}
 
-	async create(CurrentUser, data) {
+	async create(CurrentUser, data, opts = { forceSetAttributes: false }) {
 		const { _id, tests = [], ...payloadProject } = data
 		const { activity: activity_id } = payloadProject
 		const isUpdate = !!_id
@@ -78,7 +78,9 @@ class ProjectService extends BaseService {
 
 		if (!activity) throw new Util.Error(Errors.activity_does_not_exist)
 
-		const project = pick(payloadProject, Project.getEditableFields())
+		const project = opts.forceSetAttributes
+			? { ...payloadProject }
+			: pick(payloadProject, Project.getEditableFields())
 
 		const ProjectDoc = isUpdate
 			? await super.update({ _id, owner: CurrentUser._id }, project)
@@ -86,7 +88,7 @@ class ProjectService extends BaseService {
 
 		try {
 			// if something happend here, then remove the project
-			await TestService.createAll(CurrentUser, ProjectDoc, tests)
+			await TestService.createAll(CurrentUser, ProjectDoc, tests, opts)
 			return ProjectDoc
 		} catch (e) {
 			if (!isUpdate) await this.delete(CurrentUser, ProjectDoc._id)
