@@ -90,12 +90,13 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
     for (let iAttemp in attemps) {
       const attemp = attemps[iAttemp]
       const createdAtMoment = pivot.add(each, type)
+      console.log('created at of submission', createdAtMoment.format('YYYY-MM-DD'))
       // 10 create the payload
       const summaryPayload = {
         moodle_user,
         project,
-        data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
-        createdAt: createdAtMoment.toDate()
+        data: attemp.map((approved, idx) => ({ createdAt: createdAtMoment.toDate(), test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' })),
+
       }
       // 11. Create the summaries according the project, moodle user, and data, disable validations to improve the performance
       const SummaryDocs = await ProjectSummaryService.createAll(project, moodle_user, summaryPayload.data, { valideEnroledStudents: false })

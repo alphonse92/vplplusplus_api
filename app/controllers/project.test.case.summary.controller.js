@@ -1,7 +1,8 @@
 const Config = global.Config;
 const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
-const SummaryService = require(Config.paths.services + '/project/project.summary.service');
+const ProjectService = require(Config.paths.services + '/project/project.service');
+const UserService = require(Config.paths.services + '/user/user.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
 const getProjectTimelineHOC = (project) => {
@@ -24,31 +25,27 @@ const getProjectTimelineHOC = (project) => {
 		let from
 
 		if (!fromQuery) {
-			const SummaryModel = SummaryService.getModel()
-			const summaryQuery = { project }
-			const SummaryDoc = await SummaryModel
-				.findOne(summaryQuery)
-				.sort({ createdAt: 'desc' })
-				.exec()
-
+			const ProjectModel = ProjectService.getModel()
+			const SummaryDoc = await ProjectModel.findById(project)
 			from = moment(SummaryDoc.createdAt)
-
 		} else {
 			from = moment(fromQuery)
 		}
 
-		const each = !eachQuery || eachQuery <= 0 ? 6 : +eachQuery
-		const steps = !stepsQuery || stepsQuery <= 0 ? 4 : +stepsQuery
+		const each = isNaN(eachQuery) ? 6 : (eachQuery * 1)
+		const steps = isNaN(stepsQuery) ? 6 : (stepsQuery * 1)
 		const reports = []
 		const limit = each * steps
-		let monthsToSum = each
+		let period = each
 
-		while (monthsToSum <= limit) {
+		console.log('getting timeline ', { from, fromQuery, each, steps, limit })
 
-			const toMoment = from.clone().add(monthsToSum, type)
+		while (period <= limit) {
+			console.log('adding', period, type, 'to ', from)
+			const toMoment = from.clone().add(period, type)
 			const to = toMoment.format(format)
 
-			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from: fromQuery, to, topic })
+			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
 			const lastReport = reports[reports.length - 1] || { skill: 0 }
 			const { skill: lastSkill } = lastReport
 			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
@@ -61,7 +58,7 @@ const getProjectTimelineHOC = (project) => {
 				variation
 			})
 
-			monthsToSum += each
+			period += each
 		}
 
 		return { project: ProjectDoc, reports }
