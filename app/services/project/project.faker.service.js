@@ -36,7 +36,7 @@ export const getTestMock = (data) => () => {
   const code = getFakeTestCode()
   const limit = allTopics.length < topicsLimit ? allTopics.length : topicsLimit
   const topics = allTopics.slice(0, limit)
-  const randomTestCasesAmount = Math.floor((Math.random() * maxTestCases) + minTestCases)
+  const randomTestCasesAmount = faker.random.number({ min: minTestCases, max: maxTestCases })
   const pickRandomIndex = () => Math.floor(Math.random() * topics.length)
   const takeTopic = number => topics[number]
   const test_cases = Array
@@ -53,7 +53,7 @@ export const getProjectMock = (data) => {
   const description = getFakeName()
   const objective = getFakeObjective()
   const tests = Array
-    .from(Array(Math.floor(Math.random() * maxTests) + minTests))
+    .from(Array(faker.random.number({ min: minTests, max: maxTests })))
     .map(getTestMock({ ...data }))
 
   return {
