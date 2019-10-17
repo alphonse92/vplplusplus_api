@@ -53,13 +53,3 @@ const students = Array.from(Array(1), (v, i) => i)
 const attempsStudent = students.map(getArrayOfAttempsByStudent)
 
 console.log(attempsStudent)
-
-
-
-
-
-// console.log('[ ' + first.join(','), '] approved?', isASuccesfullAttemp(first))
-// console.log('[ ' + second.join(','), '] approved?', isASuccesfullAttemp(second))
-// console.log('[ ' + thirth.join(','), '] approved?', isASuccesfullAttemp(thirth))
-// console.log('[ ' + fourth.join(','), '] approved?', isASuccesfullAttemp(fourth))
-// console.log('[ ' + fifth.join(','), '] approved?', isASuccesfullAttemp(fifth))  

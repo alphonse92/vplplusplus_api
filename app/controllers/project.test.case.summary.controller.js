@@ -31,32 +31,46 @@ const getProjectTimelineHOC = (project) => {
 			from = moment(fromQuery)
 		}
 
+		from.set('hour', 0).set('minute', 0)
+
 		const each = isNaN(eachQuery) ? 6 : (eachQuery * 1)
 		const steps = isNaN(stepsQuery) ? 6 : (stepsQuery * 1)
 		const reports = []
 		const limit = each * steps
 		let period = each
 
-		console.log('getting timeline ', { from, fromQuery, each, steps, limit })
-
 		while (period <= limit) {
-			console.log('adding', period, type, 'to ', from)
-			const toMoment = from.clone().add(period, type)
+			const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
 			const to = toMoment.format(format)
-			console.log('to: ', toMoment)
+			let report = []
 
-			const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
-			const lastReport = reports[reports.length - 1] || { skill: 0 }
-			const { skill: lastSkill } = lastReport
-			const skill = report.length ? report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length : lastSkill
-			const variation = skill - lastSkill
-			reports.push({
-				from: from,
-				to: toMoment,
-				tag: to,
-				skill,
-				variation
-			})
+			try {
+				report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
+				const lastReport = reports[reports.length - 1] || { skill: 0 }
+				const { skill: lastSkill } = lastReport
+				
+				const totalSkill = report.reduce((sum, userReport, idx) => {
+					return userReport.skill + sum
+				}, 0) / report.length
+				const skill = totalSkill / report.length
+				const variation = skill - lastSkill
+				reports.push({
+					from: from,
+					to: toMoment,
+					tag: to,
+					skill,
+					variation
+				})
+			} catch (e) {
+				reports.push({
+					from: from,
+					to: toMoment,
+					tag: to,
+					skill: 0,
+					variation: 0
+				})
+			}
+
 
 			period += each
 		}

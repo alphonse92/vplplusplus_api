@@ -62,6 +62,7 @@ class SummaryReportService {
   }
 
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
+
     const { topic } = opts
     const topicQuery = topic
       ? {
@@ -73,7 +74,7 @@ class SummaryReportService {
       } : {}
     const { from, to } = this.getMomentDatesFromOptions(opts)
     const $gte = this.momentToDateSafe(from)
-    const $lte = this.momentToDateSafe(to)
+    const $lt = this.momentToDateSafe(to)
 
     const project_id_array = !project_id
       ? []
@@ -94,10 +95,10 @@ class SummaryReportService {
     const projectOwnerQuery = { owner: CurrentUser._id }
     const projectQuery = { ...projectFindQuery, ...projectOwnerQuery }
     if (moodle_user_array.length) querySummary["summary.moodle_user"] = { $in: moodle_user_array }
-    if ($gte || $lte) {
+    if ($gte || $lt) {
       const dates = {}
       if ($gte) dates.$gte = $gte
-      if ($lte) dates.$lte = $lte
+      if ($lt) dates.$lt = $lt
       querySummary["summary.createdAt"] = dates
     }
 
@@ -109,7 +110,9 @@ class SummaryReportService {
       topic: topicQuery
     }
 
+
     const aggregator = ProjectAggregator(queries)
+
     const Report = await Projectservice
       .getModel()
       .aggregate(aggregator)

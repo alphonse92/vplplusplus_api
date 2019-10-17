@@ -90,7 +90,6 @@ async function createSummariesToTheProject(CurrentUser, ProjectDoc, req) {
     for (let iAttemp in attemps) {
       const attemp = attemps[iAttemp]
       const createdAtMoment = pivot.add(each, type)
-      console.log('created at of submission', createdAtMoment.format('YYYY-MM-DD'))
       // 10 create the payload
       const summaryPayload = {
         moodle_user,

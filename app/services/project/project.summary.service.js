@@ -97,7 +97,6 @@ class SummaryService extends BaseService {
     const UserDoc = await UserService.getByMoodleId(moodle_user)
     const user = UserDoc._id
     const data = { ...summary, user }
-    console.log('creating summary ', data)
     return await super.create(data)
   }
 

@@ -300,17 +300,23 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
                     $mergeObjects: [
                       {
                         level: {
-                          $multiply: [
-                            {
-                              $divide: [
+                          $cond: {
+                            if: { $eq: [{ $multiply: ["$$skill.info.effort", "$$skill.info.negative_coefficent"] }, 0] },
+                            then: 0,
+                            else: {
+                              $multiply: [
+                                {
+                                  $divide: [
 
 
-                                "$$skill.info.approved",
-                                { $multiply: ["$$skill.info.effort", "$$skill.info.negative_coefficent"] },
+                                    "$$skill.info.approved",
+                                    { $multiply: ["$$skill.info.effort", "$$skill.info.negative_coefficent"] },
+                                  ]
+                                },
+                                100
                               ]
-                            },
-                            100
-                          ]
+                            }
+                          },
                         }
                       },
                       "$$skill.info",
