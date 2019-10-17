@@ -2,6 +2,7 @@ const faker = require('faker')
 const UserService = require(Config.paths.services + '/user/user.service');
 const ProjectFakerService = require(Config.paths.services + '/project/project.faker.service');
 const ProjectService = require(Config.paths.services + '/project/project.service');
+const ProjectTestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 const ProjectSummaryService = require(Config.paths.services + '/project/project.summary.service');
 
 //
@@ -26,23 +27,24 @@ const getLast = a => a[a.length - 1]
 const getArrayOfAttempsByStudent = (maxStudentAttemps, nTestCases) => student => {
   const firstAttemp = getArrayOfBooleans(nTestCases)
   const attemps = [firstAttemp]
+  const returnResponse = (passed) => ({ attemps, student, passed })
   let lastAttemp = firstAttemp
   for (let i = 0; i < maxStudentAttemps - 1; i++) {
     const lastAttempInArray = getLast(attemps)
-    if (isASuccesfullAttemp(lastAttempInArray)) return attemps;
+    if (isASuccesfullAttemp(lastAttempInArray)) return returnResponse(true);
     const newAttemp = upgradeRandomBooleans(lastAttempInArray)
     lastAttemp = newAttemp
     attemps.push(newAttemp)
   }
 
   const hasStudentPassed = isASuccesfullAttemp(lastAttemp)
-  if (hasStudentPassed) return attemps
+  if (hasStudentPassed) return returnResponse(true)
 
   const randomNumber = faker.random.number({ min: 1, max: 10 })
   const shouldTheStudentPass = randomNumber > 7 // the 30% of students that cant pass the project, will pass the project
   if (shouldTheStudentPass) attemps[attemps.length - 1] = getSuccessfullAttemp(nTestCases)
 
-  return attemps
+  return returnResponse(shouldTheStudentPass)
 
 }
 
@@ -59,9 +61,18 @@ export const createFakeProject = async (req, res, next) => {
     const { maxStudentAttemps = 10 } = body
     const CurrentUser = UserService.getUserFromResponse(res)
     const students = await UserService.getMyStudents(CurrentUser, req, { paginate: false })
-    const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, 5))
+
+    return res.send(students.map(getArrayOfAttempsByStudent(maxStudentAttemps, 5)))
+
+    const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, body)
+    const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
+
+    const TestCase = ProjectTestCaseService.getModel()
+    const TestCaseDocs = await TestCase.find({ project })
+    const nTestCases = TestCaseDocs.length
+    const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
+
     res.send(attempsStudent)
-    // const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, body)
     // students.map(student => {
 
     // })
