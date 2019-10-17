@@ -1,5 +1,9 @@
 const faker = require('faker')
 
+//
+// BEGIN OF : aletory functions
+//
+
 // function to valide if all array items are true
 const isASuccesfullAttemp = array => array.reduce((acc, val) => acc && val, true)
 // function that retreive a array from length, filled  with true values
@@ -37,6 +41,11 @@ const getArrayOfAttempsByStudent = student => {
   return attemps
 
 }
+
+
+//
+// END OF : aletory functions
+//
 
 const nTestCases = 5
 const maxStudentAttemps = 10
