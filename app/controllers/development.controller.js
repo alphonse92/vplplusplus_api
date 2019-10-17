@@ -70,15 +70,15 @@ export const createFakeProject = async (req, res, next) => {
     const attempsStudent = students.map(getArrayOfAttempsByStudent(maxStudentAttemps, nTestCases))
 
     attempsStudent.map(studentAttemp => {
-      const { attemps, passed, student } = attempsStudent
-      const { _id, id: moodle_user } = student
+      const { attemps, student } = studentAttemp
+      const { id: moodle_user } = student
       const payloads = attemps.map(attemp => {
         const summaryPayload = {
           moodle_user,
           project,
           data: attemp.map((approved, idx) => ({ test_case: TestCaseDocs[idx]._id, approved, output: 'summary created automatically' }))
         }
-        return summaryPayoad
+        return summaryPayload
       })
       return payloads
     })
