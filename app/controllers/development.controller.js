@@ -112,7 +112,7 @@ async function createAndSaveFakeProject(CurrentUser, req) {
   const { body: data } = req
   const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, data)
   // if teacher of current user is not teacher of the activity related, it should throw an error even if the fake project is mocked
-  const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
+  const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: true })
   return ProjectDoc
 }
 
