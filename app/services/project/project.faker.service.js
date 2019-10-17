@@ -29,15 +29,19 @@ export const getTestCaseMock = ({ owner, createdAt }) => (topic) => {
 }
 
 export const getTestMock = (data) => () => {
-  const { owner, createdAt, topics, minTestCases = 1, maxTestCases = 5 } = data
+  const { owner, createdAt, topics: allTopics = [], minTestCases = 1, maxTestCases = 5, topicsLimit = 10 } = data
   const name = getFakeName()
   const description = getFakeDescription()
   const objective = getFakeObjective()
   const code = getFakeTestCode()
+  const topics = allTopics.slice(0, topicsLimit)
+  const randomTestCasesAmount = Math.floor(Math.random() * maxTestCases) + minTestCases
+  const pickRandomIndex = () => Math.floor(Math.random() * topics.length)
+  const takeTopic = number => topics[number]
   const test_cases = Array
-    .from(Array(Math.floor(Math.random() * maxTestCases) + minTestCases), () => Math.floor(Math.random() * topics.length))
-    .map(number => topics[number])
-    .map(getTestCaseMock({ ...data }))
+    .from(Array(randomTestCasesAmount), pickRandomIndex)
+    .map(takeTopic)
+    .map(getTestCaseMock({ ...data, topics }))
 
   return { name, description, objective, tags: [], code, test_cases, createdAt, owner }
 }

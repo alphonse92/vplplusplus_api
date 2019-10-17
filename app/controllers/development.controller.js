@@ -6,7 +6,7 @@ export const createFakeProject = async (req, res, next) => {
   try {
     const CurrentUser = UserService.getUserFromResponse(res)
     const FakeProject = await ProjectFakerService.createFakeProject(CurrentUser._id, req.body)
-    const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
+    // const ProjectDoc = await ProjectService.create(CurrentUser, FakeProject, { forceSetAttributes: false })
     res.send(FakeProject)
   } catch (e) {
     next(e)
