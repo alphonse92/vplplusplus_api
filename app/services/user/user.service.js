@@ -314,6 +314,7 @@ async function getByMoodleId(moodle_id) {
 	let UserDoc = await User.findOne({ id: moodle_id })
 	// if user does not exist find in moodle table
 	if (!UserDoc) {
+		console.log('User does not exist in the database, requesting to the moodle database by ', moodle_id)
 		const MoodleUserServiceClass = require(Config.paths.services + "/moodle/moodle.user.service") // get the moodle user service class
 		const MoodleUserService = new MoodleUserServiceClass() // Create an instance of the service
 		const MoodleUser = await MoodleUserService.getUserByMoodleId(moodle_id) // find in moodle database

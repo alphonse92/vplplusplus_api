@@ -3,6 +3,7 @@ const MoodleService = require("./moodle.class.service")
 const opts_def = { closeOnEnd: true }
 class UserMoodleService extends MoodleService {
   async getUserByMoodleId(id, opts = opts_def) {
+    console.log('get user by moodle id', id)
     const { TABLE_PREFIX } = this
     const sql = `
       SELECT *
