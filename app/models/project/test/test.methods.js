@@ -9,19 +9,6 @@ import * as Statics from './test.statics'
  */
 
 export async function getSkills(moodle_user) {
-  // we need validate if is populated
-  // let justPopulate = true
-  // try {
-  //   // if something happened so, just populate
-  //   const testCasesLoaded = Array.isArray(this.test_cases) && this.test_cases[0].summaries
-  //   const topicsLoaded = testCasesLoaded && Array.isArray(this.testCases[0].topics[0].name)
-  //   justPopulate = !testCasesLoaded || !topicsLoaded
-  // } catch (e) { console.log(e) }
-
-  // const matchUserSummary = {}
-  // if (moodle_user) matchUserSummary.moodle_user = moodle_user
-  // await this.populate([{ path: 'test_cases', populate: [{ path: topics }, { path: 'summaries', match: matchUserSummary }] }]).execPopulate()
-
   return this
     .test_cases
     .reduce((topicMap, TestCaseDoc) => {
@@ -37,8 +24,6 @@ export async function getSkills(moodle_user) {
     .map(topicWithTestCases => {
       const { _id, name, description, test_cases } = topicWithTestCases
       const skillReport = Statics.getSkill(test_cases)
-      console.log(topicWithTestCases)
-      console.log(skillReport)
       return { _id, name, description, ...skillReport }
     })
 
