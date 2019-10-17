@@ -58,6 +58,13 @@ fixtures.public = {
 	]
 };
 
+if (Config.env === "dev" || Config.env === "development") {
+	fixtures.public.actions.push(
+		{ path: "POST/api/v1/dev/:action/", scopes: ["login"], query: "" }
+	)
+}
+
+
 fixtures.policyCreate = {
 	resource: "service:api:system:policy.create",
 	name: "policy.create",
