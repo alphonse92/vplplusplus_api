@@ -1,8 +1,7 @@
 const Config = global.Config;
 const moment = require('moment')
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
-const ProjectService = require(Config.paths.services + '/project/project.service');
-const UserService = require(Config.paths.services + '/user/user.service');
+const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
 const getProjectTimelineHOC = (project) => {
