@@ -14,12 +14,8 @@ const tryToSetFalseToTrue = val => val ? val : faker.random.boolean()
 const upgradeRandomBooleans = arrayOfbooleanValues => arrayOfbooleanValues.map(tryToSetFalseToTrue)
 // function to retreive the last array 
 const getLast = a => a[a.length - 1]
-
-const nTestCases = 5
-const maxStudentAttemps = 10
-const students = Array.from(Array(1), (v, i) => i)
-
-const attempsStudent = students.map(student => {
+// function to get aleatory array of attemps to solve a test cases of a project
+const getArrayOfAttempsByStudent = student => {
   const firstAttemp = getArrayOfBooleans(nTestCases)
   const attemps = [firstAttemp]
   let lastAttemp = firstAttemp
@@ -40,7 +36,12 @@ const attempsStudent = students.map(student => {
 
   return attemps
 
-})
+}
+
+const nTestCases = 5
+const maxStudentAttemps = 10
+const students = Array.from(Array(1), (v, i) => i)
+const attempsStudent = students.map(getArrayOfAttempsByStudent)
 
 console.log(attempsStudent)
 
