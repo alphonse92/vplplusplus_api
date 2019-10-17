@@ -325,7 +325,7 @@ async function getByMoodleId(moodle_id) {
 }
 
 Service.getMyStudents = getMyStudents
-async function getMyStudents(CurrentUser, req) {
+async function getMyStudents(CurrentUser, req, opts = { paginate: true }) {
 	const MoodleCourseServiceClass = require(Config.paths.services + "/moodle/moodle.course.service");
 	const MCourseService = new MoodleCourseServiceClass()
 	const students = await MCourseService.getMyStudents(CurrentUser)
@@ -335,7 +335,9 @@ async function getMyStudents(CurrentUser, req) {
 	const query = { _id: { $in: user_docs_ids } }
 	const paginator = Util.mongoose.getPaginatorFromRequest(req, Config.app.paginator);
 	const queryPaginator = Util.mongoose.getQueryFromRequest(req);
-	const results = await Util.mongoose.list(User, null, { ...queryPaginator, ...query }, paginator)
+	let results = { docs: [] }
+	if (opts.paginate) results = await Util.mongoose.list(User, null, { ...queryPaginator, ...query }, paginator)
+	else results.docs = await User.find(query)
 	const { docs } = results
 	const fieldsToReturn = [
 		'_id',
@@ -349,7 +351,7 @@ async function getMyStudents(CurrentUser, req) {
 	]
 	results.docs = docs.map(data => pick(data, fieldsToReturn))
 
-	return results
+	return opts.paginate ? results : results.docs
 }
 
 Service.getModel = () => User
