@@ -121,10 +121,10 @@ async function createAndSaveFakeProjects(CurrentUser, req) {
   let response = []
   for (let i = 0; i < quantity; i++) {
     const ProjectDoc = await createAndSaveFakeProject(CurrentUser, req)
-    const SummaryDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, req)
+    const SummaryDocs = createSummariesToTheProject(CurrentUser, ProjectDoc, req)
     response = [...response, SummaryDocs]
   }
-  response
+  return Promise.all(response)
 }
 
 export const createFakeProject = async (req, res) => {
