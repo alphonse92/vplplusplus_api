@@ -116,15 +116,23 @@ async function createAndSaveFakeProject(CurrentUser, req) {
   return ProjectDoc
 }
 
-export const createFakeProject = async (req, res, next) => {
+async function createAndSaveFakeProjects(CurrentUser, req) {
+  const { quantity = 1 } = req.body
+  let response = []
+  for (let i = 0; i < quantity; i++) {
+    const ProjectDoc = await createAndSaveFakeProject(CurrentUser, req)
+    const SummaryDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, req)
+    response = [...response, SummaryDocs]
+  }
+  response
+}
+
+export const createFakeProject = async (req, res) => {
   try {
     const CurrentUser = UserService.getUserFromResponse(res)
-    const ProjectDoc = await createAndSaveFakeProject(CurrentUser, req)
-    const summariesDocs = await createSummariesToTheProject(CurrentUser, ProjectDoc, req)
+    const summariesDocs = await createAndSaveFakeProjects(CurrentUser, req)
     res.send(summariesDocs)
   } catch (e) {
-    // should throw an error if user isnt a teacher to the related activity
-    // should throw an error if user isnt a teacher to the related activity
     next(e)
   }
 }
