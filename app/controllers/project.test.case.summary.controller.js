@@ -51,7 +51,7 @@ const getProjectTimelineHOC = (project) => {
 				
 				const totalSkill = report.reduce((sum, userReport, idx) => {
 					return userReport.skill + sum
-				}, 0) / report.length
+				}, 0)
 				const skill = totalSkill / report.length
 				const variation = skill - lastSkill
 				reports.push({
