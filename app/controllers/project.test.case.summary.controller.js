@@ -16,19 +16,21 @@ const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQu
 const getTimeline = async (CurrentUser, project, opts) => {
 	const { format, type, from, each, limit, topic } = opts
 	const reports = []
-
+	const fromString = from.format(format)
 	let period = each
 
 	while (period <= limit) {
+
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
 		const to = toMoment.format(format)
-		const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
+		const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from: fromString, to, topic })
 		const lastReport = reports[reports.length - 1] || { skill: 0 }
-		const { skill: lastSkill } = lastReport
+		const { skill: lastSkill = 0 } = lastReport
 
-		const totalSkill = report.reduce((sum, userReport, idx) => {
+		const totalSkill = report.reduce((sum, userReport) => {
 			return userReport.skill + sum
 		}, 0)
+
 		const skill = totalSkill / report.length
 		const variation = skill - lastSkill
 		reports.push({
@@ -61,7 +63,7 @@ const getProjectTimelineHOC = (project) => {
 		} = req.query
 		const separeByTopic = separeByTopicString === 'true'
 		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-		
+
 		if (topic.length && separeByTopic) {
 
 			const datasets = []
@@ -77,8 +79,6 @@ const getProjectTimelineHOC = (project) => {
 		const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
 		const reports = [{ title: ProjectDoc.name, dataset }]
 		return { project: ProjectDoc, reports }
-
-
 
 	}
 }

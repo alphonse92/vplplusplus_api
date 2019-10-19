@@ -64,7 +64,7 @@ class SummaryReportService {
   async getUserReport(CurrentUser, project_id, moodle_user, opts) {
 
     const { topic } = opts
-    const topicQuery = topic
+    const topicQuery = topic && topic.length
       ? {
         'topic.name': {
           $in: Array.isArray(topic)
