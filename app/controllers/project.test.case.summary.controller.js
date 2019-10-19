@@ -14,7 +14,7 @@ const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQu
 }
 
 const getTimeline = async (CurrentUser, project, opts) => {
-	const { format, type, from, each, limit } = opts
+	const { format, type, from, each, limit, topic } = opts
 	const reports = []
 	const period = each
 
@@ -60,7 +60,12 @@ const getProjectTimelineHOC = (project) => {
 		} = req.query
 
 		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-		const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables })
+		if (!separeByTopic) {
+			const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
+			return { project: ProjectDoc, reports }
+		}
+
+		const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
 		return { project: ProjectDoc, reports }
 
 	}
