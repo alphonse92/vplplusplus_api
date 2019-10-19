@@ -16,7 +16,8 @@ const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQu
 const getTimeline = async (CurrentUser, project, opts) => {
 	const { format, type, from, each, limit, topic } = opts
 	const reports = []
-	const period = each
+
+	let period = each
 
 	while (period <= limit) {
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
@@ -55,18 +56,26 @@ const getProjectTimelineHOC = (project) => {
 			, steps: stepsQuery  // take the first forth semestres
 			, format = "YYYY-MM-DD"
 			, type = 'months'
-			, topic
-			, separeByTopic = false
+			, topic = []
+			, separeByTopic: separeByTopicString = "false"
 		} = req.query
-
+		const separeByTopicString = Boolean(separeByTopicString)
 		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-		if (!separeByTopic) {
-			const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
+		// if no topics or if topics and not separe by topics, just return a single dataset
+		if (!topic.length || !separeByTopic) {
+			const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
+			const reports = [{ title: ProjectDoc.name, dataset }]
 			return { project: ProjectDoc, reports }
 		}
 
-		const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
-		return { project: ProjectDoc, reports }
+		const datasets = []
+		for (let i = 0; i < topic.length; i++) {
+			const singleTopic = topic[i]
+			const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
+			datasets.push({ title: singleTopic, dataset })
+		}
+
+		return { project: ProjectDoc, reports: datasets }
 
 	}
 }
