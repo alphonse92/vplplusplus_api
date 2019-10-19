@@ -59,23 +59,26 @@ const getProjectTimelineHOC = (project) => {
 			, topic = []
 			, separeByTopic: separeByTopicString = "false"
 		} = req.query
-		const separeByTopicString = Boolean(separeByTopicString)
+		const separeByTopic = separeByTopicString === 'true'
 		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-		// if no topics or if topics and not separe by topics, just return a single dataset
-		if (!topic.length || !separeByTopic) {
-			const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
-			const reports = [{ title: ProjectDoc.name, dataset }]
-			return { project: ProjectDoc, reports }
-		}
+		
+		if (topic.length && separeByTopic) {
 
-		const datasets = []
-		for (let i = 0; i < topic.length; i++) {
-			const singleTopic = topic[i]
-			const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
-			datasets.push({ title: singleTopic, dataset })
-		}
+			const datasets = []
+			for (let i = 0; i < topic.length; i++) {
+				const singleTopic = topic[i]
+				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
+				datasets.push({ title: singleTopic, dataset })
+			}
 
-		return { project: ProjectDoc, reports: datasets }
+			return { project: ProjectDoc, reports: datasets }
+
+		}
+		const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic })
+		const reports = [{ title: ProjectDoc.name, dataset }]
+		return { project: ProjectDoc, reports }
+
+
 
 	}
 }
