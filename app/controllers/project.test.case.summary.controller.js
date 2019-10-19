@@ -4,6 +4,44 @@ const SummaryReportService = require(Config.paths.services + '/project/project.s
 const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
+const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQuery) => {
+	const from = fromQuery ? moment(fromQuery) : moment(ProjectDoc.createdAt)
+	from.set('hour', 0).set('minute', 0)
+	const each = isNaN(eachQuery) ? 6 : (eachQuery * 1)
+	const steps = isNaN(stepsQuery) ? 6 : (stepsQuery * 1)
+	const limit = each * steps
+	return { from, each, steps, limit }
+}
+
+const getTimeline = async (CurrentUser, project, opts) => {
+	const { format, type, from, each, limit } = opts
+	const reports = []
+	const period = each
+
+	while (period <= limit) {
+		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
+		const to = toMoment.format(format)
+		const report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
+		const lastReport = reports[reports.length - 1] || { skill: 0 }
+		const { skill: lastSkill } = lastReport
+
+		const totalSkill = report.reduce((sum, userReport, idx) => {
+			return userReport.skill + sum
+		}, 0)
+		const skill = totalSkill / report.length
+		const variation = skill - lastSkill
+		reports.push({
+			from: from,
+			to: toMoment,
+			tag: to,
+			skill,
+			variation
+		})
+		period += each
+	}
+	return reports
+}
+
 const getProjectTimelineHOC = (project) => {
 
 	return async (req, res) => {
@@ -11,70 +49,18 @@ const getProjectTimelineHOC = (project) => {
 		const CurrentUser = UserService.getUserFromResponse(res)
 		const ProjectService = require(Config.paths.services + '/project/project.service');
 		const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
-
 		const {
 			from: fromQuery
 			, each: eachQuery // each 6 months is a semestre
 			, steps: stepsQuery  // take the first forth semestres
-			, topic
 			, format = "YYYY-MM-DD"
 			, type = 'months'
+			, topic
+			, separeByTopic = false
 		} = req.query
 
-		let from
-
-		if (!fromQuery) {
-			const ProjectModel = ProjectService.getModel()
-			const SummaryDoc = await ProjectModel.findById(project)
-			from = moment(SummaryDoc.createdAt)
-		} else {
-			from = moment(fromQuery)
-		}
-
-		from.set('hour', 0).set('minute', 0)
-
-		const each = isNaN(eachQuery) ? 6 : (eachQuery * 1)
-		const steps = isNaN(stepsQuery) ? 6 : (stepsQuery * 1)
-		const reports = []
-		const limit = each * steps
-		let period = each
-
-		while (period <= limit) {
-			const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
-			const to = toMoment.format(format)
-			let report = []
-
-			try {
-				report = await SummaryReportService.getUserReport(CurrentUser, project, undefined, { from, to, topic })
-				const lastReport = reports[reports.length - 1] || { skill: 0 }
-				const { skill: lastSkill } = lastReport
-				
-				const totalSkill = report.reduce((sum, userReport, idx) => {
-					return userReport.skill + sum
-				}, 0)
-				const skill = totalSkill / report.length
-				const variation = skill - lastSkill
-				reports.push({
-					from: from,
-					to: toMoment,
-					tag: to,
-					skill,
-					variation
-				})
-			} catch (e) {
-				reports.push({
-					from: from,
-					to: toMoment,
-					tag: to,
-					skill: 0,
-					variation: 0
-				})
-			}
-
-
-			period += each
-		}
-
+		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
+		const reports = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables })
 		return { project: ProjectDoc, reports }
 
 	}

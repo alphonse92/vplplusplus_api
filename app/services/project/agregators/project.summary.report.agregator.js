@@ -16,7 +16,8 @@ export const ProjectAggregator = ({ project = {}, topic = {}, summary = {}, user
           name: "$name",
           _id: "$_id",
           description: "$description",
-          activity: "$activity"
+          activity: "$activity",
+          createdAt: "$createdAt",
         }
       }
     },

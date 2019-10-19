@@ -168,15 +168,15 @@ class SummaryReportService {
       .reduce((map, userReport) => {
         const { student: studentTopic, topic } = userReport
         const { id, fullname } = studentTopic
-        const { name, description, level: noFixedLevel } = topic
+        const { name, description, level: noFixedLevel, _id } = topic
         const level = +noFixedLevel.toFixed(2)
         const student = { id, fullname }
         const skillInMap = map[name]
         if (!skillInMap || (skillInMap && level > skillInMap.level)) {
-          return { ...map, [name]: { name, description, level, students: [student] } }
+          return { ...map, [name]: { _id, name, description, level, students: [student] } }
         } else if (level === skillInMap.level) {
           const students = map[name].students.concat([student])
-          return { ...map, [name]: { name, description, level, students } }
+          return { ...map, [name]: { _id, name, description, level, students } }
         } else {
           return { ...map }
         }
