@@ -70,7 +70,7 @@ const getProjectTimelineHOC = (project) => {
 			for (let i = 0; i < topic.length; i++) {
 				const singleTopic = topic[i]
 				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
-				datasets.push({ title: singleTopic, dataset })
+				datasets.push({ title: `${ProjectDoc.name}-${singleTopic}`, dataset })
 			}
 
 			return { project: ProjectDoc, reports: datasets }
@@ -109,12 +109,12 @@ async function getProjectReportTimeline(req, res, next) {
 				: [projectQuery]
 
 		const results = []
-		
+
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const result = await getProjectTimelineHOC(projectParam)(req, res)
 			results.push(result)
 		}
-		
+
 		res.send(results)
 
 	} catch (e) { next(e) }
