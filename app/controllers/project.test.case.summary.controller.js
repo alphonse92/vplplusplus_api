@@ -100,8 +100,23 @@ async function create(req, res, next) {
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const { id: project } = req.params
-		res.send(await getProjectTimelineHOC(project)(req, res))
+		const { id: projectParam } = req.params
+		const { project: projectQuery } = req.query
+		const ArrayOfProjects = projectParam
+			? [projectParam]
+			: Array.isArray(projectQuery)
+				? projectQuery
+				: [projectQuery]
+
+		const results = []
+		
+		for (let i = 0; i < ArrayOfProjects.length; i++) {
+			const result = await getProjectTimelineHOC(projectParam)(req, res)
+			results.push(result)
+		}
+		
+		res.send(results)
+
 	} catch (e) { next(e) }
 }
 
