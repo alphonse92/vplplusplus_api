@@ -101,12 +101,11 @@ module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
 		const { id: projectParam } = req.params
-		const { project: projectQuery } = req.query
-		const ArrayOfProjects = projectQuery
-			? Array.isArray(projectQuery)
-				? projectQuery
-				: [projectQuery]
-			: [projectParam]
+		const { project: projectQuery = [] } = req.query
+
+		const ArrayOfProjects = projectParam && !projectQuery
+			? projectParam
+			: projectQuery
 
 		const results = []
 
