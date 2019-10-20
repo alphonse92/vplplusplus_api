@@ -70,7 +70,7 @@ const getProjectTimelineHOC = (project) => {
 			for (let i = 0; i < topic.length; i++) {
 				const singleTopic = topic[i]
 				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
-				datasets.push({ title: `${ProjectDoc.name}-${singleTopic}`, dataset })
+				datasets.push({ title: `${singleTopic}-${ProjectDoc.name}`, dataset })
 			}
 
 			return { project: ProjectDoc, reports: datasets }
