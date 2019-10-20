@@ -1,14 +1,16 @@
 import { pick } from 'lodash'
 
 const Config = global.Config;
-const BaseService = require(Config.paths.services + '/service');
-const CourseServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
+
+const Util = require(Config.paths.utils);
+
 const Errors = require(Config.paths.errors + '/project.errors');
-const Summary = require(Config.paths.models + "/project/summary/summary.mongo");
 const Project = require(Config.paths.models + "/project/project/project.mongo");
+
+const BaseService = require(Config.paths.services + '/service');
 const TestService = require('./project.test.service');
 const TestCaseService = require('./project.test.case.service');
-const Util = require(Config.paths.utils);
+const CourseServiceClass = require(Config.paths.services + '/moodle/moodle.course.service');
 
 class ProjectService extends BaseService {
 

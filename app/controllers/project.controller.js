@@ -6,7 +6,7 @@ module.exports.list = list;
 async function list(req, res, next) {
 	try {
 		const CurrentUser = UserService.getUserFromResponse(res)
-		const Projects = ProjectService.list(CurrentUser, req)
+		const Projects = await ProjectService.list(CurrentUser)
 		res.send(Projects)
 	} catch (e) {
 		next(e)
