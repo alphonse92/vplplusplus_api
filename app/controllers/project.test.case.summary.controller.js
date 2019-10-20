@@ -111,12 +111,11 @@ async function getProjectReportTimeline(req, res, next) {
 			? [projectParam]
 			: ArrayOfProjectInQueryParams
 
-		console.log(projectParam, projectQuery, ArrayOfProjects)
-
 		const results = []
 
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
-			const result = await getProjectTimelineHOC(projectParam)(req, res)
+			const projectId = ArrayOfProjects[i]
+			const result = await getProjectTimelineHOC(projectId)(req, res)
 			results.push(result)
 		}
 
