@@ -139,10 +139,21 @@ fixtures.listProjects = {
 	name: "project.list",
 	slug: "List current project",
 	type: DefaultPolicyService.types.default,
-	description: "Policy for list projects for a person",
+	description: "Policy for list projects for a person. The main differece between it and project.get, is b/c this endpoint return all projects, just name and _id",
 	extends: [], depends: [],
 	actions: [
-		{ path: "GET/api/v1/project/:id?", scopes: ["listProject"] }
+		{ path: "GET/api/v1/project/list/", scopes: ["listProject"] }
+	]
+};
+fixtures.listProjects = {
+	resource: "service:api:system:project.get",
+	name: "project.get",
+	slug: "Get current projects",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for get projects for a person",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/:id?", scopes: ["getProjects"] }
 	]
 };
 

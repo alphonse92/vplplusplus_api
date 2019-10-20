@@ -65,6 +65,7 @@ module.exports = {
 			{ resource: "service:api:system:user.student.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
+			{ resource: "service:api:system:project.get" },
 			{ resource: "service:api:system:project.compile" },
 			{ resource: "service:api:system:project.export" },
 			{ resource: "service:api:system:project.create" },
@@ -117,6 +118,7 @@ module.exports = {
 			{ resource: "service:api:system:user.student.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
+			{ resource: "service:api:system:project.get" },
 			{ resource: "service:api:system:project.compile" },
 			{ resource: "service:api:system:project.export" },
 			{ resource: "service:api:system:project.create" },
@@ -168,6 +170,7 @@ module.exports = {
 			{ resource: "service:api:system:user.teacher.list" },
 			// projects
 			{ resource: "service:api:system:project.list" },
+			{ resource: "service:api:system:project.get" },
 			// tests cases
 			{ resource: "service:api:system:test.case.list" },
 			// summaries

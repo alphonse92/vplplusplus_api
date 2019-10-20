@@ -2,6 +2,17 @@ const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
 const ProjectService = require(Config.paths.services + '/project/project.service');
 
+module.exports.list = list;
+async function list(req, res, next) {
+	try {
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const Projects = ProjectService.list(CurrentUser, req)
+		res.send(Projects)
+	} catch (e) {
+		next(e)
+	}
+
+}
 module.exports.get = get;
 async function get(req, res, next) {
 	try {
