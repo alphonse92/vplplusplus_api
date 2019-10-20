@@ -7,7 +7,7 @@ async function list(req, res, next) {
 	try {
 		const CurrentUser = UserService.getUserFromResponse(res)
 		const Projects = await ProjectService.list(CurrentUser)
-		res.send(Projects)
+		res.send(Projects.map(({ name, description, activity, _id }) => ({ name, description, activity, _id })))
 	} catch (e) {
 		next(e)
 	}

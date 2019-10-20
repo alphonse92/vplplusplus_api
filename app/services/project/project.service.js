@@ -51,9 +51,20 @@ class ProjectService extends BaseService {
 		}
 	}
 
-	list(CurrentUser, query, populates) {
+	list(CurrentUser, customQuery={}, populates) {
+		const query = {
+			$and: [
+				customQuery,
+				{
+					$or: [
+						{ owner: CurrentUser._id },
+						{ is_public: true },
+					]
+				}
+			]
+		}
 		return super
-			.list({ ...query, owner: CurrentUser._id })
+			.list(query)
 			.populate(populates)
 	}
 
