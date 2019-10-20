@@ -103,13 +103,15 @@ async function getProjectReportTimeline(req, res, next) {
 		const { id: projectParam } = req.params
 		const { project: projectQuery = [] } = req.query
 
-		const ArrayOfProjects = projectParam && !projectQuery
-			? [projectParam]
-			: Array.isArray(projectQuery)
-				? projectQuery
-				: [projectQuery]
+		const ArrayOfProjectInQueryParams = Array.isArray(projectQuery)
+			? projectQuery
+			: [projectQuery]
 
-		console.log(projectParam, projectQuery)
+		const ArrayOfProjects = projectParam && !ArrayOfProjectInQueryParams.length
+			? [projectParam]
+			: ArrayOfProjectInQueryParams
+
+		console.log(projectParam, projectQuery, ArrayOfProjects)
 
 		const results = []
 
