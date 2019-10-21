@@ -117,22 +117,26 @@ const getQueryWeight = (req) => {
 	const {
 		separeByTopic,
 		separeByProject,
+		separeByStudent,
 		project: rProject = [],
 		topic: rTopic = [],
+		student: rStudent = []
 		each = 1,
 		steps = 1
 	} = req.query
 
 	const project = Array.isArray(rProject) ? rProject : [rProject]
 	const topic = Array.isArray(rTopic) ? rTopic : [rTopic]
+	const student = Array.isArray(student) ? student : [student]
 
 	const currentUserCalls = 1
 	const topicCalls = separeByTopic === "true" ? topic.length : 1
 	const projectCalls = separeByProject === "true" ? project.length : 1
+	const studentCalls = separeByStudent === "true" ? student.length : 1
 	const projectByTopicCalls = topicCalls * projectCalls
 	const dateRangesCalls = steps
 
-	const weight = currentUserCalls + (projectByTopicCalls * dateRangesCalls)
+	const weight = currentUserCalls + (projectByTopicCalls * studentCalls * dateRangesCalls)
 	return weight
 
 }
