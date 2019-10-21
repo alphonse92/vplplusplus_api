@@ -47,39 +47,55 @@ const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
 	return reports
 }
 
-const getProjectTimelineHOC = (project) => {
+const getProjectTimelineHOC = (project, req, res) => {
+	const ProjectService = require(Config.paths.services + '/project/project.service');
+	const TopicService = require(Config.paths.services + '/topic/topic.service');
 
-	return async (req, res) => {
+	const {
+		from: fromQuery
+		, each: eachQuery // each 6 months is a semestre
+		, steps: stepsQuery  // take the first forth semestres
+		, format = "YYYY-MM-DD"
+		, type = 'months'
+		, topic = []
+		, separeByTopic: separeByTopicString = "false"
+	} = req.query
 
-		const CurrentUser = UserService.getUserFromResponse(res)
-		const ProjectService = require(Config.paths.services + '/project/project.service');
+	const CurrentUser = UserService.getUserFromResponse(res)
+
+	const TopicDocs = await TopicService.list({ name: { $in: topic } })
+	const topicMap = TopicDocs.reduce((acc = {}, t) => ({ ...acc, [t.name]: t }), {})
+
+	const separeByTopic = separeByTopicString === 'true'
+	const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
+	const { name, description, activity } = ProjectDoc
+
+	return async () => {
 		const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
-		const {
-			from: fromQuery
-			, each: eachQuery // each 6 months is a semestre
-			, steps: stepsQuery  // take the first forth semestres
-			, format = "YYYY-MM-DD"
-			, type = 'months'
-			, topic = []
-			, separeByTopic: separeByTopicString = "false"
-		} = req.query
-		const separeByTopic = separeByTopicString === 'true'
-		const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-
-		if (topic.length && separeByTopic) {
-
+		if (TopicDocs.length && separeByTopic) {
 			const datasets = []
-			for (let i = 0; i < topic.length; i++) {
-				const singleTopic = topic[i]
-				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: singleTopic })
-				datasets.push({ title: `${singleTopic}-${ProjectDoc.name}`, dataset })
+			for (let i = 0; i < TopicDocs.length; i++) {
+				const TopicDoc = TopicDocs[i]
+				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: TopicDocs.name })
+				const label = {
+					topic: topicMap[TopicDoc.name],
+					project: {
+						name,
+						description,
+						activity
+					}
+				}
+				datasets.push({ label, dataset })
 			}
 
 			return { project: ProjectDoc, reports: datasets }
 
 		}
-		const dataset = await getTimeline(CurrentUser, ProjectDoc, { format, type, ...timelineVariables, topic })
-		const reports = [{ title: ProjectDoc.name, dataset }]
+		const TopicNamesArray = TopicDocs.length
+			? TopicDocs.map(({ name }) => name)
+			: []
+		const dataset = await getTimeline(CurrentUser, ProjectDoc, { format, type, ...timelineVariables, topic: TopicNamesArray })
+		const reports = [{ label: { project: ProjectDoc.name, topic: TopicDocs }, dataset }]
 		return { project: ProjectDoc, reports }
 
 	}
