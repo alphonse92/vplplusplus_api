@@ -61,8 +61,9 @@ const getProjectTimelineHOC = async (project, req, res) => {
 		, separeByTopic: separeByTopicString = "false"
 	} = req.query
 
-	const CurrentUser = UserService.getUserFromResponse(res)
 
+	const CurrentUser = UserService.getUserFromResponse(res)
+	const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
 	const TopicDocs = await TopicService.list({ name: { $in: topic } })
 	const topicMap = TopicDocs.reduce((acc = {}, t) => ({ ...acc, [t.name]: t }), {})
 
@@ -71,12 +72,12 @@ const getProjectTimelineHOC = async (project, req, res) => {
 	const { name, description, activity } = ProjectDoc
 
 	return async () => {
-		const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
 		if (TopicDocs.length && separeByTopic) {
 			const datasets = []
 			for (let i = 0; i < TopicDocs.length; i++) {
 				const TopicDoc = TopicDocs[i]
-				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: TopicDocs.name })
+				console.log(TopicDoc)
+				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: [TopicDocs.name ]})
 				const label = {
 					topic: topicMap[TopicDoc.name],
 					project: {
@@ -85,6 +86,7 @@ const getProjectTimelineHOC = async (project, req, res) => {
 						activity
 					}
 				}
+				console.log(label)
 				datasets.push({ label, dataset })
 			}
 
@@ -134,7 +136,7 @@ async function getProjectReportTimeline(req, res, next) {
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const projectId = ArrayOfProjects[i]
 			const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
-			const result = getTimelineFn()
+			const result = await getTimelineFn()
 			results.push(result)
 		}
 
