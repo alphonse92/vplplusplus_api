@@ -1,5 +1,7 @@
 const Config = global.Config;
+const Util = require(Config.paths.utils);
 const moment = require('moment')
+const ReportErrors = require(Config.paths.errors + '/report.errors');
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
@@ -110,6 +112,30 @@ const getProjectTimelineHOC = async (project, req, res) => {
 	}
 }
 
+const getQueryWeight = (req) => {
+
+	const {
+		separeByTopic,
+		separeByProject,
+		project: rProject = [],
+		topic: rTopic = [],
+		each = 1,
+		steps = 1
+	} = req.query
+
+	const project = Array.isArray(rProject) ? rProject : [rProject]
+	const topic = Array.isArray(rTopic) ? rTopic : [rTopic]
+
+	const currentUserCalls = 1
+	const topicCalls = separeByTopic === "true" ? topic.length : 1
+	const projectCalls = separeByProject === "true" ? project.length : 1
+	const projectByTopicCalls = topicCalls * projectCalls
+	const dateRangesCalls = steps
+
+	const weight = currentUserCalls + (projectByTopicCalls * dateRangesCalls)
+	return weight
+
+}
 
 module.exports.create = create;
 async function create(req, res, next) {
@@ -139,6 +165,11 @@ async function getProjectReportTimeline(req, res, next) {
 			: ArrayOfProjectInQueryParams
 
 		const results = []
+		const queryWeight = getQueryWeight({ query: { ...req.query, separeByProject: 'true' } })
+
+		if (queryWeight >= 350) {
+			throw new Util.Error(ReportErrors.too_weight)
+		}
 
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const projectId = ArrayOfProjects[i]
