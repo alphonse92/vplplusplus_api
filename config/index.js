@@ -79,9 +79,7 @@ const getFileConfig = () => require('./env/' + (process.env.NODE_ENV ? process.e
 
 module.exports = (function () {
 	const fileconfig = getFileConfig();
-	const configFromEnvars = getConfig(process.env)
-	const configFromFile = getConfig(fileconfig || {})
-	const config = { ...configFromEnvars, ...configFromFile }
+	const config =getConfig({...process.env ,...fileconfig})
 
 	if (!config.security.token) throw new Error("God, staph, ¡ token security is required ! ");
 
