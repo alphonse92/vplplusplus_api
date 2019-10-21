@@ -7,6 +7,10 @@ bootstrap()
 	.then(r => {
 		init(Config)
 	})
+	.catch(e=>{
+		console.error(e)
+		process.exit(1)
+	})
 
 // const cluster = require('cluster');
 // const Config = require("./config/");
