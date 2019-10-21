@@ -78,7 +78,7 @@ const getProjectTimelineHOC = async (project, req, res) => {
 				const TopicDoc = TopicDocs[i]
 				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: [TopicDoc.name ]})
 				const label = {
-					topic: topicMap[TopicDoc.name],
+					topic: [topicMap[TopicDoc.name]],
 					project: {
 						name,
 						description,
