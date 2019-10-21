@@ -1,3 +1,3 @@
 module.exports = {
-	env:"stg"
+	NODE_ENV: 'stg',
 };
