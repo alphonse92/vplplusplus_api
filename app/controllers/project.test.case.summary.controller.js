@@ -76,7 +76,6 @@ const getProjectTimelineHOC = async (project, req, res) => {
 			const datasets = []
 			for (let i = 0; i < TopicDocs.length; i++) {
 				const TopicDoc = TopicDocs[i]
-				console.log(TopicDoc)
 				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: [TopicDoc.name ]})
 				const label = {
 					topic: topicMap[TopicDoc.name],
@@ -86,7 +85,6 @@ const getProjectTimelineHOC = async (project, req, res) => {
 						activity
 					}
 				}
-				console.log(label)
 				datasets.push({ label, dataset })
 			}
 
