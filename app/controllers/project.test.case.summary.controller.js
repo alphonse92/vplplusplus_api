@@ -47,7 +47,7 @@ const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
 	return reports
 }
 
-const getProjectTimelineHOC = (project, req, res) => {
+const getProjectTimelineHOC = async (project, req, res) => {
 	const ProjectService = require(Config.paths.services + '/project/project.service');
 	const TopicService = require(Config.paths.services + '/topic/topic.service');
 
@@ -133,7 +133,8 @@ async function getProjectReportTimeline(req, res, next) {
 
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const projectId = ArrayOfProjects[i]
-			const result = await getProjectTimelineHOC(projectId)(req, res)
+			const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
+			const result = getTimelineFn()
 			results.push(result)
 		}
 
