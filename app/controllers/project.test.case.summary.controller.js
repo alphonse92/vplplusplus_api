@@ -120,8 +120,7 @@ const getQueryWeight = (req) => {
 		separeByStudent,
 		project: rProject = [],
 		topic: rTopic = [],
-		student: rStudent = []
-		each = 1,
+		student: rStudent = [],
 		steps = 1
 	} = req.query
 
