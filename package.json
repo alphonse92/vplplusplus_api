@@ -8,7 +8,8 @@
 	},
 	"scripts": {
 		"start": "NODE_PATH=. babel-node server.js",
-		"startDev": "nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js server.js",
+		"startDev": "NODE_ENV=development nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js server.js",
+		"localdev": "NODE_ENV=development nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js -r node_modules/dotenv/config server.js",
 		"test": "NODE_ENV=test node server.js"
 	},
 	"author": "Alejandro Molina Vergel",
@@ -21,10 +22,11 @@
 		"chalk": "^2.4.2",
 		"commander": "^3.0.2",
 		"cors": "^2.8.4",
+		"dotenv": "^8.2.0",
 		"express": "^4.16.3",
 		"faker": "^4.1.0",
 		"fs-extra": "^8.1.0",
-		"google-auth-library": "^3.1.2",
+		"google-auth-library": "^5.5.0",
 		"gulp": "^4.0.2",
 		"gulp-apidoc": "^0.2.8",
 		"gunzip-maybe": "^1.4.1",
