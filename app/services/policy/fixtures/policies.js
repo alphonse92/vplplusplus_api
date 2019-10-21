@@ -58,7 +58,7 @@ fixtures.public = {
 	]
 };
 
-if (Config.env === "dev" || Config.env === "development") {
+if (Config.app.open_development_endpoint) {
 	fixtures.public.actions.push(
 		{ path: "POST/api/v1/dev/:action/", scopes: ["login"], query: "" }
 	)

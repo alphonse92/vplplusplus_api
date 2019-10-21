@@ -9,7 +9,7 @@
 	"scripts": {
 		"start": "NODE_PATH=. babel-node server.js",
 		"startdev": "NODE_ENV=development nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js server.js",
-		"localdev": "NODE_ENV=local nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js server.js",
+		"startlocal": "NODE_ENV=local nodemon -L --watch ./server.js --watch ./app --watch ./config --exec node_modules/@babel/node/bin/babel-node.js server.js",
 		"test": "NODE_ENV=test node server.js"
 	},
 	"author": "Alejandro Molina Vergel",

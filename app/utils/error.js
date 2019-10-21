@@ -20,7 +20,7 @@ export class Error {
         type: 'validation'
       }
 
-      if (["development", "dev"].includes(process.env.NODE_ENV)) {
+      if (["development", "dev", "local"].includes(process.env.NODE_ENV)) {
         error.__development__ = {
           raw: e.errors,
           instance: INSTANCE

@@ -13,8 +13,7 @@ const errors = app + "/errors";
 const lang = app + "/language";
 const webservices = app + "/webservices";
 
-
-getConfig = envVars => ({
+const getConfig = envVars => ({
 	env: envVars.NODE_ENV,
 	service: {
 		name: "api"
@@ -34,7 +33,8 @@ getConfig = envVars => ({
 			limit: +envVars.APP_PAGINATION_LIMIT_DEFAULT || 10,
 			limitMax: +envVars.APP_PAGINATION_LIMIT_MAX_DEFAULT || 75,
 			page: +envVars.APP_PAGE_DEFAULT || 1,
-		}
+		},
+		open_development_endpoint: envVars.OPEN_DEVELOPMENT_ENDPOINT === 'true'
 	},
 	system: {
 		cores: +envVars.SYSTEM_CORES || os.cpus().length
@@ -75,8 +75,10 @@ getConfig = envVars => ({
 	paths: { cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices }
 });
 
+const getFileConfig = () => require('./env/' + (process.env.NODE_ENV ? process.env.NODE_ENV : 'local') + '/config')
+
 module.exports = (function () {
-	const fileconfig = require('./env/' + (envVars.NODE_ENV ? envVars.NODE_ENV : 'local') + '/config');
+	const fileconfig = getFileConfig();
 	const configFromEnvars = getConfig(process.env)
 	const configFromFile = getConfig(fileconfig || {})
 	const config = { ...configFromEnvars, ...configFromFile }
@@ -84,6 +86,6 @@ module.exports = (function () {
 	if (!config.security.token) throw new Error("God, staph, ¡ token security is required ! ");
 
 	config.client.email = config.client.username + "@" + config.web.host;
-	
+
 	return config;
 })();

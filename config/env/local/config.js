@@ -15,4 +15,5 @@ module.exports = {
 	TOKEN_SECRET: 'secret',
 	TOKEN_EXP_MINUTES: 'NEVER',
 	CACHE_FOLDER: '/tmp/vplplusplus',
+	OPEN_DEVELOPMENT_ENDPOINT:true
 };
