@@ -26,7 +26,8 @@ const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
 
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
 		const to = toMoment.format(format)
-		const report = await SummaryReportService.getUserReport(CurrentUser, _id, undefined, { from: fromString, to, topic })
+		const reportConf = { from: fromString, to, topic }
+		const report = await SummaryReportService.getUserReport(CurrentUser, _id, undefined, reportConf)
 		const lastReport = reports[reports.length - 1] || { skill: 0 }
 		const { skill: lastSkill = 0 } = lastReport
 
@@ -78,7 +79,8 @@ const getProjectTimelineHOC = async (project, req, res) => {
 			const datasets = []
 			for (let i = 0; i < TopicDocs.length; i++) {
 				const TopicDoc = TopicDocs[i]
-				const dataset = await getTimeline(CurrentUser, project, { format, type, ...timelineVariables, topic: [TopicDoc.name] })
+				const opts = { format, type, ...timelineVariables, topic: [TopicDoc.name] }
+				const dataset = await getTimeline(CurrentUser, ProjectDoc._id, opts)
 				const label = {
 					topic: [topicMap[TopicDoc.name]],
 					project: {
@@ -93,6 +95,7 @@ const getProjectTimelineHOC = async (project, req, res) => {
 			return { project: ProjectDoc, reports: datasets }
 
 		}
+
 		const TopicNamesArray = TopicDocs.length
 			? TopicDocs.map(({ name }) => name)
 			: []
@@ -113,7 +116,7 @@ const getProjectTimelineHOC = async (project, req, res) => {
 }
 
 const getQueryWeight = (req) => {
-
+	const { id: projectIdInParams } = req.params
 	const {
 		separeByTopic,
 		separeByProject,
@@ -130,7 +133,8 @@ const getQueryWeight = (req) => {
 
 	const currentUserCalls = 1
 	const topicCalls = separeByTopic === "true" ? topic.length : 1
-	const projectCalls = separeByProject === "true" ? project.length : 1
+	const projectInParamCall = projectIdInParams ? 1 : 0
+	const projectCalls = separeByProject === "true" ? (project.length * projectInParamCall) : 1
 	const studentCalls = separeByStudent === "true" ? student.length : 1
 	const projectByTopicCalls = topicCalls * projectCalls
 	const dateRangesCalls = steps
@@ -156,23 +160,23 @@ async function create(req, res, next) {
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
-		const { id: projectParam } = req.params
-		const { project: projectQuery = [] } = req.query
 
-		const ArrayOfProjectInQueryParams = Array.isArray(projectQuery)
-			? projectQuery
-			: [projectQuery]
-
-		const ArrayOfProjects = projectParam && !ArrayOfProjectInQueryParams.length
-			? [projectParam]
-			: ArrayOfProjectInQueryParams
-
-		const results = []
-		const queryWeight = getQueryWeight({ query: { ...req.query, separeByProject: 'true' } })
+		const queryWeight = getQueryWeight({ params: { ...req.params, }, query: { ...req.query, separeByProject: 'true' } })
 
 		if (queryWeight >= 350) {
 			throw new Util.Error(ReportErrors.too_weight)
 		}
+
+		const { id: projectParam } = req.params
+		const { project: projectQuery = [] } = req.query
+
+		const ArrayOfProjectInQuery = Array.isArray(projectQuery)
+			? projectQuery
+			: [projectQuery]
+
+		const ArrayOfProjects = ArrayOfProjectInQuery.length ? ArrayOfProjectInQuery : [projectParam]
+		const results = []
+
 
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const projectId = ArrayOfProjects[i]
