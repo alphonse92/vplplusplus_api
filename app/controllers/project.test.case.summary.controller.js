@@ -6,6 +6,7 @@ const SummaryReportService = require(Config.paths.services + '/project/project.s
 const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 
+
 const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQuery) => {
 	const from = fromQuery ? moment(fromQuery) : moment(ProjectDoc.createdAt)
 	from.set('hour', 0).set('minute', 0)
@@ -188,6 +189,11 @@ async function getProjectReportTimeline(req, res, next) {
 		res.send(results)
 
 	} catch (e) { next(e) }
+}
+
+module.exports.getStudentReportTimeline = getStudentReportTimeline
+async function getStudentReportTimeline(req, res, next) {
+
 }
 
 module.exports.getUserReports = getUserReports
