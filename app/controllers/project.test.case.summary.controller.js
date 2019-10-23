@@ -16,9 +16,8 @@ const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQu
 	return { from, each, steps, limit }
 }
 
-const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
+const getTimeline = async (CurrentUser, project, student, opts) => {
 	const { format, type, from, each, limit, topic } = opts
-	const { name, description, activity, _id } = ProjectDoc
 	const reports = []
 	const fromString = from.format(format)
 	let period = each
@@ -28,7 +27,7 @@ const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
 		const to = toMoment.format(format)
 		const reportConf = { from: fromString, to, topic }
-		const report = await SummaryReportService.getUserReport(CurrentUser, _id, undefined, reportConf)
+		const report = await SummaryReportService.getUserReport(CurrentUser, project, student, reportConf)
 		const lastReport = reports[reports.length - 1] || { skill: 0 }
 		const { skill: lastSkill = 0 } = lastReport
 
@@ -44,7 +43,6 @@ const getTimeline = async (CurrentUser, ProjectDoc, opts) => {
 			tag: to,
 			skill,
 			variation,
-			project: { name, description, activity, _id }
 		})
 		period += each
 	}
@@ -75,13 +73,13 @@ const getProjectTimelineHOC = async (project, req, res) => {
 	const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
 	const { name, description, activity } = ProjectDoc
 
-	return async () => {
+	return async (student) => {
 		if (TopicDocs.length && separeByTopic) {
 			const datasets = []
 			for (let i = 0; i < TopicDocs.length; i++) {
 				const TopicDoc = TopicDocs[i]
 				const opts = { format, type, ...timelineVariables, topic: [TopicDoc.name] }
-				const dataset = await getTimeline(CurrentUser, ProjectDoc._id, opts)
+				const dataset = await getTimeline(CurrentUser, ProjectDoc._id, student, opts)
 				const label = {
 					topic: [topicMap[TopicDoc.name]],
 					project: {
@@ -100,7 +98,7 @@ const getProjectTimelineHOC = async (project, req, res) => {
 		const TopicNamesArray = TopicDocs.length
 			? TopicDocs.map(({ name }) => name)
 			: []
-		const dataset = await getTimeline(CurrentUser, ProjectDoc, { format, type, ...timelineVariables, topic: TopicNamesArray })
+		const dataset = await getTimeline(CurrentUser, ProjectDoc._id, student, { format, type, ...timelineVariables, topic: TopicNamesArray })
 		const reports = [{
 			label: {
 				project: {
@@ -158,15 +156,19 @@ async function create(req, res, next) {
 	res.send(SummaryDoc)
 }
 
+const valideHugeQuery = (req) => {
+	const queryWeight = getQueryWeight(req)
+
+	if (queryWeight >= 350) {
+		throw new Util.Error(ReportErrors.too_weight)
+	}
+}
+
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
 
-		const queryWeight = getQueryWeight({ params: { ...req.params, }, query: { ...req.query, separeByProject: 'true' } })
-
-		if (queryWeight >= 350) {
-			throw new Util.Error(ReportErrors.too_weight)
-		}
+		valideHugeQuery(req)
 
 		const { id: projectParam } = req.params
 		const { project: projectQuery = [] } = req.query
@@ -176,9 +178,8 @@ async function getProjectReportTimeline(req, res, next) {
 			: [projectQuery]
 
 		const ArrayOfProjects = ArrayOfProjectInQuery.length ? ArrayOfProjectInQuery : [projectParam]
+
 		const results = []
-
-
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
 			const projectId = ArrayOfProjects[i]
 			const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
@@ -194,28 +195,52 @@ async function getProjectReportTimeline(req, res, next) {
 module.exports.getStudentReportTimeline = getStudentReportTimeline
 async function getStudentReportTimeline(req, res, next) {
 
+	try {
+
+		valideHugeQuery(req)
+
+		const { moodle_student_id } = req.params
+		const { id: projectParam } = req.params
+		const { project: projectQuery = [] } = req.query
+
+		const ArrayOfProjectInQuery = Array.isArray(projectQuery)
+			? projectQuery
+			: [projectQuery]
+
+		const ArrayOfProjects = ArrayOfProjectInQuery.length ? ArrayOfProjectInQuery : [projectParam]
+
+		const results = []
+		for (let i = 0; i < ArrayOfProjects.length; i++) {
+			const projectId = ArrayOfProjects[i]
+			const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
+			const result = await getTimelineFn(moodle_student_id)
+			results.push(result)
+		}
+
+		res.send(results)
+
+	} catch (e) { next(e) }
+
 }
 
 module.exports.getUserReports = getUserReports
 async function getUserReports(req, res, next) {
+
 	try {
 		const { moodle_student_id, id: project_id } = req.params
 		const { from, to, topic } = req.query
 		const opts = { from, to, topic }
 		const CurrentUser = UserService.getUserFromResponse(res)
-
-		const report = moodle_student_id
-			? await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts)
-			: await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, opts)
-
+		const userid = moodle_student_id ? +moodle_student_id : undefined
+		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, userid, opts)
 		const stadistics = {
 			mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
 			mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
 			avg: report.reduce((sum, userReport) => userReport.skill + sum, 0) / report.length
 		}
-
 		res.send({ report, stadistics, options: opts })
 	} catch (e) { next(e) }
+
 }
 
 module.exports.getUserEvolution = getUserEvolution
