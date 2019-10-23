@@ -92,9 +92,9 @@ class SummaryReportService {
     const projectFindQuery = project_id_array.length
       ? { _id: { $in: project_id_array.map(id => new mongoose.Types.ObjectId(id)) } }
       : {}
-    const projectOwnerQuery = { owner: CurrentUser._id }
+    const projectOwnerQuery = { owner: new mongoose.Types.ObjectId(CurrentUser._id) }
     const projectQuery = { ...projectFindQuery, ...projectOwnerQuery }
-    if (moodle_user_array.length) querySummary["summary.moodle_user"] = { $in: moodle_user_array }
+    if (moodle_user_array.length) querySummary["summary.moodle_user"] = { $in: moodle_user_array.map(id => +id) }
     if ($gte || $lt) {
       const dates = {}
       if ($gte) dates.$gte = $gte
@@ -102,14 +102,11 @@ class SummaryReportService {
       querySummary["summary.createdAt"] = dates
     }
 
-
-
     const queries = {
       project: projectQuery,
       summary: querySummary,
       topic: topicQuery
     }
-
 
     const aggregator = ProjectAggregator(queries)
 

@@ -31,11 +31,14 @@ Router.patch("/:project_id/test/:test_id/case/:id", TestCaseController.update);
 Router.delete("/:project_id/test/:test_id/case/:id", TestCaseController.delete);
 
 
+Router.get('/report/topic/timeline', SummaryReportController.getTopicTimeline) // get report of especific project
+
 Router.get('/report/user/:moodle_student_id/', SummaryReportController.getUserReports) // get report of specific user
 Router.get('/report/user/:moodle_student_id/timeline/', SummaryReportController.getStudentReportTimeline) // get report of students evolution (how the skill level student change along the time)
 
 Router.get('/:id/report', SummaryReportController.getUserReports) // get report of especific project
 Router.get('/:id/report/timeline', SummaryReportController.getProjectReportTimeline) // get report of especific project
+
 
 Router.post("/test/case/summary/", SummaryController.create);
 

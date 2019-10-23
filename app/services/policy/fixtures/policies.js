@@ -425,6 +425,18 @@ fixtures.getReportStudentTimeline = {
 		{ path: "GET/api/v1/project/report/user/:moodle_student_id/timeline/", scopes: ["getReportStudentTimeline"] }
 	]
 };
+fixtures.getReportTopicTimeline = {
+	resource: "service:api:system:topic.report.timeline",
+	name: "topic.report.timeline",
+	slug: "Get topic report timeline",
+	type: DefaultPolicyService.types.default,
+	description: "Can create the timeline dataset for all topics",
+	extends: [], depends: [],
+	actions: [
+		{ path: "GET/api/v1/project/report/topic/timeline/", scopes: ["getReportTopicTimeline"] }
+	]
+};
+
 fixtures.getReportProjectUsers = {
 	resource: "service:api:system:project.report.user.list",
 	name: "project.report.user",

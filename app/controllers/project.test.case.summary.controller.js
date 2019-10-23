@@ -5,10 +5,18 @@ const ReportErrors = require(Config.paths.errors + '/report.errors');
 const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
+const ProjectService = require(Config.paths.services + '/project/project.service');
+const TopicService = require(Config.paths.services + '/topic/topic.service');
 
 
 const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQuery) => {
-	const from = fromQuery ? moment(fromQuery) : moment(ProjectDoc.createdAt)
+
+	const from = fromQuery
+		? moment(fromQuery)
+		: ProjectDoc
+			? moment(ProjectDoc.createdAt)
+			: moment()
+
 	from.set('hour', 0).set('minute', 0)
 	const each = isNaN(eachQuery) ? 6 : (eachQuery * 1)
 	const steps = isNaN(stepsQuery) ? 6 : (stepsQuery * 1)
@@ -50,8 +58,7 @@ const getTimeline = async (CurrentUser, project, student, opts) => {
 }
 
 const getProjectTimelineHOC = async (project, req, res) => {
-	const ProjectService = require(Config.paths.services + '/project/project.service');
-	const TopicService = require(Config.paths.services + '/topic/topic.service');
+
 
 	const {
 		from: fromQuery
@@ -65,29 +72,35 @@ const getProjectTimelineHOC = async (project, req, res) => {
 
 
 	const CurrentUser = UserService.getUserFromResponse(res)
-	const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
 	const TopicDocs = await TopicService.list({ name: { $in: topic } })
 	const topicMap = TopicDocs.reduce((acc = {}, t) => ({ ...acc, [t.name]: t }), {})
 
 	const separeByTopic = separeByTopicString === 'true'
 	const timelineVariables = getTimelineVariablesFromQuery(ProjectDoc, fromQuery, eachQuery, stepsQuery)
-	const { name, description, activity } = ProjectDoc
+
+	const shouldFindByProject = !!project
+	const ProjectDoc = await ProjectService.get(CurrentUser, { _id: project }, { populate: false })
+	const { name, description, activity } = ProjectDoc || {}
 
 	return async (student) => {
+
+		const projectId = shouldFindByProject ? ProjectDoc._id : undefined
+
 		if (TopicDocs.length && separeByTopic) {
 			const datasets = []
 			for (let i = 0; i < TopicDocs.length; i++) {
 				const TopicDoc = TopicDocs[i]
 				const opts = { format, type, ...timelineVariables, topic: [TopicDoc.name] }
-				const dataset = await getTimeline(CurrentUser, ProjectDoc._id, student, opts)
-				const label = {
-					topic: [topicMap[TopicDoc.name]],
-					project: {
-						name,
-						description,
-						activity
-					}
-				}
+				const dataset = await getTimeline(CurrentUser, projectId, student, opts)
+				const label = shouldFindByProject
+					? {
+						topic: [topicMap[TopicDoc.name]],
+						project: {
+							name,
+							description,
+							activity
+						}
+					} : { topic: [topicMap[TopicDoc.name]] }
 				datasets.push({ label, dataset })
 			}
 
@@ -98,17 +111,18 @@ const getProjectTimelineHOC = async (project, req, res) => {
 		const TopicNamesArray = TopicDocs.length
 			? TopicDocs.map(({ name }) => name)
 			: []
-		const dataset = await getTimeline(CurrentUser, ProjectDoc._id, student, { format, type, ...timelineVariables, topic: TopicNamesArray })
-		const reports = [{
-			label: {
+		const dataset = await getTimeline(CurrentUser, projectId, student, { format, type, ...timelineVariables, topic: TopicNamesArray })
+		const label = shouldFindByProject
+			? {
+				topic: TopicDocs,
 				project: {
 					name,
 					description,
 					activity
-				},
-				topic: TopicDocs
-			}, dataset
-		}]
+				}
+			} : { topic: TopicDocs }
+
+		const reports = [{ label, dataset }]
 		return { project: ProjectDoc, reports }
 
 	}
@@ -177,7 +191,11 @@ async function getProjectReportTimeline(req, res, next) {
 			? projectQuery
 			: [projectQuery]
 
-		const ArrayOfProjects = ArrayOfProjectInQuery.length ? ArrayOfProjectInQuery : [projectParam]
+		const ArrayOfProjects = ArrayOfProjectInQuery.length
+			? ArrayOfProjectInQuery
+			: projectParam
+				? [projectParam]
+				: []
 
 		const results = []
 		for (let i = 0; i < ArrayOfProjects.length; i++) {
@@ -207,21 +225,77 @@ async function getStudentReportTimeline(req, res, next) {
 			? projectQuery
 			: [projectQuery]
 
-		const ArrayOfProjects = ArrayOfProjectInQuery.length ? ArrayOfProjectInQuery : [projectParam]
+		const ArrayOfProjects = ArrayOfProjectInQuery.length
+			? ArrayOfProjectInQuery
+			: projectParam
+				? [projectParam]
+				: []
 
 		const results = []
-		for (let i = 0; i < ArrayOfProjects.length; i++) {
-			const projectId = ArrayOfProjects[i]
-			const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
+
+		if (ArrayOfProjects.length) {
+			for (let i = 0; i < ArrayOfProjects.length; i++) {
+				const projectId = ArrayOfProjects[i]
+				const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
+				const result = await getTimelineFn(moodle_student_id)
+				results.push(result)
+			}
+		} else {
+			const getTimelineFn = await getProjectTimelineHOC(null, req, res)
 			const result = await getTimelineFn(moodle_student_id)
 			results.push(result)
 		}
+
 
 		res.send(results)
 
 	} catch (e) { next(e) }
 
 }
+
+module.exports.getTopicTimeline = getTopicTimeline
+async function getTopicTimeline(req, res, next) {
+	try {
+
+		const CurrentUser = UserService.getUserFromResponse(res)
+		const {
+			from: fromQuery = CurrentUser.createdAt
+			, each: eachQuery // each 6 months is a semestre
+			, steps: stepsQuery  // take the first forth semestres
+			, format = "YYYY-MM-DD"
+			, type = 'months'
+		} = req.query
+
+		const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
+		const TestCaseDocs = await TestCaseService.list(CurrentUser)
+		const topicIdsMap = TestCaseDocs.reduce((map, testcase) => {
+			testcase.topic.forEach(topicId => {
+				if (!map[topicId]) map[topicId] = topicId
+			})
+			return map
+		}, {})
+		const topics = Object.values(topicIdsMap)
+		const TopicDocs = await TopicService.list({ _id: { $in: topics } })
+		const opts = getTimelineVariablesFromQuery(null, fromQuery, eachQuery, stepsQuery)
+		const reports = []
+
+		for (let i = 0; i < TopicDocs.length; i++) {
+			const TopicDoc = TopicDocs[i]
+			const topic = TopicDoc.name
+			const dataset = await getTimeline(CurrentUser, null, null, { ...opts, format, type, topic })
+			const label = { topic: TopicDoc }
+			const reports = [{ label, dataset }]
+			reports.push(reports)
+		}
+
+		const project = {
+			name: 'Topics project'
+		}
+		res.send({ project, reports })
+
+	} catch (e) { next(e) }
+}
+
 
 module.exports.getUserReports = getUserReports
 async function getUserReports(req, res, next) {

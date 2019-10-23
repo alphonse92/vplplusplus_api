@@ -14,6 +14,13 @@ Schema.virtual('tests', {
   justOne: false
 });
 
+Schema.virtual('testcases', {
+  ref: 'TestCase',
+  localField: '_id',
+  foreignField: 'project',
+  justOne: false
+});
+
 Schema.virtual('summaries', {
   ref: 'Summary',
   localField: '_id',

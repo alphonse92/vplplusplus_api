@@ -98,6 +98,8 @@ module.exports = {
 			{ resource: "service:api:system:project.report.user.list", },
 			{ resource: "service:api:system:project.report.timeline", },
 			{ resource: "service:api:system:student.report.timeline", },
+			{ resource: "service:api:system:topic.report.timeline", },
+			
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
@@ -152,6 +154,7 @@ module.exports = {
 			{ resource: "service:api:system:project.report.user.list", },
 			{ resource: "service:api:system:project.report.timeline", },
 			{ resource: "service:api:system:student.report.timeline", },
+			{ resource: "service:api:system:topic.report.timeline", },
 			//activities
 			{ resource: "service:api:system:course.activity.list" },
 			// web client
