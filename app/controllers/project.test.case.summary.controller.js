@@ -30,6 +30,7 @@ const getTimeline = async (CurrentUser, project, student, opts) => {
 	const fromString = from.format(format)
 	let period = each
 
+
 	while (period <= limit) {
 
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
@@ -275,7 +276,8 @@ async function getTopicTimeline(req, res, next) {
 			return map
 		}, {})
 		const topics = Object.values(topicIdsMap)
-		const TopicDocs = await TopicService.list({ _id: { $in: topics } })
+		const topicQuery = { _id: { $in: topics } }
+		const TopicDocs = await TopicService.list(topicQuery)
 		const opts = getTimelineVariablesFromQuery(null, fromQuery, eachQuery, stepsQuery)
 		const reports = []
 
@@ -284,14 +286,13 @@ async function getTopicTimeline(req, res, next) {
 			const topic = TopicDoc.name
 			const dataset = await getTimeline(CurrentUser, null, null, { ...opts, format, type, topic })
 			const label = { topic: TopicDoc }
-			const reports = [{ label, dataset }]
-			reports.push(reports)
+			reports.push({ label, dataset })
 		}
 
 		const project = {
 			name: 'Topics project'
 		}
-		res.send({ project, reports })
+		res.send([{ project, reports }])
 
 	} catch (e) { next(e) }
 }
