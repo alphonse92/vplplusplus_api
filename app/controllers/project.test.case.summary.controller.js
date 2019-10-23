@@ -204,13 +204,10 @@ async function getUserReports(req, res, next) {
 		const opts = { from, to, topic }
 		const CurrentUser = UserService.getUserFromResponse(res)
 
-		if (moodle_student_id) return res.send({
-			report: await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts),
-			stadistics: {},
-			options: opts
-		})
+		const report = moodle_student_id
+			? await SummaryReportService.getUserReport(CurrentUser, project_id, +moodle_student_id, opts)
+			: await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, opts)
 
-		const report = await SummaryReportService.getUserReport(CurrentUser, project_id, undefined, opts)
 		const stadistics = {
 			mostDifficultTest: SummaryReportService.getTestCasesByDifficult(report),
 			mostSkilledStudents: SummaryReportService.getTheMostSkilledStudentByTopic(report),
