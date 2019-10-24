@@ -78,8 +78,10 @@ const getProjectTimelineHOC = async (project, req, res) => {
 
 	const CurrentUser = UserService.getUserFromResponse(res)
 	const ExtraData = Promise.all(
-		await ProjectService.get(CurrentUser, { _id: project }, { populate: false }),
-		await TopicService.list({ name: { $in: topic } }),
+		[
+			ProjectService.get(CurrentUser, { _id: project }, { populate: false }),
+			TopicService.list({ name: { $in: topic } })
+		]
 	)
 
 	const [ProjectDoc, TopicDocs] = await ExtraData
@@ -102,8 +104,9 @@ const getProjectTimelineHOC = async (project, req, res) => {
 			})
 
 			const resultOfPromises = await Promise.all(promises)
-			const datasets = resultOfPromises.map(data => {
-				return shouldFindByProject
+			const datasets = resultOfPromises.map((dataset, idx) => {
+				const TopicDoc = TopicDocs[idx]
+				const label = shouldFindByProject
 					? {
 						topic: [topicMap[TopicDoc.name]],
 						project: {
@@ -112,28 +115,10 @@ const getProjectTimelineHOC = async (project, req, res) => {
 							activity
 						}
 					} : { topic: [topicMap[TopicDoc.name]] }
+				return { label, dataset }
 			})
 
 			return { project: ProjectDoc, reports: datasets }
-
-
-			// for (let i = 0; i < TopicDocs.length; i++) {
-			// 	const TopicDoc = TopicDocs[i]
-			// 	const opts = { format, type, ...timelineVariables, topic: [TopicDoc.name] }
-			// 	const dataset = await getTimeline(CurrentUser, projectId, student, opts)
-			// 	const label = shouldFindByProject
-			// 		? {
-			// 			topic: [topicMap[TopicDoc.name]],
-			// 			project: {
-			// 				name,
-			// 				description,
-			// 				activity
-			// 			}
-			// 		} : { topic: [topicMap[TopicDoc.name]] }
-			// 	datasets.push({ label, dataset })
-			// }
-
-			// return { project: ProjectDoc, reports: datasets }
 
 		}
 
@@ -260,23 +245,24 @@ async function getStudentReportTimeline(req, res, next) {
 				? [projectParam]
 				: []
 
-		const results = []
-
 		if (ArrayOfProjects.length) {
-			for (let i = 0; i < ArrayOfProjects.length; i++) {
-				const projectId = ArrayOfProjects[i]
-				const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
-				const result = await getTimelineFn(moodle_student_id)
-				results.push(result)
-			}
+
+			const getTimelineFNS = await Promise.all(ArrayOfProjects.map(projectId => getProjectTimelineHOC(projectId, req, res)))
+			const arrayOfResults = await Promise.all(getTimelineFNS.map(getTimelineFn => getTimelineFn(moodle_student_id)))
+			return res.send(arrayOfResults)
+
+			// for (let i = 0; i < ArrayOfProjects.length; i++) {
+			// 	const projectId = ArrayOfProjects[i]
+			// 	const getTimelineFn = await getProjectTimelineHOC(projectId, req, res)
+			// 	const result = await getTimelineFn(moodle_student_id)
+			// 	results.push(result)
+			// }
+
 		} else {
 			const getTimelineFn = await getProjectTimelineHOC(null, req, res)
 			const result = await getTimelineFn(moodle_student_id)
-			results.push(result)
+			return res.send([result])
 		}
-
-
-		res.send(results)
 
 	} catch (e) { next(e) }
 
@@ -303,19 +289,17 @@ async function getTopicTimeline(req, res, next) {
 			})
 			return map
 		}, {})
+
 		const topics = Object.values(topicIdsMap)
 		const topicQuery = { _id: { $in: topics } }
 		const TopicDocs = await TopicService.list(topicQuery)
 		const opts = getTimelineVariablesFromQuery(null, fromQuery, eachQuery, stepsQuery)
-		const reports = []
-
-		for (let i = 0; i < TopicDocs.length; i++) {
-			const TopicDoc = TopicDocs[i]
-			const topic = TopicDoc.name
-			const dataset = await getTimeline(CurrentUser, null, null, { ...opts, format, type, topic })
-			const label = { topic: TopicDoc }
+		const promises = TopicDocs.map(TopicDoc => getTimeline(CurrentUser, null, null, { ...opts, format, type, topic: TopicDoc.name }))
+		const promiseResults = await Promise.all(promises)
+		const reports = promiseResults.map((dataset, idx) => {
+			const label = { topic: TopicDocs[idx] }
 			reports.push({ label, dataset })
-		}
+		})
 
 		const project = {
 			name: 'Topics project'
