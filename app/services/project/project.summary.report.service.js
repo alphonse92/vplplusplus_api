@@ -41,26 +41,6 @@ class SummaryReportService {
       : undefined
   }
 
-  async getProjectReports(CurrentUser, opts) {
-    const SummaryService = require('./project.summary.service');
-    const { from, to } = this.getMomentDatesFromOptions(opts)
-    const $gte = this.momentToDateSafe(from)
-    const $lte = this.momentToDateSafe(to)
-    const SummaryModel = SummaryService.getModel()
-    const querySummary = {}
-
-    if ($gte || $lte) {
-      const dates = {}
-      if ($gte) dates.$gte = $gte
-      if ($lte) dates.$lte = $lte
-      querySummary.createdAt = dates
-    }
-
-    const ArrayOfSummaryDocuments = await SummaryModel.find(querySummary).select('project').exec()
-    const arrayOfProjectIds = ArrayOfSummaryDocuments.map(({ project }) => project)
-    return this.getUserReport(CurrentUser, arrayOfProjectIds, undefined, opts)
-  }
-
   getUserReport(CurrentUser, project_id, moodle_user, opts) {
 
     const { topic } = opts

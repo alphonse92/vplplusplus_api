@@ -168,27 +168,6 @@ const getQueryWeight = (req) => {
 
 }
 
-module.exports.create = create;
-async function create(req, res, next) {
-	const {
-		project_id,
-		test_case_id
-	} = req.params
-
-	const project = { _id: project_id }
-	const testCase = { _id: test_case_id }
-	const SummaryDoc = await SummaryService.createAll(project, testCase, req.body)
-	res.send(SummaryDoc)
-}
-
-const valideHugeQuery = (req) => {
-	const queryWeight = getQueryWeight(req)
-
-	if (queryWeight >= 350) {
-		throw new Util.Error(ReportErrors.too_weight)
-	}
-}
-
 module.exports.getProjectReportTimeline = getProjectReportTimeline
 async function getProjectReportTimeline(req, res, next) {
 	try {
@@ -320,18 +299,23 @@ async function getUserReports(req, res, next) {
 
 }
 
-module.exports.getUserEvolution = getUserEvolution
-async function getUserEvolution(req, res, next) {
-	try {
-		res.send("ok project controller")
-	} catch (e) { next(e) }
+module.exports.create = create;
+async function create(req, res, next) {
+	const {
+		project_id,
+		test_case_id
+	} = req.params
+
+	const project = { _id: project_id }
+	const testCase = { _id: test_case_id }
+	const SummaryDoc = await SummaryService.createAll(project, testCase, req.body)
+	res.send(SummaryDoc)
 }
 
-module.exports.getUserReportFromProject = getUserReportFromProject
-async function getUserReportFromProject(req, res, next) {
-	try {
-		res.send("ok project controller")
-	} catch (e) { next(e) }
+const valideHugeQuery = (req) => {
+	const queryWeight = getQueryWeight(req)
+
+	if (queryWeight >= 350) {
+		throw new Util.Error(ReportErrors.too_weight)
+	}
 }
-
-
