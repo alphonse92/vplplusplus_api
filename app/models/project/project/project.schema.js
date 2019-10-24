@@ -27,13 +27,14 @@ module.exports = {
 		activity: {
 			type: "Number",
 			required: true,
-			_editable: true
+			_editable: true,
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		}
 	},
 }

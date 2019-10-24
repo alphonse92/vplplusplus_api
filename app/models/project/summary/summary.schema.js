@@ -18,25 +18,30 @@ module.exports = {
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: true
+			required: true,
+			index: true
 		},
 		test_case: {
 			type: Schema.Types.ObjectId,
 			ref: "TestCase",
-			required: true
+			required: true,
+			index: true
 		},
 		moodle_user: {
 			type: "Number",
-			required: true
+			required: true,
+			index: true
 		},
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true
+			required: true,
+			index: true
 		},
 		approved: {
 			type: "Boolean",
-			default: false
+			default: false,
+			index: true
 		},
 		output: {
 			type: "String",

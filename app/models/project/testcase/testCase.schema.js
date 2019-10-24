@@ -18,19 +18,22 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		},
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		},
 		test: {
 			type: Schema.Types.ObjectId,
 			ref: "Test",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		},
 		topic: {
 			type: [{

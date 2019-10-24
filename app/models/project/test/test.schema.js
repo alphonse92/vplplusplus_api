@@ -14,7 +14,8 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		},
 		name: {
 			type: 'String',
@@ -49,7 +50,8 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			_readOnly: true
+			_readOnly: true,
+			index: true
 		}
 	},
 }
