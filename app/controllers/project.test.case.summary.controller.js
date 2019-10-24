@@ -147,27 +147,23 @@ const getQueryWeight = (req) => {
 	const { id: projectIdInParams } = req.params
 	const {
 		separeByTopic,
-		separeByProject,
-		separeByStudent,
+		separeByProject = "true",
 		project: rProject = [],
 		topic: rTopic = [],
-		student: rStudent = [],
 		steps = 1
 	} = req.query
 
 	const project = Array.isArray(rProject) ? rProject : [rProject]
 	const topic = Array.isArray(rTopic) ? rTopic : [rTopic]
-	const student = Array.isArray(student) ? student : [student]
+
 
 	const currentUserCalls = 1
 	const topicCalls = separeByTopic === "true" ? topic.length : 1
 	const projectInParamCall = projectIdInParams ? 1 : 0
-	const projectCalls = separeByProject === "true" ? (project.length * projectInParamCall) : 1
-	const studentCalls = separeByStudent === "true" ? student.length : 1
+	const projectCalls = separeByProject === "true" ? (project.length + projectInParamCall) : 1
 	const projectByTopicCalls = topicCalls * projectCalls
 	const dateRangesCalls = steps
-
-	const weight = currentUserCalls + (projectByTopicCalls * studentCalls * dateRangesCalls)
+	const weight = currentUserCalls + (projectByTopicCalls * dateRangesCalls)
 	return weight
 
 }
@@ -282,7 +278,7 @@ async function getTopicTimeline(req, res, next) {
 			, type = 'months'
 		} = req.query
 
-		
+
 		const TestCaseDocs = await TestCaseService.list(CurrentUser)
 		const topicIdsMap = TestCaseDocs.reduce((map, testcase) => {
 			testcase.topic.forEach(topicId => {
@@ -298,7 +294,7 @@ async function getTopicTimeline(req, res, next) {
 		const promises = TopicDocs.map(TopicDoc => getTimeline(CurrentUser, null, null, { ...opts, format, type, topic: TopicDoc.name }))
 		const promiseResults = await Promise.all(promises)
 		const reports = promiseResults.map((dataset, idx) => ({ label: { topic: TopicDocs[idx] }, dataset }))
-		res.send([{ project:{name: 'Topics project'}, reports }])
+		res.send([{ project: { name: 'Topics project' }, reports }])
 
 	} catch (e) { next(e) }
 }
