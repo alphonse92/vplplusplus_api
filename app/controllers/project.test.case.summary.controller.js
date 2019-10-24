@@ -2,11 +2,12 @@ const Config = global.Config;
 const Util = require(Config.paths.utils);
 const moment = require('moment')
 const ReportErrors = require(Config.paths.errors + '/report.errors');
-const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
-const SummaryService = require(Config.paths.services + '/project/project.summary.service');
 const UserService = require(Config.paths.services + '/user/user.service');
 const ProjectService = require(Config.paths.services + '/project/project.service');
+const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 const TopicService = require(Config.paths.services + '/topic/topic.service');
+const SummaryService = require(Config.paths.services + '/project/project.summary.service');
+const SummaryReportService = require(Config.paths.services + '/project/project.summary.report.service');
 
 
 const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQuery) => {
@@ -275,13 +276,13 @@ async function getTopicTimeline(req, res, next) {
 		const CurrentUser = UserService.getUserFromResponse(res)
 		const {
 			from: fromQuery = CurrentUser.createdAt
-			, each: eachQuery // each 6 months is a semestre
-			, steps: stepsQuery  // take the first forth semestres
+			, each: eachQuery
+			, steps: stepsQuery
 			, format = "YYYY-MM-DD"
 			, type = 'months'
 		} = req.query
 
-		const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
+		
 		const TestCaseDocs = await TestCaseService.list(CurrentUser)
 		const topicIdsMap = TestCaseDocs.reduce((map, testcase) => {
 			testcase.topic.forEach(topicId => {
