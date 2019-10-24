@@ -26,36 +26,40 @@ const getTimelineVariablesFromQuery = (ProjectDoc, fromQuery, eachQuery, stepsQu
 
 const getTimeline = async (CurrentUser, project, student, opts) => {
 	const { format, type, from, each, limit, topic } = opts
-	const reports = []
 	const fromString = from.format(format)
 	let period = each
 
+	const promises = []
+	const arrayOfDates = []
 
 	while (period <= limit) {
-
 		const toMoment = from.clone().add(period, type).set('hour', 0).set('minute', 0)
 		const to = toMoment.format(format)
 		const reportConf = { from: fromString, to, topic }
-		const report = await SummaryReportService.getUserReport(CurrentUser, project, student, reportConf)
-		const lastReport = reports[reports.length - 1] || { skill: 0 }
-		const { skill: lastSkill = 0 } = lastReport
-
-		const totalSkill = report.reduce((sum, userReport) => {
-			return userReport.skill + sum
-		}, 0)
-
-		const skill = totalSkill / report.length
-		const variation = skill - lastSkill
-		reports.push({
-			from: from,
-			to: toMoment,
-			tag: to,
-			skill,
-			variation,
-		})
+		const promise = SummaryReportService.getUserReport(CurrentUser, project, student, reportConf)
+		arrayOfDates.push({ from, to: toMoment, tag: to })
+		promises.push(promise)
 		period += each
 	}
-	return reports
+
+	const promiseResults = await Promise.all(promises)
+
+	const result = promiseResults
+		.map((data, idx) => {
+			const { from, to, tag } = arrayOfDates[idx]
+			const sumOfSkill = data.reduce((sum, userReport) => {
+				return userReport.skill + sum
+			}, 0)
+			const skill = sumOfSkill / data.length
+			return {
+				from,
+				to,
+				tag,
+				skill
+			}
+		})
+
+	return result
 }
 
 const getProjectTimelineHOC = async (project, req, res) => {

@@ -61,7 +61,7 @@ class SummaryReportService {
     return this.getUserReport(CurrentUser, arrayOfProjectIds, undefined, opts)
   }
 
-  async getUserReport(CurrentUser, project_id, moodle_user, opts) {
+  getUserReport(CurrentUser, project_id, moodle_user, opts) {
 
     const { topic } = opts
     const topicQuery = topic && topic.length
@@ -110,11 +110,9 @@ class SummaryReportService {
 
     const aggregator = ProjectAggregator(queries)
 
-    const Report = await Projectservice
+    return Projectservice
       .getModel()
       .aggregate(aggregator)
-
-    return Report
 
   }
 
