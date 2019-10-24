@@ -296,15 +296,8 @@ async function getTopicTimeline(req, res, next) {
 		const opts = getTimelineVariablesFromQuery(null, fromQuery, eachQuery, stepsQuery)
 		const promises = TopicDocs.map(TopicDoc => getTimeline(CurrentUser, null, null, { ...opts, format, type, topic: TopicDoc.name }))
 		const promiseResults = await Promise.all(promises)
-		const reports = promiseResults.map((dataset, idx) => {
-			const label = { topic: TopicDocs[idx] }
-			reports.push({ label, dataset })
-		})
-
-		const project = {
-			name: 'Topics project'
-		}
-		res.send([{ project, reports }])
+		const reports = promiseResults.map((dataset, idx) => ({ label: { topic: TopicDocs[idx] }, dataset }))
+		res.send([{ project:{name: 'Topics project'}, reports }])
 
 	} catch (e) { next(e) }
 }
