@@ -34,7 +34,7 @@ export async function compile() {
   if (!this.owner) await this.populate('owner').execPopulate()
 
   const {
-    _id,
+    project,
     name,
     objective,
     maxGrade,
@@ -73,7 +73,7 @@ import org.junit.Before;
 
 @VplPlusPlusAnnotation
 @VplTestInfoAnnotation(
-  id = "${_id}"
+  project = "${project}"
   name = "${name}",
   tags = "${tags}",
   created_by = "${owner.firstname} ${owner.lastname}",
