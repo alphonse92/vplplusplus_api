@@ -46,9 +46,9 @@ class SummaryService extends BaseService {
   }
 
   async createAll(project_id, moodle_user, summary_array_to_save, opts = { valideEnroledStudents: true, throwExceptions: true }) {
+
     const ProjectService = require('./project.service');
-    const Project = ProjectService.getModel()
-    const ProjectDoc = await Project.findById(project_id)
+    const ProjectDoc = await ProjectService.get(undefined, { _id: project_id })
     const { _id: project, activity } = ProjectDoc
 
     // user should be enroled in the activity

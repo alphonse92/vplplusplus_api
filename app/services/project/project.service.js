@@ -20,6 +20,9 @@ class ProjectService extends BaseService {
 
 	async get(CurrentUser, query, opts = { throwErrorIfNotExist: true, populate: true }) {
 		try {
+
+			const baseQuery = !CurrentUser ? {} : { owner: CurrentUser._id }
+			
 			const populates = [
 				{
 					path: 'summaries'
@@ -34,7 +37,7 @@ class ProjectService extends BaseService {
 						]
 					}
 				}]
-			return await super.get({ ...query, owner: CurrentUser._id }, opts.populate ? populates : [], opts)
+			return await super.get({ ...query, ...baseQuery }, opts.populate ? populates : [], opts)
 		} catch (e) {
 			throw new Util.Error(Errors.project_doesnt_exist)
 		}
@@ -51,7 +54,7 @@ class ProjectService extends BaseService {
 		}
 	}
 
-	list(CurrentUser, customQuery={}, populates) {
+	list(CurrentUser, customQuery = {}, populates) {
 		const query = {
 			$and: [
 				customQuery,

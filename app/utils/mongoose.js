@@ -101,7 +101,7 @@ function list(Model, id, query, paginator) {
 	return Model.paginate(query, paginator);
 }
 
-module.exports.createObjectId = () => new ObjectId()
+module.exports.createObjectId = (data) => new ObjectId(data)
 
 module.exports.extractFields = extractFields;
 function extractFields(ModelSchema) {
