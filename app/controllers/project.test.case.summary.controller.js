@@ -301,15 +301,16 @@ async function getUserReports(req, res, next) {
 
 module.exports.create = create;
 async function create(req, res, next) {
-	const {
-		project_id,
-		test_case_id
-	} = req.params
+	try {
+		const {
+			project,
+			moodle_user,
+			data,
+		} = req.body
+		const SummaryDoc = await SummaryService.createAll(project, moodle_user, data)
+		res.send(SummaryDoc)
+	} catch (e) { next(e) }
 
-	const project = { _id: project_id }
-	const testCase = { _id: test_case_id }
-	const SummaryDoc = await SummaryService.createAll(project, testCase, req.body)
-	res.send(SummaryDoc)
 }
 
 const valideHugeQuery = (req) => {
