@@ -73,7 +73,7 @@ import org.junit.Before;
 
 @VplPlusPlusAnnotation
 @VplTestInfoAnnotation(
-  api_id = "${_id}"
+  id = "${_id}"
   name = "${name}",
   tags = "${tags}",
   created_by = "${owner.firstname} ${owner.lastname}",
