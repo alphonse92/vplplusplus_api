@@ -53,7 +53,7 @@ class SummaryService extends BaseService {
     const { valideEnroledStudents = true, throwExceptions = true } = opts;
     // user should be enroled in the activity
     try {
-      valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
+      valideEnroledStudents && this.valideUserIsEnrolledInCourse(activity, moodle_user)
     } catch (e) {
       if (throwExceptions) throw e
       else return
