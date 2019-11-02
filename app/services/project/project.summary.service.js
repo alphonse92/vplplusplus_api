@@ -50,12 +50,12 @@ class SummaryService extends BaseService {
     const ProjectService = require('./project.service');
     const ProjectDoc = await ProjectService.get(undefined, { _id: project_id })
     const { _id: project, activity } = ProjectDoc
-
+    const { valideEnroledStudents = true, throwExceptions = true } = opts;
     // user should be enroled in the activity
     try {
-      opts.valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
+      valideEnroledStudents && valideUserIsEnrolledInCourse(activity, moodle_user)
     } catch (e) {
-      if (opts.throwExceptions) throw e
+      if (throwExceptions) throw e
       else return
     }
 
