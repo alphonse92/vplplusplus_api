@@ -42,11 +42,8 @@ module.exports = [
   //activities
   { resource: "service:api:system:course.activity.list" },
   // web client
-  { resource: "client:web:system:webclient.dashboard:show" },
-  { resource: "client:web:system:webclient.lab:show" },
-  { resource: "client:web:system:webclient.students:show" },
-  { resource: "client:web:system:webclient.configuration:show" },
-  { resource: "client:web:system:webclient.help:show" },
-  { resource: "client:web:system:webclient.logout:show" },
+  { resource: "client:web:system:webclient.lab.show" },
+  { resource: "client:web:system:webclient.students.show" },
+  { resource: "client:web:system:webclient.logout.show" },
 
 ]

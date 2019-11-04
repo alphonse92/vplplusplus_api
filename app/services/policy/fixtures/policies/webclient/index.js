@@ -2,7 +2,7 @@ const DefaultPolicyService = require("./../../../policy.access-manager.service")
 const fixtures = {}
 
 fixtures.showDashboardPage = {
-	resource: "client:web:system:webclient.dashboard:show",
+	resource: "client:web:system:webclient.dashboard.show",
 	name: "client",
 	slug: "See dashboard page",
 	type: DefaultPolicyService.types.default,
@@ -14,7 +14,7 @@ fixtures.showDashboardPage = {
 }
 
 fixtures.showLabPage = {
-	resource: "client:web:system:webclient.lab:show",
+	resource: "client:web:system:webclient.lab.show",
 	name: "client",
 	slug: "See lab page",
 	type: DefaultPolicyService.types.default,
@@ -26,7 +26,7 @@ fixtures.showLabPage = {
 }
 
 fixtures.showStudentsPage = {
-	resource: "client:web:system:webclient.students:show",
+	resource: "client:web:system:webclient.students.show",
 	name: "client",
 	slug: "See students page",
 	type: DefaultPolicyService.types.default,
@@ -38,7 +38,7 @@ fixtures.showStudentsPage = {
 }
 
 fixtures.showConfigurationPage = {
-	resource: "client:web:system:webclient.configuration:show",
+	resource: "client:web:system:webclient.configuration.show",
 	name: "client",
 	slug: "See configuration page",
 	type: DefaultPolicyService.types.default,
@@ -50,7 +50,7 @@ fixtures.showConfigurationPage = {
 }
 
 fixtures.showHelpPage = {
-	resource: "client:web:system:webclient.help:show",
+	resource: "client:web:system:webclient.help.show",
 	name: "client",
 	slug: "See help page",
 	type: DefaultPolicyService.types.default,
@@ -62,7 +62,7 @@ fixtures.showHelpPage = {
 }
 
 fixtures.showLogoutPage = {
-	resource: "client:web:system:webclient.logout:show",
+	resource: "client:web:system:webclient.logout.show",
 	name: "client",
 	slug: "See logout page",
 	type: DefaultPolicyService.types.default,
@@ -72,6 +72,32 @@ fixtures.showLogoutPage = {
 		{ scopes: ["showLogoutPage"] }
 	]
 }
+
+fixtures.showLogoutPage = {
+	resource: "client:web:system:webclient.topics.show",
+	name: "client",
+	slug: "See topics page to manage the topics",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for show topics page.",
+	extends: [], depends: [],
+	actions: [
+		{ scopes: ["showTopicsPage"] }
+	]
+}
+
+fixtures.showLogoutPage = {
+	resource: "client:web:system:webclient.applications.show",
+	name: "client",
+	slug: "See applications page",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for show applications page.",
+	extends: [], depends: [],
+	actions: [
+		{ scopes: ["showApplicationsPage"] }
+	]
+}
+
+
 
 
 module.exports = fixtures

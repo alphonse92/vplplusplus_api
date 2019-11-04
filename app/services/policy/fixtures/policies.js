@@ -60,7 +60,7 @@ fixtures.public = {
 
 if (Config.app.open_development_endpoint) {
 	fixtures.public.actions.push(
-		{ path: "POST/api/v1/dev/:action/", scopes: ["login"], query: "" }
+		{ path: "POST/api/v1/dev/:action/", scopes: ["devEndpoint"], query: "" }
 	)
 }
 

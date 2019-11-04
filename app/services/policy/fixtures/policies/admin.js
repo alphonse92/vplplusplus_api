@@ -4,29 +4,6 @@ const TOKEN_RESOURCE_NAME = 'token'
 const USER_RESOURCE_NAME = 'user'
 const TOPIC_RESOURCE_NAME = 'topic'
 
-// export const createUser = {
-//   resource: `service:api:system:${USER_RESOURCE_NAME}.list`,
-//   name: `${USER_RESOURCE_NAME}.create`,
-//   slug: `Create ${USER_RESOURCE_NAME}`,
-//   type: DefaultPolicyService.types.default,
-//   description: `Policy for create ${USER_RESOURCE_NAME}.`,
-//   extends: [], depends: [],
-//   actions: [
-//     { path: `POST/api/v1/users/`, scopes: [`createUser`] }
-//   ]
-// };
-
-// export const userRead = {
-//   resource: "service:api:system:user.read",
-//   name: "user.read",
-//   slug: "Read Users",
-//   type: DefaultPolicyService.types.default,
-//   description: "Policy for Read. This will read only api user. If you want to know more information about some user in moodle, pelase go to Moodle administration",
-//   extends: [], depends: [],
-//   actions: [
-//     { path: "GET/api/v1/users/:id?", scopes: ["readUser"] }
-//   ]
-// };
 
 export const listStudents = {
   resource: `service:api:system:${USER_RESOURCE_NAME}.student.list`,
