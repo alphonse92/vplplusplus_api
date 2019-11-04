@@ -73,7 +73,7 @@ fixtures.showLogoutPage = {
 	]
 }
 
-fixtures.showLogoutPage = {
+fixtures.showTopicsPage = {
 	resource: "client:web:system:webclient.topics.show",
 	name: "client",
 	slug: "See topics page to manage the topics",
@@ -85,7 +85,7 @@ fixtures.showLogoutPage = {
 	]
 }
 
-fixtures.showLogoutPage = {
+fixtures.showApplicationsPage = {
 	resource: "client:web:system:webclient.applications.show",
 	name: "client",
 	slug: "See applications page",
