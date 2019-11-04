@@ -48,4 +48,11 @@ module.exports = {
 			message: "Cant create the token because the token name is the same than a username of a user."
 		}
 	},
+	required_fields: {
+		http_code: 400,
+		error: {
+			code: -8,
+			message: "Please set a name and description"
+		}
+	}
 }

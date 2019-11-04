@@ -13,10 +13,10 @@ class TokenService extends BaseService {
 		super(Token)
 	}
 
-	async get(CurrentUser,id){
-		try{
-			return await super.get({owner:CurrentUser._id,_id:id})
-		}catch(e){
+	async get(CurrentUser, id) {
+		try {
+			return await super.get({ owner: CurrentUser._id, _id: id })
+		} catch (e) {
 			throw new Util.Error(Errors.token_doesnt_exist)
 		}
 	}
@@ -60,7 +60,10 @@ class TokenService extends BaseService {
 
 	async create(CurrentUser, TokenData) {
 		const { _id: owner } = CurrentUser
-		const { exp: tokenExp, name } = TokenData
+		const { exp: tokenExp, name, description } = TokenData
+
+		if (!name && !description) throw new Util.Error(Errors.required_fields)
+
 		const exp = !Number.isNaN(tokenExp) && tokenExp > 0 ? tokenExp : 0
 		TokenData.exp = exp
 
