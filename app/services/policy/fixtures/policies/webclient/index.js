@@ -96,6 +96,17 @@ fixtures.showApplicationsPage = {
 		{ scopes: ["showApplicationsPage"] }
 	]
 }
+fixtures.showReportsPage = {
+	resource: "client:web:system:webclient.reports.show",
+	name: "client",
+	slug: "See reports page",
+	type: DefaultPolicyService.types.default,
+	description: "Policy for show reports page.",
+	extends: [], depends: [],
+	actions: [
+		{ scopes: ["showReportsPage"] }
+	]
+}
 
 
 

@@ -44,6 +44,7 @@ module.exports = [
   // web client
   { resource: "client:web:system:webclient.lab.show" },
   { resource: "client:web:system:webclient.students.show" },
+  { resource: "client:web:system:webclient.reports.show" },
   { resource: "client:web:system:webclient.logout.show" },
 
 ]
