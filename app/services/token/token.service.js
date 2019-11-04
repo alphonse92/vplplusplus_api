@@ -53,7 +53,7 @@ class TokenService extends BaseService {
 			const UserDoc = await UserService.create(CurrentUserWhoCreateTheUser, newUserData, { exp })
 			return UserDoc
 		} catch (e) {
-			throw new Util.Error(Errors.user_clients_already_exists)
+			throw new Util.Error(e)
 		}
 	}
 
