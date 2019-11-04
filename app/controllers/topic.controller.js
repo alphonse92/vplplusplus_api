@@ -1,7 +1,6 @@
 const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
 const TopicService = require(Config.paths.services + '/topic/topic.service');
-const Util = require(Config.paths.utils)
 
 module.exports.get = get;
 async function get(req, res, next) {
@@ -12,6 +11,17 @@ async function get(req, res, next) {
       .map(
         ({ _id, name, description, owner }) => ({ _id, name, description, owner })
       ))
+  } catch (e) {
+    next(e)
+  }
+}
+
+module.exports.list = list
+async function list(req, res, next) {
+  try {
+    const CurrentUser = UserService.getUserFromResponse(res)
+    const Topics = await TopicService.listUsingTheRequest(CurrentUser, req)
+    res.send(Topics)
   } catch (e) {
     next(e)
   }

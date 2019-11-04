@@ -6,6 +6,7 @@ const Controller = require(Config.paths.controllers + "/topic.controller");
 
 Router.get("/health", (req, res) => res.send("ok"));
 Router.get("/", Controller.get);
+Router.get("/list/:id?", Controller.list);
 Router.post("/", Controller.create);
 Router.delete("/:id", Controller.delete);
 Util.log(Base);

@@ -12,9 +12,17 @@ class TopicService extends BaseService {
 		super(Topic)
 	}
 
+	async list(CurrentUser) {
+		try {
+			return await super.list()
+		} catch (e) {
+			throw new Util.Error(Errors.topic_does_not_exist)
+		}
+	}
+
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest2(req, {}, { deleted_at: null })
+			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
