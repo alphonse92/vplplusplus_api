@@ -1,6 +1,7 @@
 const TeacherPoliciesGroup = require('./groups/teacher');
 const AdminPoliciesGroup = require('./groups/admin');
 const RunnerPoliciesGroup = require('./groups/runner');
+const StudentPoliciesGroup = require('./groups/student');
 
 module.exports = {
 	runner: {
@@ -40,9 +41,7 @@ module.exports = {
 	student: {
 		name: "default/student",
 		default: true,
-		policies: [
-			{ resource: "service:api:system:public" }
-		]
+		policies: StudentPoliciesGroup
 	},
 	guest: {
 		name: "default/guest",
