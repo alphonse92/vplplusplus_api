@@ -13,6 +13,19 @@ class TokenService extends BaseService {
 		super(Token)
 	}
 
+	async get(CurrentUser,id){
+		try{
+			return await super.get({owner:CurrentUser._id,_id:id})
+		}catch(e){
+			throw new Util.Error(Errors.token_doesnt_exist)
+		}
+	}
+
+	async list(CurrentUser) {
+		const query = { owner: CurrentUser };
+		return await super.list(query)
+	}
+
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
 			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })

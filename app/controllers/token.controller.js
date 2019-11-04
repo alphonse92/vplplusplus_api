@@ -6,7 +6,9 @@ module.exports.get = get;
 async function get(req, res, next) {
   try {
     const CurrentUser = UserService.getUserFromResponse(res)
-    const Tokens = await TokenService.listUsingTheRequest(CurrentUser, req)
+    const Tokens = req.params.id
+      ? await TokenService.get(CurrentUser, req.params.id)
+      : await TokenService.list(CurrentUser)
     res.send(Tokens)
   } catch (e) {
     next(e)
