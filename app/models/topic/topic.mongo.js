@@ -7,6 +7,13 @@ const mongoose = require(Config.paths.db + '/mongo');
 const ModelSchema = require("./topic.schema");
 const Schema = new mongoose.Schema(ModelSchema.schema, { toJSON: { virtuals: true } });
 
+Schema.virtual('test_cases', {
+  ref: 'TestCase',
+  localField: '_id',
+  foreignField: 'topics',
+  justOne: false
+});
+
 Schema.plugin(paginator);
 Schema.plugin(timestamps);
 increment.initialize(mongoose.connection);

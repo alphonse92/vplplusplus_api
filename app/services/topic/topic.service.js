@@ -22,7 +22,7 @@ class TopicService extends BaseService {
 
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id, deleted_at: null })
+			return await super.listUsingTheRequest(req, req.query.populate || {}, { owner: CurrentUser._id, deleted_at: null })
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}

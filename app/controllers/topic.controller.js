@@ -1,6 +1,7 @@
 const Config = global.Config;
 const UserService = require(Config.paths.services + '/user/user.service');
 const TopicService = require(Config.paths.services + '/topic/topic.service');
+const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 
 module.exports.get = get;
 async function get(req, res, next) {
@@ -19,9 +20,30 @@ async function get(req, res, next) {
 module.exports.list = list
 async function list(req, res, next) {
   try {
+
     const CurrentUser = UserService.getUserFromResponse(res)
     const Topics = await TopicService.listUsingTheRequest(CurrentUser, req)
-    res.send(Topics)
+    const TestCase = TestCaseService.getModel()
+    
+    for (let i = 0; i < Topics.docs.length; i++) {
+      const TopicDoc = Topics.docs[i];
+      const TestCaseDocs = await TestCase
+        .find({ topic: TopicDoc._id })
+        .populate('summaries')
+        .exec()
+
+      const hasSummaries = TestCaseDocs.reduce((acc, testCaseDoc) => {
+        return acc || !!(testCaseDoc.summaries.length)
+      }, false)
+
+      const Doc = Topics.docs[i].toObject()
+      Doc.hasSummaries = hasSummaries
+
+      Topics.docs[i] = Doc
+
+    }
+
+    res.send({ ...Topics })
   } catch (e) {
     next(e)
   }
