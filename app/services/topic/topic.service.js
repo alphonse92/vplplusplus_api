@@ -12,7 +12,7 @@ class TopicService extends BaseService {
 		super(Topic)
 	}
 
-	async list(CurrentUser) {
+	async list() {
 		try {
 			return await super.list()
 		} catch (e) {
@@ -22,7 +22,7 @@ class TopicService extends BaseService {
 
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
+			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id, deleted_at: null })
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
