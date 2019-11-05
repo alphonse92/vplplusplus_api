@@ -25,7 +25,7 @@ module.exports = [
   // summaries
   { resource: "service:api:system:test.case.summary.list" },
   // Topics
-  { resource: "service:api:system:topic.list" },
+  { resource: "service:api:system:topic.get" },
   // reports
   { resource: "service:api:system:projects.report.list" },
   { resource: "service:api:system:projects.report.user.list" },

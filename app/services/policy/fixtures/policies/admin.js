@@ -84,6 +84,6 @@ export const listTopic = {
   description: `Policy for list the ${TOPIC_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `GET/api/v1/${TOPIC_RESOURCE_NAME}/:id?`, scopes: [`listTopic`] }
+    { path: `GET/api/v1/${TOPIC_RESOURCE_NAME}/list/:id?`, scopes: [`listTopic`] }
   ]
 }
