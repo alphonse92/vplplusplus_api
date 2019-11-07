@@ -20,4 +20,11 @@ module.exports = {
 			message: "Password is required"
 		}
 	},
+	topic_has_summaries: {
+		http_code: 401,
+		error: {
+			code: -1,
+			message: "Topic has summaries. Please request to the teachers to delete all projects that are using this topic"
+		}
+	},
 }

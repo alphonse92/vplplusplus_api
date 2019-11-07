@@ -1,10 +1,11 @@
 import { pick } from 'lodash'
 
 const Config = global.Config;
+const Util = require(Config.paths.utils);
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/topic.errors');
 const Topic = require(Config.paths.models + "/topic/topic.mongo");
-const Util = require(Config.paths.utils);
+const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
 
 class TopicService extends BaseService {
 
@@ -45,7 +46,19 @@ class TopicService extends BaseService {
 		}
 	}
 
-	delete(CurrentUser, topic_id) {
+	async delete(CurrentUser, topic_id) {
+		const TestCase = TestCaseService.getModel()
+		const TestCaseDocs = await TestCase
+			.find({ topic: topic_id })
+			.populate('summaries')
+			.exec()
+
+		const hasSummaries = TestCaseDocs.reduce((acc, testCaseDoc) => {
+			return acc || !!(testCaseDoc.summaries.length)
+		}, false)
+
+		if (hasSummaries) throw new Util.Error(Errors.topic_has_summaries)
+
 		try {
 			const { _id: owner } = CurrentUser
 			return super.delete({ owner, _id: topic_id }, { deleted_at: Date.now() })
