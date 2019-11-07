@@ -153,7 +153,7 @@ class SummaryService extends BaseService {
   }
 
   deleteMany(query) {
-    throw new Util.Error(Errors.blocked)
+    return super.deleteMany(query)
   }
 
 

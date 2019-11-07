@@ -22,7 +22,7 @@ class ProjectService extends BaseService {
 		try {
 
 			const baseQuery = !CurrentUser ? {} : { owner: CurrentUser._id }
-			
+
 			const populates = [
 				{
 					path: 'summaries'
@@ -113,13 +113,14 @@ class ProjectService extends BaseService {
 
 	}
 
-	async delete(CurrentUser, projectId) {
-
-		await this.validateHasSummaries(projectId)
+	async delete(CurrentUser, project_id) {
+		const SummaryService = require('./project.summary.service')
 		const { _id: owner } = CurrentUser
-		const ProjectDocument = await super.delete({ owner, _id: projectId })
-		await TestService.deleteMany({ owner, project: projectId })
-		await TestCaseService.deleteMany({ owner, project: projectId })
+		const ProjectDocument = await super.delete({ owner, _id: project_id })
+		const { _id: project } = ProjectDocument;
+		await TestService.deleteMany({ owner, project })
+		await TestCaseService.deleteMany({ owner, project })
+		await SummaryService.deleteMany({ project })
 
 		return ProjectDocument
 
