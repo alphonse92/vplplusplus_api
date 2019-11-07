@@ -54,7 +54,7 @@ fixtures.public = {
 	description: "Policy for public resources. Take care.",
 	extends: [], depends: [],
 	actions: [
-		{ path: "POST/api/v1/users/auth", scopes: ["login","logout"], query: "" } //this an example of a public path
+		{ path: "POST/api/v1/users/auth", scopes: ["login","logout","showLogoutPage"], query: "" } //this an example of a public path
 	]
 };
 
