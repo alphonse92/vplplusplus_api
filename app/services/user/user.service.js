@@ -86,11 +86,17 @@ function addGroupsToUser(UserDoc) {
 	return UserDoc.save();
 }
 
+/**
+ *  This function add the policies groups depending of the user moodle role.
+ *  If the user hasnt roles then add the default role.
+ */
 Service.getUserGroups = getUserGroups;
 function getUserGroups(UserDoc) {
 	let groups = [];
 	if (UserDoc.is_site_admin)
 		groups.push(getGroupByArchetype("siteadministrator").name);
+
+	if (!UserDoc.roles.lenght) return ['default/default']
 
 	UserDoc.roles.forEach(role => {
 		let archetype = role.archetype;

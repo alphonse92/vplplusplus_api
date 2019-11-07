@@ -19,6 +19,8 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
+			
 		]
 	},
 	coursecreator: {
@@ -26,6 +28,7 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
 		]
 	},
 	editingteacher: {
@@ -48,6 +51,7 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
 		]
 	},
 	user: {
@@ -55,6 +59,7 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
 		]
 	},
 	frontpage: {
@@ -62,6 +67,15 @@ module.exports = {
 		default: true,
 		policies: [
 			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
+		]
+	},
+	default: {
+		name: "default/default",
+		default: true,
+		policies: [
+			{ resource: "service:api:system:public" },
+			{ resource: "client:web:system:webclient.logout.show" },
 		]
 	}
 };
