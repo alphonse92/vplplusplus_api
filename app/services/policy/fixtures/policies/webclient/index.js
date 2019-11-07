@@ -69,7 +69,7 @@ fixtures.showLogoutPage = {
 	description: "Policy for show logout page.",
 	extends: [], depends: [],
 	actions: [
-		{ scopes: ["showLogoutPage2"] }
+		{ scopes: ["showLogoutPage"] }
 	]
 }
 

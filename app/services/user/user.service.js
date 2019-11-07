@@ -92,6 +92,8 @@ function getUserGroups(UserDoc) {
 	if (UserDoc.is_site_admin)
 		groups.push(getGroupByArchetype("siteadministrator").name);
 
+	if (!UserDoc.roles.length) groups.push(getGroupByArchetype('default').name)
+
 	UserDoc.roles.forEach(role => {
 		let archetype = role.archetype;
 		if (!groups.includes(archetype)) {
