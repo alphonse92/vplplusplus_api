@@ -12,8 +12,8 @@ module.exports = {
 		name: {
 			type: "String",
 			required: true,
-			unique:true,
-			index:true,
+			unique: true,
+			index: true,
 			maxlength: 10,
 			_readOnly: true,
 			_editable: true
@@ -29,12 +29,12 @@ module.exports = {
 			type: Schema.Types.ObjectId,
 			ref: "User",
 			required: true,
-			index:true,
+			index: true,
 			_readOnly: true
 		},
-		deleted_at: {
-			type: "Date",
-			default: null
+		visible: {
+			type: "Boolean",
+			default: true
 		}
 	},
 }

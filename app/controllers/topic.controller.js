@@ -1,4 +1,6 @@
 const Config = global.Config;
+const Util = require(Config.paths.utils);
+const Errors = require(Config.paths.errors + '/topic.errors');
 const UserService = require(Config.paths.services + '/user/user.service');
 const TopicService = require(Config.paths.services + '/topic/topic.service');
 const TestCaseService = require(Config.paths.services + '/project/project.test.case.service');
@@ -6,9 +8,8 @@ const TestCaseService = require(Config.paths.services + '/project/project.test.c
 module.exports.get = get;
 async function get(req, res, next) {
   try {
-    const Topics = await TopicService.list()
+    const Topics = await TopicService.list({visible:true})
     res.send(Topics
-      .filter(({ deleted_at }) => !deleted_at)
       .map(
         ({ _id, name, description, owner }) => ({ _id, name, description, owner })
       ))
@@ -25,6 +26,8 @@ async function list(req, res, next) {
     const Topics = await TopicService.listUsingTheRequest(CurrentUser, req)
     const TestCase = TestCaseService.getModel()
     
+    if(req.body.password && !req.body.password.length) throw new Util.error(Errors.password_is_required)
+
     for (let i = 0; i < Topics.docs.length; i++) {
       const TopicDoc = Topics.docs[i];
       const TestCaseDocs = await TestCase

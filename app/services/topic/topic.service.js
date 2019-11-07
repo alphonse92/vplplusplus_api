@@ -22,7 +22,7 @@ class TopicService extends BaseService {
 
 	async listUsingTheRequest(CurrentUser, req) {
 		try {
-			return await super.listUsingTheRequest(req, req.query.populate || {}, { owner: CurrentUser._id, deleted_at: null })
+			return await super.listUsingTheRequest(req, {}, { owner: CurrentUser._id })
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
@@ -37,7 +37,7 @@ class TopicService extends BaseService {
 		try {
 			const { _id: owner } = CurrentUser
 			const { name, description } = pick(TokenData, ['name', 'description'])
-			const topic = await super.get({ name, deleted_at: null }, null, { throwErrorIfNotExist: false }) // get a not deleted topic with the same name
+			const topic = await super.get({ name }, null, { throwErrorIfNotExist: false }) // get a not deleted topic with the same name
 			if (topic) throw new Util.Error(Errors.topic_already_exists)
 			return super.create({ owner, name, description })
 		} catch (e) {
@@ -48,7 +48,7 @@ class TopicService extends BaseService {
 	delete(CurrentUser, topic_id) {
 		try {
 			const { _id: owner } = CurrentUser
-			return super.update({ owner, _id: topic_id, deleted_at: null }, { deleted_at: Date.now() })
+			return super.delete({ owner, _id: topic_id }, { deleted_at: Date.now() })
 		} catch (e) { throw new Util.Error(Errors.topic_does_not_exist) }
 
 	}

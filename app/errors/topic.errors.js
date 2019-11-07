@@ -13,4 +13,11 @@ module.exports = {
 			message: "Topic already exist"
 		}
 	},
+	password_is_required: {
+		http_code: 401,
+		error: {
+			code: -1,
+			message: "Password is required"
+		}
+	},
 }
