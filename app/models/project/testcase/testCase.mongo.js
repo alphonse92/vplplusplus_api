@@ -26,28 +26,13 @@ Util.mongoose.addStatics(Schema, ModelSchema)
 Schema.methods.compile = function () {
   const {
     name: testCaseName,
-    objective,
-    grade,
-    successMessage,
-    successReferenceLink,
-    failureMessage,
-    failureReferenceLink,
     timeout,
     _id: id
   } = this
   const name = capitalize(camelCase(testCaseName))
   const code =
     `
-  @VplTestDescriptorAnnotation(
-    id = "${id}"
-    name = "${name}",
-    objective = ${objective},
-    grade = ${grade},
-    successMessage = "${successMessage}",
-    successReferenceLink = "${successReferenceLink}",
-    failureMessage = "${failureMessage}",
-    failureReferenceLink = "${failureReferenceLink}",
-  )
+  @VplTestDescriptorAnnotation(id = "${id}")
   @Test(timeout = ${timeout})
   public void ${name}Test(){     
     ${this.code}

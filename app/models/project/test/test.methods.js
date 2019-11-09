@@ -72,14 +72,7 @@ import org.junit.Before;
 // end of your imports
 
 @VplPlusPlusAnnotation
-@VplTestInfoAnnotation(
-  project = "${project}"
-  name = "${name}",
-  tags = "${tags}",
-  created_by = "${owner.firstname} ${owner.lastname}",
-  maxGrade = ${maxGrade},
-  objetive =  ${objective},
-)
+@VplTestInfoAnnotation(project = "${project}")
 public class ${className}{
   
   ${this.code}
