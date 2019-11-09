@@ -14,6 +14,19 @@ class UserMoodleService extends MoodleService {
     return module[0]
   }
 
+  async getUserByEmail(id, opts = opts_def) {
+    const { TABLE_PREFIX } = this
+    const sql = `
+      SELECT *
+      FROM ${TABLE_PREFIX}user user
+      WHERE user.email = ? AND user.deleted=0
+      LIMIT 1 
+    `
+    const module = await super.execute(sql, [id], opts)
+    return module[0]
+  }
+
+  
 
 }
 
