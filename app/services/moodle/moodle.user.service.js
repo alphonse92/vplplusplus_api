@@ -7,11 +7,11 @@ class UserMoodleService extends MoodleService {
     const sql = `
       SELECT *
       FROM ${TABLE_PREFIX}user user
-      WHERE user.id = ?
+      WHERE user.id = ?  AND user.deleted=0
       LIMIT 1 
     `
-    const module = await super.execute(sql, [id], opts)
-    return module[0]
+    const user = await super.execute(sql, [id], opts)
+    return user[0]
   }
 
   async getUserByEmail(id, opts = opts_def) {
@@ -22,11 +22,11 @@ class UserMoodleService extends MoodleService {
       WHERE user.email = ? AND user.deleted=0
       LIMIT 1 
     `
-    const module = await super.execute(sql, [id], opts)
-    return module[0]
+    const user = await super.execute(sql, [id], opts)
+    return user[0]
   }
 
-  
+
 
 }
 
