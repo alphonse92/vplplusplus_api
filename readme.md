@@ -145,7 +145,9 @@ public class CalculadoraTest{
 ```
 
 # How to calculate the student skill of a topic?
- The skill of a student is calculated by the next formulas:
+ 
+The skill of a student is calculated by the next formulas:
+
 ```
 Effort      (E)       =  s / ∑a  
 Coefficient (C)       =  ( T + 1 ) / ( R + 1 )
@@ -153,9 +155,10 @@ Skill       (S)       =  T / (E*C)
 ```
 
 Variables:
+
 ```
 s: Total of summaries of a test case
-a: attemp to solve a test case
+a: Attemps to solve a test case
 T: Total of test cases  
 R: Total of test cases that the student solved
 N: Total of test cases that the student not solved
