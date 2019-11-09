@@ -1,0 +1,2190 @@
+{
+	"info": {
+		"_postman_id": "2abdaa49-84c3-4abc-a5ba-d8db2effb4f0",
+		"name": "Tesis 2",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Single Auth + Teacher POO 1-1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "dd12f8f3-4232-4a49-9ee7-a4cf65064ddf",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "e93a846e-c38d-436e-9554-d2f2f44f9181",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TOKEN_TEACHER_POO_1_1\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"single\": {\n        \"email\": \"alejandromover92+vplteachereliecer@gmail.com\",\n        \"password\": \"Passw0rd*\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Auth + Teacher POO 1-2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "dd12f8f3-4232-4a49-9ee7-a4cf65064ddf",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "d1233f72-3161-4cb8-a193-9627bd4d1ea2",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TOKEN_TEACHER_POO_1_2\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"single\": {\n        \"email\": \"alejandromover92+vplteachereliecer2@gmail.com\",\n        \"password\": \"Passw0rd*\"\n    }\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Auth + Student (1) POO 1-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "05b61dec-453a-4468-be7a-369639739367",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TOKEN_STUDENT_1_POO_1_1\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"single\":{\n\t\t\"email\":\"alejandromover92+vplstudentalejandro@gmail.com\",\n\t\t\"password\":\"Passw0rd*\"\n\t}\t\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Auth + Student (2) POO 1-1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "d85477a7-4118-4c5e-9121-e2abff4f628d",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TOKEN_STUDENT_2_POO_1_1\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"disabled": false,
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"single\":{\n\t\t\"email\":\"alejandromover92+vplstudentcamilo@gmail.com\",\n\t\t\"password\":\"Passw0rd*\"\n\t}\t\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Google Auth",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"google\":{\n\t\t\"token\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6IjM3ODJkM2YwYmM4OTAwOGQ5ZDJjMDE3MzBmNzY1Y2ZiMTlkM2I3MGUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJhY2NvdW50cy5nb29nbGUuY29tIiwiYXpwIjoiMTI2NzYwODY3NTQ0LWsxZXMzdHFpaG80NmIwZzgzMWNtc3Znb2t2bDBucHF1LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTI2NzYwODY3NTQ0LWsxZXMzdHFpaG80NmIwZzgzMWNtc3Znb2t2bDBucHF1LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTA1NTg1NTc1Mjk2MTMyMjUxMzY5IiwiZW1haWwiOiJhbGVqYW5kcm9tb3ZlcjkyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoielJHZi1LU0lxSWhabGtxNHYxVHg4QSIsIm5hbWUiOiJBbGVqYW5kcm8gTW9saW5hIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS8tRUJodkJsaW9lMzQvQUFBQUFBQUFBQUkvQUFBQUFBQUFBQUEvQUNIaTNyZGhwS25QOEZWTDdUN2dWTHRzR2Nic3pIZFdwZy9zOTYtYy9waG90by5qcGciLCJnaXZlbl9uYW1lIjoiQWxlamFuZHJvIiwiZmFtaWx5X25hbWUiOiJNb2xpbmEiLCJsb2NhbGUiOiJlcyIsImlhdCI6MTU1NTYxODUzMiwiZXhwIjoxNTU1NjIyMTMyLCJqdGkiOiJiZDAzM2M0ZjE2MjIyZGQwMjdiZjEyMDkxOTRjNzEzYTcwMjNhNTViIn0.JmimSVfDjqWj8m8kwK-XHsnM7cn8ayIutbDrQ_RBN8dub9wxTft8aHtzNYWp1Lr9RLLzn4ERISJUKMTCdZPBu5_gJA2-6-5-3m53KvZ2wbAx_1Un4AaqhbyGgInFiG3rA4OmW6veCPsdfO07pCtplUYq0EoTIUtAaJQV0XogyjFaYvyYrueYWDNPc0cq1bleN5tANWvXH_vG2zedwr0d8nDhepkpyLIzcCC43MJDPt7qi2ZRCQRNnzyIePGzZOSsRHaSOL1WIzets8XbB_fXfqUmu1Il3Rbw4rsSvpet5ATa6yKShBes9ReDLML52Eu-Zy0JAwCWA9LHHOjsNdm5-Q\",\n\t\t\n\t\t\"id\":\"105585575296132251369\",\n\t\t\"fullName\":\"Alejandro Molina\",\n\t\t\"givenName\":\"Alejandro\",\n\t\t\"familyName\":\"Molina\",\n\t\t\"imageURL\":null,\n\t\t\"email\":\"alejandromover92@gmail.com\"\n\t\t\n\t}\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Projects",
+			"item": [
+				{
+					"name": "exceptions",
+					"item": [
+						{
+							"name": "[Exception: Not Found] Get Project + Teacher POO 1-1",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\":\"My first project\",\n\t\"description\":\"description of my first project\",\n\t\"is_public\":true,\n\t\"tests\":[\n\t\t{\n\t\t\t\n\t\t\t\"name\": \"My first Test\",\n\t\t\t\"tags\": [\"java\",\"poo\",\"recursivity \"],\n\t\t\t\"description\": \"Description of my first Test\",\n\t\t\t\"objective\":\"Objective of my first test\",\n\t\t\t\"maxGrade\": 5,\n\t\t\t\"test_cases\": [\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\t\"name\": \"My first Test case\",\n\t\t\t\t\t\"objective\": \"Objective of my first test case\",\n\t\t\t\t\t\"grade\": 5,\n\t\t\t\t\t\"successMessage\": \"successMessage\",\n\t\t\t\t\t\"successMessageLink\": \"successMessageLink\",\n\t\t\t\t\t\"failureMessage\": \"failureReferenceLink\"\n\t\t\t\t},\n\t\t\t\t{\n\t\t\t\t\t\n\t\t\t\t\t\"name\": \"My second Test case\",\n\t\t\t\t\t\"objective\": \"Objective of my first test case\",\n\t\t\t\t\t\"grade\": 5,\n\t\t\t\t\t\"successMessage\": \"successMessage\",\n\t\t\t\t\t\"successMessageLink\": \"successMessageLink\",\n\t\t\t\t\t\"failureMessage\": \"failureReferenceLink\"\n\t\t\t\t}\n\t\t\t]\n\t\t}\n\t]\n}"
+								},
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d2cb4d56db0e700638e28e2",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d2cb4d56db0e700638e28e2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "[Exception: Unauthorized] Admin cant add a summary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280/test/5d30e78e1892fd0085ab3281/case/5d30e78e1892fd0085ab3282/summary",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d30e78e1892fd0085ab3280",
+										"test",
+										"5d30e78e1892fd0085ab3281",
+										"case",
+										"5d30e78e1892fd0085ab3282",
+										"summary"
+									]
+								},
+								"description": "Only users in the default/runner group are auth to it"
+							},
+							"response": []
+						},
+						{
+							"name": "[Exception: Unauthorized] Teacher POO 1-1 cant add a summary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280/test/5d30e78e1892fd0085ab3281/case/5d30e78e1892fd0085ab3282/summary",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d30e78e1892fd0085ab3280",
+										"test",
+										"5d30e78e1892fd0085ab3281",
+										"case",
+										"5d30e78e1892fd0085ab3282",
+										"summary"
+									]
+								},
+								"description": "Only users in the default/runner group are auth to it"
+							},
+							"response": []
+						},
+						{
+							"name": "[Exception: Unauthorized] Teacher POO 1-2 cant add a summary Copy",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280/test/5d30e78e1892fd0085ab3281/case/5d30e78e1892fd0085ab3282/summary",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d30e78e1892fd0085ab3280",
+										"test",
+										"5d30e78e1892fd0085ab3281",
+										"case",
+										"5d30e78e1892fd0085ab3282",
+										"summary"
+									]
+								},
+								"description": "Only users in the default/runner group are auth to it"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "POO 1 -1 ",
+					"item": [
+						{
+							"name": "Endpoints",
+							"item": [
+								{
+									"name": "List projects  + no pagination",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/list/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"list",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Projects with populate + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/?populate=tests&populate=tests.test_cases",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												""
+											],
+											"query": [
+												{
+													"key": "populate",
+													"value": "tests"
+												},
+												{
+													"key": "populate",
+													"value": "tests.test_cases"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Project + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d30e78e1892fd0085ab3280"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Export Project [moodle] + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280/export/moodle",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d30e78e1892fd0085ab3280",
+												"export",
+												"moodle"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Compile Project + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d2cb4d56db0e700638e28e1",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d2cb4d56db0e700638e28e1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Compile Test of a Project + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280/test/5d30e78e1892fd0085ab3281/compile",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d30e78e1892fd0085ab3280",
+												"test",
+												"5d30e78e1892fd0085ab3281",
+												"compile"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Project + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Operadores aritméticos\",\n    \"description\": \"Este conjunto de tests evaluará la capacidad del estudiante para usar los diferentes operadores aritméticos\",\n    \"is_public\": true,\n    \"activity\":4,\n    \"tests\": [\n        {\n            \"name\": \"operadores simples\",\n            \"tags\": [\n                \"Operadores aritméticos\",\n                \"Fundamentos de programación\"\n            ],\n            \"description\": \"El estudiante deberá crear una clase calculadora con los métodos sumar,restar,dividir y multiplicar. Solo el metodo dividir retornará un double, el resto retornará valores enteros\",\n            \"objective\": \"Evaluar los operadores matemáticos básicos\",\n            \"code\": \"private Calculadora test \\n @Before \\n   public void setUp(){ \\n  test = new Calculadora(); \\n }\",\n            \"test_cases\": [\n                {\n                    \"name\": \"Crear clase\",\n                    \"objective\": \"Evaluar si el estudiante sabe crear la clase\",\n                    \"topic\": [\n                    \t\"5d39cc1ffb9370034ec5640a\",\n                        \"5d39cc1ffb9370034ec5640c\"\n                    ],\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador suma!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido sumar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+sum+numbers+in+java\",\n                    \"code\": \"Calculadora prueba = new Calculadora()\"\n                },\n                {\n                    \"name\": \"Sumar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático suma\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador suma!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido sumar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+sum+numbers+in+java\",\n                    \"code\": \"assertEquals(3, test.sumar(1, 2));\"\n                },\n                {\n                    \"name\": \"Restar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático suma\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador resta!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido restar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+diff+numbers+in+java\",\n                    \"code\": \"assertEquals(1, test.restar(2,1));\"\n                },\n                {\n                    \"name\": \"Multiplicar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático multiplicar\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador multiplicar!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido multiplicar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+multiply+numbers+in+java\",\n                    \"code\": \"assertEquals(6, test.multiplicar(2,3));\"\n                },\n                {\n                    \"name\": \"Dividir simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático dividir\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador dividir!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido dividir dos numeros. Recuerda que tu función debe retornar un double.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+divide+numbers+in+java\",\n                    \"code\": \"assertEquals(2.5, test.dividir(5,2));\"\n                }\n            ]\n        },\n        {\n            \"name\": \"operadores encadenados\",\n            \"tags\": [\n                \"Operadores aritméticos\",\n                \"Fundamentos de programación\"\n            ],\n            \"description\": \"El estudiante deberá crear una clase calculadora con los métodos sumar,restar,dividir y multiplicar. Solo el metodo dividir retornará un double, el resto retornará valores enteros\",\n            \"objective\": \"Evaluar los operadores matemáticos básicos\",\n            \"code\": \"private Calculadora test \\n @Before \\n   public void setUp(){ \\n  test = new Calculadora(); \\n }\",\n            \"test_cases\": [\n                {\n                    \"name\": \"fuerza\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener la fuerza\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener la fuerza\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener la fuerza.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+force+in+java\",\n                    \"code\": \"assertEquals(3, test.getFuerza(1, 2));\"\n                },\n                {\n                    \"name\": \"trabajo\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener el trabajo\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener el trabajo\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener el trabajo.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+work+in+java\",\n                    \"code\": \"assertEquals(1, test.getTrabajo(2,1));\"\n                },\n                {\n                    \"name\": \"presion\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener la presion\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener la presion\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener la presion.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+preasure+in+java\",\n                    \"code\": \"assertEquals(6, test.getPresion(2,3));\"\n                }\n            ]\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Project + Teacher POO 1-1",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e49de103270057596473",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d30e49de103270057596473"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report of all users of all projects",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+												"type": "text"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/report/user/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"report",
+												"user",
+												""
+											]
+										},
+										"description": "Get report of all projects with all users that the teacher can access"
+									},
+									"response": []
+								},
+								{
+									"name": "Get Report of user of all projects",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/report/user/3/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"report",
+												"user",
+												"3",
+												""
+											]
+										},
+										"description": "Get report of a user of all projects that the teacher can access"
+									},
+									"response": []
+								},
+								{
+									"name": "Get reports of user of all projects with dates",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/report/user/3/?from=2012-01-02&to=2020-02-02",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"report",
+												"user",
+												"3",
+												""
+											],
+											"query": [
+												{
+													"key": "from",
+													"value": "2012-01-02"
+												},
+												{
+													"key": "to",
+													"value": "2020-02-02"
+												}
+											]
+										},
+										"description": "Get report of user of all projects that the teacher can access with filter with dates"
+									},
+									"response": []
+								},
+								{
+									"name": "Get report of user of a project with dates",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d3b4861bd5ecf01468d2975/report/user/3/?from=2012-01-02&to=2020-02-02",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d3b4861bd5ecf01468d2975",
+												"report",
+												"user",
+												"3",
+												""
+											],
+											"query": [
+												{
+													"key": "from",
+													"value": "2012-01-02"
+												},
+												{
+													"key": "to",
+													"value": "2020-02-02"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get report timeline from date",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d3b4861bd5ecf01468d2975/report/timeline/?type=weeks&each=1&steps=24&from=2019-01-01&format=YYYY-MM-DD",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												"5d3b4861bd5ecf01468d2975",
+												"report",
+												"timeline",
+												""
+											],
+											"query": [
+												{
+													"key": "type",
+													"value": "weeks"
+												},
+												{
+													"key": "each",
+													"value": "1"
+												},
+												{
+													"key": "steps",
+													"value": "24"
+												},
+												{
+													"key": "from",
+													"value": "2019-01-01"
+												},
+												{
+													"key": "format",
+													"value": "YYYY-MM-DD"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						},
+						{
+							"name": "Seeds",
+							"item": [
+								{
+									"name": "Project - Operadores aritmeticos",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"Operadores aritméticos\",\n    \"description\": \"Este conjunto de tests evaluará la capacidad del estudiante para usar los diferentes operadores aritméticos\",\n    \"is_public\": true,\n    \"activity\":4,\n    \"tests\": [\n        {\n            \"name\": \"operadores simples\",\n            \"tags\": [\n                \"Operadores aritméticos\",\n                \"Fundamentos de programación\"\n            ],\n            \"description\": \"El estudiante deberá crear una clase calculadora con los métodos sumar,restar,dividir y multiplicar. Solo el metodo dividir retornará un double, el resto retornará valores enteros\",\n            \"objective\": \"Evaluar los operadores matemáticos básicos\",\n            \"code\": \"private Calculadora test \\n @Before \\n   public void setUp(){ \\n  test = new Calculadora(); \\n }\",\n            \"test_cases\": [\n                {\n                    \"name\": \"Crear clase\",\n                    \"objective\": \"Evaluar si el estudiante sabe crear la clase\",\n                    \"topic\": [\n                    \t\"5d39cc1ffb9370034ec5640a\",\n                        \"5d39cc1ffb9370034ec5640c\"\n                    ],\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador suma!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido sumar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+sum+numbers+in+java\",\n                    \"code\": \"Calculadora prueba = new Calculadora()\"\n                },\n                {\n                    \"name\": \"Sumar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático suma\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador suma!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido sumar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+sum+numbers+in+java\",\n                    \"code\": \"assertEquals(3, test.sumar(1, 2));\"\n                },\n                {\n                    \"name\": \"Restar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático suma\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador resta!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido restar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+diff+numbers+in+java\",\n                    \"code\": \"assertEquals(1, test.restar(2,1));\"\n                },\n                {\n                    \"name\": \"Multiplicar simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático multiplicar\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador multiplicar!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido multiplicar dos numeros.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+multiply+numbers+in+java\",\n                    \"code\": \"assertEquals(6, test.multiplicar(2,3));\"\n                },\n                {\n                    \"name\": \"Dividir simple\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar el operador matemático dividir\",\n                    \"grade\": 2,\n                    \"successMessage\": \"Felicidades, sabes usar el operador dividir!\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, pero no has conseguido dividir dos numeros. Recuerda que tu función debe retornar un double.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+divide+numbers+in+java\",\n                    \"code\": \"assertEquals(2.5, test.dividir(5,2));\"\n                }\n            ]\n        },\n        {\n            \"name\": \"operadores encadenados\",\n            \"tags\": [\n                \"Operadores aritméticos\",\n                \"Fundamentos de programación\"\n            ],\n            \"description\": \"El estudiante deberá crear una clase calculadora con los métodos sumar,restar,dividir y multiplicar. Solo el metodo dividir retornará un double, el resto retornará valores enteros\",\n            \"objective\": \"Evaluar los operadores matemáticos básicos\",\n            \"code\": \"private Calculadora test \\n @Before \\n   public void setUp(){ \\n  test = new Calculadora(); \\n }\",\n            \"test_cases\": [\n                {\n                    \"name\": \"fuerza\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener la fuerza\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener la fuerza\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener la fuerza.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+force+in+java\",\n                    \"code\": \"assertEquals(3, test.getFuerza(1, 2));\"\n                },\n                {\n                    \"name\": \"trabajo\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener el trabajo\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener el trabajo\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener el trabajo.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+work+in+java\",\n                    \"code\": \"assertEquals(1, test.getTrabajo(2,1));\"\n                },\n                {\n                    \"name\": \"presion\",\n                    \"topic\": [\n                        \"5d39cc1ffb9370034ec5640c\",\n                        \"5d39cc1ffb9370034ec5640b\",\n                        \"5d39cc1ffb9370034ec56427\"\n                    ],\n                    \"objective\": \"Evaluar si el estudiante sabe usar los operadores matemáticos para obtener la presion\",\n                    \"grade\": 5,\n                    \"successMessage\": \"Felicidades, sabes usar los operadores matematicos para resolver obtener la presion\",\n                    \"successMessageLink\": \"http://www.google.com/search?q=how+to+make+complex+matemathics+operations+in+java\",\n                    \"failureMessage\": \"Buen intento, no has podido obtener la presion.\",\n                    \"failureMessageLink\": \"http://www.google.com/search?q=how+to+calculate+the+preasure+in+java\",\n                    \"code\": \"assertEquals(6, test.getPresion(2,3));\"\n                }\n            ]\n        }\n    ]\n}"
+										},
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"project",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Fake Project + Set project start",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"activity\":4,\n\t\"from\":\"2018-01-01\",\n\t\"minTests\" : 1,\n\t\"maxTests\" : 1,\n\t\"minTestCases\" : 5,\n\t\"maxTestCases\" : 5,\n\t\"topicsLimit\" : 10,\n\t\"type\":\"days\",\n\t\"each\":1\n}"
+										},
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/dev/createFakeProject/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"dev",
+												"createFakeProject",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Fake Project + Multiple projects",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"activity\":4,\n\t\"minTests\" : 1,\n\t\"maxTests\" : 3,\n\t\"minTestCases\" : 5,\n\t\"maxTestCases\" : 5,\n\t\"topicsLimit\" : 10,\n\t\"type\":\"days\",\n\t\"each\":1\n}"
+										},
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/dev/createFakeProject/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"dev",
+												"createFakeProject",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Create Fake Project + Multiple projects",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+											},
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"type": "text",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"activity\":4,\n\t\"minTests\" : 1,\n\t\"maxTests\" : 3,\n\t\"minTestCases\" : 5,\n\t\"maxTestCases\" : 5,\n\t\"topicsLimit\" : 10,\n\t\"type\":\"days\",\n\t\"each\":1,\n\t\"quantity\":5\n}"
+										},
+										"url": {
+											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/dev/createFakeProject/",
+											"protocol": "http",
+											"host": [
+												"{{HOST_API}}"
+											],
+											"port": "{{PORT_API}}",
+											"path": [
+												"api",
+												"v1",
+												"dev",
+												"createFakeProject",
+												""
+											]
+										}
+									},
+									"response": []
+								}
+							],
+							"_postman_isSubFolder": true
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "POO 1 - 2",
+					"item": [
+						{
+							"name": "Get Project + Teacher POO 1-2",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d30e78e1892fd0085ab3280"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Projects with populate + Teacher POO 1-2",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/?populate=tests&populate=tests.test_cases",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										""
+									],
+									"query": [
+										{
+											"key": "populate",
+											"value": "tests"
+										},
+										{
+											"key": "populate",
+											"value": "tests.test_cases"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Project + Teacher POO 1-2",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/5d30e78e1892fd0085ab3280",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"5d30e78e1892fd0085ab3280"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "topics",
+					"item": [
+						{
+							"name": "List Topic + Admin",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"topic",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "summaries",
+					"item": [
+						{
+							"name": "Create Summary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZGJjNTg4M2E1ZDk4ZTRjOTA5MTE2MGQiLCJpZCI6LTE1NzI2MjQ1MTU3NzIsInVzZXJuYW1lIjoiVG9rZW5WcGxKVW5pdDIiLCJ0eXBlIjoiYXBpX2NsaWVudCIsImlhdCI6MTU3MjYyNDUxNX0.vjLJk32kkf0g_Uz-saiRkA3Jwd316kCkRJkD2uz1YnI",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"moodle_user\": 3,\n    \"project\": \"5d3b4861bd5ecf01468d2975\",\n    \"data\": [\n        {\n            \"output\": \"output message\",\n            \"approved\": true,\n            \"test_case\": \"5d3b4861bd5ecf01468d2979\"\n        },\n        {\n            \"output\": \"output message\",\n            \"approved\": true,\n            \"test_case\": \"5d3b4861bd5ecf01468d2979\"\n        },\n        {\n            \"output\": \"output message\",\n            \"approved\": true,\n            \"test_case\": \"5d3b4861bd5ecf01468d2971\"\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/test/case/summary/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"test",
+										"case",
+										"summary",
+										""
+									]
+								},
+								"description": "Only users in the default/runner group are auth to it"
+							},
+							"response": []
+						},
+						{
+							"name": "[Exception] Create Summary",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_RUNNER}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"moodle_user\": 311,\n    \"data\": [\n        {\n            \"output\": \"output message\",\n            \"approved\": true\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/project/test/case/summary/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"project",
+										"test",
+										"case",
+										"summary",
+										""
+									]
+								},
+								"description": "Moodle user does not exist"
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Admin ",
+			"item": [
+				{
+					"name": "Token",
+					"item": [
+						{
+							"name": "Create Token for Runner + Admin",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"id": "057edb47-e15d-430b-aa23-6b23a2d46209",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"TOKEN_RUNNER\", jsonData.token);",
+											"postman.setEnvironmentVariable(\"LAST_CLIENT_RUNNER_CREATED\", jsonData._id);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"TokenVplJUnit2\",\n    \"description\": \"First application external token\",\n    \"exp\": 0\n}"
+								},
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/token/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"token",
+										""
+									]
+								},
+								"description": "Name should be alphanumeric"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Token for Runner + Admin",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/token/{{LAST_CLIENT_RUNNER_CREATED}}",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"token",
+										"{{LAST_CLIENT_RUNNER_CREATED}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Token for Runner + Admin",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/token/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"token",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Token for Runner + Admin",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/token/{{LAST_CLIENT_RUNNER_CREATED}}/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"token",
+										"{{LAST_CLIENT_RUNNER_CREATED}}",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Topics",
+					"item": [
+						{
+							"name": "Create Topic + Admin",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{TOKEN_ADMIN}}"
+									},
+									{
+										"key": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "[\n  {\n    \"name\": \"t000\",\n    \"description\": \"Construir clases\"\n  },\n  {\n    \"name\": \"t001\",\n    \"description\": \"Manejo de estructuras de control\"\n  },\n  {\n    \"name\": \"t002\",\n    \"description\": \"Manejo de ciclos\"\n  },\n  {\n    \"name\": \"t003\",\n    \"description\": \"Uso de recursividad\"\n  },\n  {\n    \"name\": \"t004\",\n    \"description\": \"Fundamentos de programacion\"\n  },\n  {\n    \"name\": \"t005\",\n    \"description\": \"Manejo de operadores aritméticos\"\n  },\n  {\n    \"name\": \"t006\",\n    \"description\": \"Manejo de precedencia de operadores\"\n  },\n  {\n    \"name\": \"t007\",\n    \"description\": \"Uso de tipo de variables\"\n  },\n  {\n    \"name\": \"t008\",\n    \"description\": \"Manejo de strings\"\n  },\n  {\n    \"name\": \"t009\",\n    \"description\": \"Topicos basicos de java\"\n  },\n  {\n    \"name\": \"t0010\",\n    \"description\": \"Topicos intermedios de java\"\n  },\n  {\n    \"name\": \"t0011\",\n    \"description\": \"Topicos avanzados de java\"\n  },\n  {\n    \"name\": \"t0012\",\n    \"description\": \"Encapsulamiento\"\n  },\n  {\n    \"name\": \"t0013\",\n    \"description\": \"Acoplamiento\"\n  },\n  {\n    \"name\": \"t0014\",\n    \"description\": \"Sobrecarga de metodos\"\n  },\n  {\n    \"name\": \"t0015\",\n    \"description\": \"Uso de clases abstractas\"\n  },\n  {\n    \"name\": \"t0016\",\n    \"description\": \"Creacion de clases abstractas\"\n  },\n  {\n    \"name\": \"t0017\",\n    \"description\": \"Uso de estructura de datos\"\n  },\n  {\n    \"name\": \"t0018\",\n    \"description\": \"Creacion de estructura de datos\"\n  },\n  {\n    \"name\": \"t0019\",\n    \"description\": \"Uso de Arboles\"\n  },\n  {\n    \"name\": \"t0020\",\n    \"description\": \"Uso de Arboles binarios\"\n  },\n  {\n    \"name\": \"t0021\",\n    \"description\": \"Uso de Arboles n-arios\"\n  },\n  {\n    \"name\": \"t0022\",\n    \"description\": \"Uso de Arboles roji-negros\"\n  },\n  {\n    \"name\": \"t0023\",\n    \"description\": \"Creación de Arboles\"\n  },\n  {\n    \"name\": \"t0024\",\n    \"description\": \"Creación de Arboles binarios\"\n  },\n  {\n    \"name\": \"t0025\",\n    \"description\": \"Creación de Arboles n-arios\"\n  },\n  {\n    \"name\": \"t0026\",\n    \"description\": \"Creación de Arboles roji-negros\"\n  },\n  {\n    \"name\": \"t0027\",\n    \"description\": \"Uso de enumeraciones\"\n  },\n  {\n    \"name\": \"t0028\",\n    \"description\": \"Uso de Listas\"\n  },\n  {\n    \"name\": \"t0029\",\n    \"description\": \"Uso de Listas doblemente enlazadas\"\n  },\n  {\n    \"name\": \"t0030\",\n    \"description\": \"Creación de Listas\"\n  },\n  {\n    \"name\": \"t0031\",\n    \"description\": \"Creación de Listas doblemente enlazadas\"\n  },\n  {\n    \"name\": \"t0032\",\n    \"description\": \"Uso de Vectores\"\n  },\n  {\n    \"name\": \"t0033\",\n    \"description\": \"Creacion de Vectores\"\n  },\n  {\n    \"name\": \"t0034\",\n    \"description\": \"Uso de Matrices\"\n  },\n  {\n    \"name\": \"t0035\",\n    \"description\": \"Creacion de Matrices\"\n  },\n  {\n    \"name\": \"t0036\",\n    \"description\": \"Uso de Hashmaps\"\n  },\n  {\n    \"name\": \"t0037\",\n    \"description\": \"Creación de Hashmaps\"\n  },\n  {\n    \"name\": \"t0038\",\n    \"description\": \"Uso de Colas\"\n  },\n  {\n    \"name\": \"t0039\",\n    \"description\": \"Creación de Colas\"\n  },\n  {\n    \"name\": \"t0040\",\n    \"description\": \"Uso de Pilas\"\n  },\n  {\n    \"name\": \"t0041\",\n    \"description\": \"Creación de Pilas\"\n  },\n  {\n    \"name\": \"t0042\",\n    \"description\": \"Uso de Interfaces\"\n  },\n  {\n    \"name\": \"t0043\",\n    \"description\": \"Creación de Interfaces\"\n  },\n  {\n    \"name\": \"t0044\",\n    \"description\": \"Uso de Herencia\"\n  },\n  {\n    \"name\": \"t0045\",\n    \"description\": \"Manejo de herencia y polimorfismo\"\n  }\n]"
+								},
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"topic",
+										""
+									]
+								},
+								"description": "Name should be alphanumeric"
+							},
+							"response": []
+						},
+						{
+							"name": "Get Topic + Admin",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/5d38ce0e60801801c3728b31",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"topic",
+										"5d38ce0e60801801c3728b31"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List Topic + Admin",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"topic",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Topic + Admin",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{TOKEN_ADMIN}}",
+										"type": "text"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/5d38d19107869e0286ce4835/",
+									"protocol": "http",
+									"host": [
+										"{{HOST_API}}"
+									],
+									"port": "{{PORT_API}}",
+									"path": [
+										"api",
+										"v1",
+										"topic",
+										"5d38d19107869e0286ce4835",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Single Auth + Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6e456016-1f33-4afc-8a57-ae1913434eef",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"TOKEN_ADMIN\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"single\":{\n\t\t\"email\":\"alejandromover92+vpladmin@gmail.com\",\n\t\t\"password\":\"Passw0rd*\"\n\t}\t\n}"
+						},
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/auth",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Topic + Admin",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{TOKEN_ADMIN}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/topic/list",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"topic",
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Students + Teacher POO 1-1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/students/",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"students",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Students + Teacher POO 1-2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/users/students/",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"students",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "courses",
+			"item": [
+				{
+					"name": "Get Activities + Teacher POO 1-1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{TOKEN_TEACHER_POO_1_1}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/course/activities",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"course",
+								"activities"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Activities + Teacher POO 1-2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "06adf08c-f832-445c-ad72-e5d65650a74b",
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"type": "text",
+								"value": "Bearer {{TOKEN_TEACHER_POO_1_2}}"
+							},
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/course/activities",
+							"protocol": "http",
+							"host": [
+								"{{HOST_API}}"
+							],
+							"port": "{{PORT_API}}",
+							"path": [
+								"api",
+								"v1",
+								"course",
+								"activities"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

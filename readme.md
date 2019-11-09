@@ -53,6 +53,10 @@ npm startdev
 ### Local
 npm startlocal
 
+# Endpoints
+
+At root project, there is a exported Postman collections.
+
 
 # Glosary
 
