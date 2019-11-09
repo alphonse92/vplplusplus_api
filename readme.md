@@ -15,11 +15,11 @@ This is the repository of VPL++ API. Its belongs to the VPL++ ecosystem.
 
 The configuration is made by enviroment variables. However if you dont want to use enviroment variables you can choose by config file.
 
-The folder `config/env` contains the folders that will be used by environmet. Each folder inside matchs with the environment. For example, the folder `config/env/custom`match with the enviroment called `custom`.
+The folder `config/env` contains the folders that will be used by environmet. Each folder inside matchs with the environment name. For example, the folder `config/env/custom` matchs with the enviroment called `custom`.
 
 The api will try to read the file `config.js`. 
 
-**warning:** The `config.js` file is more relevant than the enviroment variables. Its mean, the `config.js` file overwritte the enviroment varibles
+**warning:** The `config.js` file is more relevant than the enviroment variables. Its mean, the `config.js` file overwritte the enviroment variables
 
 ## Variables
 
