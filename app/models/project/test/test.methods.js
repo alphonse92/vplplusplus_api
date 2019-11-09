@@ -72,7 +72,7 @@ import org.junit.Before;
 // end of your imports
 
 @VplPlusPlusAnnotation
-@VplTestInfoAnnotation(project = "${project}")
+@VplTest(project = "${project}")
 public class ${className}{
   
   ${this.code}

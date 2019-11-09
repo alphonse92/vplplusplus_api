@@ -32,7 +32,7 @@ Schema.methods.compile = function () {
   const name = capitalize(camelCase(testCaseName))
   const code =
     `
-  @VplTestDescriptorAnnotation(id = "${id}")
+  @VplTestCase(id = "${id}")
   @Test(timeout = ${timeout})
   public void ${name}Test(){     
     ${this.code}
