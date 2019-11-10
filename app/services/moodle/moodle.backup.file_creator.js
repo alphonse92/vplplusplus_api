@@ -84,7 +84,9 @@ async function getActivityModuleDotXMLFromProjectDocument(ProjectDoc) {
       </execution_file>
       <execution_file id="">
         <name>execution_files/vpl_evaluate.sh</name>
-        <content>.vpl_run.sh</content>
+        <content>
+          java -jar VPLPlusPlus-jlib.jar
+        </content>
       </execution_file>
       <execution_file id="">
         <name>execution_files/vpl_evaluate.cases</name>
