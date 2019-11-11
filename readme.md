@@ -18,9 +18,9 @@ The configuration is made by enviroment variables. However if you dont want to u
 
 The folder `config/env` contains the folders that will be used by environmet. Each folder inside matchs with the environment name. For example, the folder `config/env/custom` matchs with the enviroment called `custom`.
 
-The api will try to read the file `config.js`. 
+The api will try to read the file `index.js`. 
 
-**warning:** The `config.js` file is more relevant than the enviroment variables. Its mean, the `config.js` file overwritte the enviroment variables
+**warning:** The `index.js` file is more relevant than the enviroment variables. Its mean, the `index.js` file overwritte the enviroment variables
 
 ## Variables
 
