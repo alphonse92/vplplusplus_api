@@ -62,4 +62,4 @@ nbproject/
 .idea
 cache/
 
-config/env/production/config.js
+config/env/**/*.js 
