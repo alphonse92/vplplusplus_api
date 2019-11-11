@@ -22,6 +22,42 @@ The api will try to read the file `index.js`.
 
 **warning:** The `index.js` file is more relevant than the enviroment variables. Its mean, the `index.js` file overwritte the enviroment variables
 
+
+```
+ ..root
+   |....config
+      |.........env
+              |........custom
+                      |........index.js
+```
+
+the index.js for a config file looks like:
+
+
+For example 
+
+```javascript
+module.exports = {
+	NODE_PATH: '.',
+	HOST: 'localhost',
+	PORT: '1337',
+	NODE_ENV: 'development',
+	SYSTEM_CORES: '1',
+	MONGO: 'mongodb://vpladmin:secret@localhost:27017/vpl-local?authSource=admin',
+	MYSQL: 'mysql://root:root@localhost:3306/moodle?connectionAttributes=program_name:vplplusplus_api',
+	MOODLE_HOST: 'localhost',
+	MOODLE_PORT: '8080',
+	MOODLE_DB_PREFIX: 'mdl_',
+	MOODLE_AUTH_TYPE: 'saltedcrypt',
+	GOOGLE_CLIENT_ID: 'clientid.apps.googleusercontent.com',
+	INIT_USER_TYPE: 'reset',
+	TOKEN_SECRET: 'secret',
+	TOKEN_EXP_MINUTES: 'NEVER',
+	CACHE_FOLDER: '/tmp/vplplusplus',
+	OPEN_DEVELOPMENT_ENDPOINT:"true"
+};
+```
+
 ## Variables
 
 1. HOST: The domain where the api is allocated.

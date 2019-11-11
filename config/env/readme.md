@@ -18,7 +18,7 @@ module.exports = {
 	MOODLE_PORT: '8080',
 	MOODLE_DB_PREFIX: 'mdl_',
 	MOODLE_AUTH_TYPE: 'saltedcrypt',
-	GOOGLE_CLIENT_ID: '126760867544-k1es3tqiho46b0g831cmsvgokvl0npqu.apps.googleusercontent.com',
+	GOOGLE_CLIENT_ID: 'clientid.apps.googleusercontent.com',
 	INIT_USER_TYPE: 'reset',
 	TOKEN_SECRET: 'secret',
 	TOKEN_EXP_MINUTES: 'NEVER',
