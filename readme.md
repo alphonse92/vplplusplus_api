@@ -5,7 +5,8 @@ This is the repository of VPL++ API. Its belongs to the VPL++ ecosystem.
 # Requeriments 
 
 1. Node v8 or greater
-2. npx
+2. Babel-node not required, it will installed as dev dependency.
+3. npx
 
 # Installation
 
@@ -40,23 +41,35 @@ The api will try to read the file `config.js`.
 15. OPEN_DEVELOPMENT_ENDPOINT: Potentially dangerous. Its exposes a development endpoint.
 
 
-# Launch
+# Running
 
 After you set the enviroment variables by each enviroment. You can run each enviroment running the next commands
 
+### From scratch
+
+Before execute the server, you can define the environment if you set the env var **NODE_ENV**
+
+##### If you has not babel
+`NODE_PATH=. node node_modules/@babel/node/bin/babel-node.js server.js`
+
+##### If you has not babel but has npx
+`NODE_PATH=. npx babel-node server.js`
+
+##### If you has babel
+`NODE_PATH=. babel-node server.js`
+
 ### Production
-npm start
+`npm start`
 
 ### Development
-npm startdev
+`npm startdev`
 
 ### Local
-npm startlocal
+`npm startlocal`
 
 # Endpoints
 
 At root project, there is a exported Postman collections.
-
 
 # Glosary
 
