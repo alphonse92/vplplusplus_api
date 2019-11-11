@@ -39,7 +39,7 @@ The api will try to read the file `config.js`.
 13. TOKEN_EXP_MINUTES: It could be `NEVER` or a number. Its the time in minutes that the tokens will expires for the users sessions
 14. CACHE_FOLDER: Host url for caching
 15. OPEN_DEVELOPMENT_ENDPOINT: Potentially dangerous. Its exposes a development endpoint.
-
+16. SHOW_CONFIG_AT_STARTUP: print the current configuration that the api take. Only admit true.
 
 # Running
 

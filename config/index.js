@@ -75,15 +75,27 @@ const getConfig = envVars => ({
 	paths: { cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices }
 });
 
-const getFileConfig = () => require('./env/' + (process.env.NODE_ENV ? process.env.NODE_ENV : 'local') + '/config')
+const getFileConfig = () => require('./env/' + (process.env.NODE_ENV ? process.env.NODE_ENV : 'local'))
 
 module.exports = (function () {
-	const fileconfig = getFileConfig();
-	const config =getConfig({...process.env ,...fileconfig})
+
+	let fileconfig = {}
+
+	try {
+		fileconfig = getFileConfig()
+	} catch (e) { }
+
+	const config = getConfig({ ...process.env, ...fileconfig })
 
 	if (!config.security.token) throw new Error("God, staph, ¡ token security is required ! ");
 
 	config.client.email = config.client.username + "@" + config.web.host;
+
+	process.env.SHOW_CONFIG_AT_STARTUP
+		&& process.env.SHOW_CONFIG_AT_STARTUP
+			.toString()
+			.toLocaleLowerCase() === "true"
+		&& console.log(config)
 
 	return config;
 })();
