@@ -85,7 +85,8 @@ async function getActivityModuleDotXMLFromProjectDocument(ProjectDoc) {
       <execution_file id="">
         <name>execution_files/vpl_evaluate.sh</name>
         <content>
-          vpl
+          . vpl_environment.
+          /usr/bin/vpl $(pwd)/
         </content>
       </execution_file>
       <execution_file id="">
