@@ -52,7 +52,7 @@ class SummaryService extends BaseService {
     const ProjectDoc = await ProjectService.get(undefined, { _id: project_id })
     const TeacherOfProject = await UserService.getModel().findById({ _id: ProjectDoc.owner })
 
-    if (ProjecTeacherOfProject.id.toSring() === moodle_user.toString()) throw new Util.Error(Errors.teacher_cant_create_summary_for_him_projects)
+    if (TeacherOfProject.id.toSring() === moodle_user.toString()) throw new Util.Error(Errors.teacher_cant_create_summary_for_him_projects)
 
     const { _id: project, activity } = ProjectDoc
     const { valideEnroledStudents = true, throwExceptions = true } = opts;
