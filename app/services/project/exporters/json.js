@@ -4,7 +4,7 @@ const Config = global.Config;
 module.exports = (ProjectDoc) => {
   const Project = require(Config.paths.models + "/project/project/project.mongo");
   const Test = require(Config.paths.models + "/project/test/test.mongo");
-  const TestCase = require(Config.paths.models + "/project/testCase/testCase.mongo");
+  const TestCase = require(Config.paths.models + "/project/testcase/testCase.mongo");
 
   const project = ProjectDoc
   const { tests: TestObjects = [] } = project

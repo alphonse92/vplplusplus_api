@@ -3,7 +3,7 @@ import { pick } from 'lodash'
 const Config = global.Config;
 const BaseService = require(Config.paths.services + '/service');
 const Errors = require(Config.paths.errors + '/project.test.case.errors');
-const TestCase = require(Config.paths.models + "/project/testCase/testCase.mongo");
+const TestCase = require(Config.paths.models + "/project/testcase/testCase.mongo");
 const ProjectService = require(Config.paths.services + '/project/project.service');
 const Util = require(Config.paths.utils);
 
