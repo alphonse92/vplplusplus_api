@@ -20,5 +20,12 @@ module.exports = {
 			message: "The test case already solved for you"
 		}
 	},
+	teacher_cant_create_summary_for_him_projects: {
+		http_code: 202,
+		error: {
+			code: -1,
+			message: "Teacher cant participate in him projects"
+		}
+	},
 
 }

@@ -33,7 +33,7 @@ Schema.methods.compile = function () {
   const code =
     `
   @VplTestCase(id = "${id}")
-  @Test(timeout = ${timeout})
+  @Test()
   public void ${name}Test(){     
     ${this.code}
   }

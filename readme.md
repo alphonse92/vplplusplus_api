@@ -146,31 +146,31 @@ public class CalculadoraTest{
     // the id links this method with a test case in database
     id = "5dbde95d22b5259ca46f35ab"
   )
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void testInstancia(){
     new Calculadora();
   }
 
   @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void testSumar(){
     assertEquals(3, test.sumar(1, 2));
   }
 
   @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void testRestar(){
     assertEquals(-1, test.restar(1, 2));
   }
 
   @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void testMultiplicar(){
     assertEquals(3, test.multiplicar(1, 2));
   }
 
   @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void testDividir(){
     double x = test.dividir(2, 2);
     assertEquals(1,x ,0);
@@ -179,12 +179,12 @@ public class CalculadoraTest{
   // the methods below arent a vpl ++ test cases
   // b/c those methods does not have the @VplTestCase annotattion
   // and will be omited by the vpl + runner
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void SingleJUnitMethod(){
     assertEquals(2, test.multiplicar(1, 2));
   }
   
-  @Test(timeout = Configurator.TIMEOUT_VERY_LONG)
+  @Test()
   public void SingleJUnitMethodThatFails(){
     assertEquals(3, test.multiplicar(1, 2));
   }

@@ -50,6 +50,9 @@ class SummaryService extends BaseService {
 
     const ProjectService = require('./project.service');
     const ProjectDoc = await ProjectService.get(undefined, { _id: project_id })
+
+    if(ProjectDoc.owner.toString() === project_id) throw new Error("asdasd")
+
     const { _id: project, activity } = ProjectDoc
     const { valideEnroledStudents = true, throwExceptions = true } = opts;
 

@@ -58,7 +58,6 @@ export async function compile() {
 */
 
 import org.junit.Test;
-import VPLPluPlusCore.Configurator;
 import VPLPluPlusCore.annotations.VplPlusPlusAnnotation;
 import VPLPluPlusCore.annotations.VplTestInfoAnnotation;
 import VPLPluPlusCore.annotations.VplTestDescriptorAnnotation;
