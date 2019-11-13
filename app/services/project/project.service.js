@@ -85,15 +85,6 @@ class ProjectService extends BaseService {
 		// prevent modify project if it has summaries
 		if (isUpdate) await this.validateHasSummaries(project)
 
-		if (!activity_id) throw new Util.Error(Errors.activity_does_selected)
-
-
-		const CourseModule = new CourseServiceClass()
-		const activities = await CourseModule.getMyVPLActivitiesWhereImTheTeacher(CurrentUser)
-		const activity = activities.find(({ course_module_id }) => course_module_id === activity_id)
-
-		if (!activity) throw new Util.Error(Errors.activity_does_not_exist)
-
 		const project = opts.forceSetAttributes
 			? { ...payloadProject }
 			: pick(payloadProject, Project.getEditableFields())

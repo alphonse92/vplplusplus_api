@@ -26,7 +26,6 @@ module.exports = {
 		},
 		activity: {
 			type: "Number",
-			required: true,
 			_editable: true,
 		},
 		owner: {

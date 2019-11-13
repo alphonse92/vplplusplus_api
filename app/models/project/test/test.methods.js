@@ -41,11 +41,11 @@ export async function compile() {
     tags,
     owner
   } = this
-  const className = capitalize(camelCase(name))
-  const filename = `${className}Test.java`
+  const className = `capitalize(camelCase(name))Test`
+  const filename = `${className}.java`
 
   const code =
-    `**
+    `/**
 * VplJUnit version 1.0
 * This class was generated automatically, and adds 
 * the VPL++ api to improve your tests with extra functionalities.
@@ -57,20 +57,20 @@ export async function compile() {
 * If you need help please contact to the Vpl++ creator
 */
 
-import org.junit.Test;
-import VPLPluPlusCore.annotations.VplPlusPlusAnnotation;
-import VPLPluPlusCore.annotations.VplTestInfoAnnotation;
-import VPLPluPlusCore.annotations.VplTestDescriptorAnnotation;
+import VPLPluPlusCore.annotations.VplPlusPlus;
+import VPLPluPlusCore.annotations.VplTest;
+import VPLPluPlusCore.annotations.VplTestCase;
 
 // set here your imports
 // YOU NEED TO SET YOUR IMPORTS MANUALLY 
 
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 import org.junit.Before;
 
 // end of your imports
 
-@VplPlusPlusAnnotation
+@VplPlusPlus
 @VplTest(project = "${project}")
 public class ${className}{
   
