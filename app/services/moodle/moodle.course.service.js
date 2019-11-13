@@ -99,6 +99,7 @@ class CourseService extends MoodleService {
       WHERE 
         context.id in (?)
         AND activity.module = ${vpl.id}
+        AND activity.deletioninprogress=0
     `
     const preparedValues = [contextAsATeacher.join(',')]
     return super.execute(sql, preparedValues, opts)
