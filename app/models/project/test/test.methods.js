@@ -41,7 +41,7 @@ export async function compile() {
     tags,
     owner
   } = this
-  const className = `capitalize(camelCase(name))Test`
+  const className = `${capitalize(camelCase(name))}Test`
   const filename = `${className}.java`
 
   const code =
