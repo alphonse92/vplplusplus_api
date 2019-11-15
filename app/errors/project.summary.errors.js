@@ -27,5 +27,18 @@ module.exports = {
 			message: "Teacher cant participate in him projects"
 		}
 	},
-
+	teacher_activity_no_setted: {
+		http_code: 400,
+		error: {
+			code: -1,
+			message: "Please set the activity in your project. Login in VPL ++ client, select this project, assing an activity to it and save. Students can't evaluate them activities"
+		}
+	},
+	student_activity_no_setted: {
+		http_code: 400,
+		error: {
+			code: -1,
+			message: "Can't save the submission results, project is not related to this activity. Please report it to the teacher, he knows how to resolve it."
+		}
+	},
 }
