@@ -29,6 +29,7 @@ module.exports = {
 			_editable: true,
 		},
 		exported: {
+			type: "Boolean",
 			default: false,
 			_editable: false,
 		},
