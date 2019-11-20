@@ -143,6 +143,8 @@ class ProjectService extends BaseService {
 				}
 			}
 		])
+		ProjectDoc.exported = true
+		await ProjectDoc.save();
 		return exporter(ProjectDoc)
 	}
 }
