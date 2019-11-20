@@ -26,13 +26,13 @@ Util.mongoose.addStatics(Schema, ModelSchema)
 Schema.methods.compile = function () {
   const {
     name: testCaseName,
-    timeout,
+    grade,
     _id: id
   } = this
   const name = capitalize(camelCase(testCaseName))
   const code =
     `
-  @VplTestCase(id = "${id}")
+  @VplTestCase(id = "${id}" , grade = "${grade}" )
   @Test()
   public void ${name}Test(){     
     ${this.code}
