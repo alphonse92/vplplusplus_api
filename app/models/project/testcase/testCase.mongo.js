@@ -32,7 +32,7 @@ Schema.methods.compile = function () {
   const name = capitalize(camelCase(testCaseName))
   const code =
     `
-  @VplTestCase(id = "${id}" , grade = "${grade}" )
+  @VplTestCase(id = "${id}" , grade = ${grade} )
   @Test()
   public void ${name}Test(){     
     ${this.code}
