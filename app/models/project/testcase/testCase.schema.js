@@ -42,8 +42,8 @@ module.exports = {
 			}],
 			required: true,
 			validate: {
-				validator: function (v) { return v.length > 0 },
-				message: 'Test schema requires at least one topic'
+				validator: function (v) { return v.length > 0 && v.length <= 3 },
+				message: 'Test schema requires at least one topic. Maximum three.'
 			},
 			_editable: true
 		},
