@@ -28,6 +28,10 @@ module.exports = {
 			type: "Number",
 			_editable: true,
 		},
+		exported: {
+			default: false,
+			_editable: false,
+		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
