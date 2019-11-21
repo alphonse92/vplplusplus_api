@@ -17,7 +17,7 @@ module.exports = {
 		},
 		description: {
 			type: "String",
-			required: true,
+			required: [true, 'Description is required'],
 			_editable: true
 		},
 		is_public: {

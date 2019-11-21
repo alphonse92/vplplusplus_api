@@ -101,7 +101,7 @@ class CourseService extends MoodleService {
         AND activity.module = ${vpl.id}
         AND activity.deletioninprogress=0
     `
-    const preparedValues = [contextAsATeacher.join(',')]
+    const preparedValues = [contextAsATeacher]
     return super.execute(sql, preparedValues, opts)
   }
 
@@ -120,7 +120,7 @@ class CourseService extends MoodleService {
         INNER JOIN ${TABLE_PREFIX}role role ON ra.roleid = role.id
       WHERE role.archetype in (?) AND ra.contextid in (?)
     `
-    const preparedValues = [archetype, contexts.join(',')]
+    const preparedValues = [archetype, contexts]
 
     return super.execute(sql, preparedValues, opts)
 
