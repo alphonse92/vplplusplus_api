@@ -70,7 +70,8 @@ const getConfig = envVars => ({
 	},
 	web: {
 		host: envVars.HOST || "localhost",
-		port: envVars.PORT || "1337"
+		port: envVars.PORT || "1337",
+		public: envVars.PUBLIC || "vplapi"
 	},
 	paths: { cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices }
 });

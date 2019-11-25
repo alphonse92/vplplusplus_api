@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const Config = global.Config;
 const Util = require(Config.paths.utils);
-const Base = '/' + Config.app.apiPath + '/' + Config.app.version + '/' + "policies";
+const Base = '/' + Config.web.public + '/' + Config.app.version + '/' + "policies";
 const PolicyCtrl = require(Config.paths.controllers + "/policy.controller");
 
 Router.get("/health", (req, res) => res.send("ok"));

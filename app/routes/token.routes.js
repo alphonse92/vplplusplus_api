@@ -1,7 +1,7 @@
 const Config = global.Config;
 const Router = require("express").Router();
 const Util = require(Config.paths.utils);
-const Base = '/' + Config.app.apiPath + '/' + Config.app.version + '/' + "token";
+const Base = '/' + Config.web.public + '/' + Config.app.version + '/' + "token";
 const TokenController = require(Config.paths.controllers + "/token.controller");
 
 Router.get("/health", (req, res) => res.send("ok"));

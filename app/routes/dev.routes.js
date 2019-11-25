@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const Config = global.Config;
 const Util = require(Config.paths.utils);
-const Base = '/' + Config.app.apiPath + '/' + Config.app.version + '/' + "dev";
+const Base = '/' + Config.web.public + '/' + Config.app.version + '/' + "dev";
 const DevController = require(Config.paths.controllers + "/development.controller");
 
 if (Config.app.open_development_endpoint) {

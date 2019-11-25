@@ -13,7 +13,7 @@ export const listStudents = {
   description: `Policy for list the teacher students ${USER_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `GET/api/v1/${USER_RESOURCE_NAME}s/students`, scopes: [`listStudents`] }
+    { path: `GET/${Config.web.public}/v1/${USER_RESOURCE_NAME}s/students`, scopes: [`listStudents`] }
   ]
 };
 
@@ -25,7 +25,7 @@ export const listToken = {
   description: `Policy for list an application ${TOKEN_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `GET/api/v1/${TOKEN_RESOURCE_NAME}/:id?`, scopes: [`listToken`] }
+    { path: `GET/${Config.web.public}/v1/${TOKEN_RESOURCE_NAME}/:id?`, scopes: [`listToken`] }
   ]
 };
 
@@ -37,7 +37,7 @@ export const createToken = {
   description: `Policy for create an application ${TOKEN_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `POST/api/v1/${TOKEN_RESOURCE_NAME}/`, scopes: [`createToken`] }
+    { path: `POST/${Config.web.public}/v1/${TOKEN_RESOURCE_NAME}/`, scopes: [`createToken`] }
   ]
 };
 
@@ -49,7 +49,7 @@ export const deleteToken = {
   description: `Policy for delete an application ${TOKEN_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `DELETE/api/v1/${TOKEN_RESOURCE_NAME}/:id`, scopes: [`deleteToken`] }
+    { path: `DELETE/${Config.web.public}/v1/${TOKEN_RESOURCE_NAME}/:id`, scopes: [`deleteToken`] }
   ]
 };
 
@@ -62,7 +62,7 @@ export const createTopic = {
   description: `Policy for create a ${TOPIC_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `POST/api/v1/${TOPIC_RESOURCE_NAME}/`, scopes: [`createTopic`] }
+    { path: `POST/${Config.web.public}/v1/${TOPIC_RESOURCE_NAME}/`, scopes: [`createTopic`] }
   ]
 }
 export const deleteTopic = {
@@ -73,7 +73,7 @@ export const deleteTopic = {
   description: `Policy for delete a ${TOPIC_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `DELETE/api/v1/${TOPIC_RESOURCE_NAME}/:id`, scopes: [`deleteTopic`] }
+    { path: `DELETE/${Config.web.public}/v1/${TOPIC_RESOURCE_NAME}/:id`, scopes: [`deleteTopic`] }
   ]
 }
 export const listTopic = {
@@ -84,6 +84,6 @@ export const listTopic = {
   description: `Policy for list the ${TOPIC_RESOURCE_NAME}`,
   extends: [], depends: [],
   actions: [
-    { path: `GET/api/v1/${TOPIC_RESOURCE_NAME}/list/:id?`, scopes: [`listTopic`] }
+    { path: `GET/${Config.web.public}/v1/${TOPIC_RESOURCE_NAME}/list/:id?`, scopes: [`listTopic`] }
   ]
 }

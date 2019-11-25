@@ -1,7 +1,7 @@
 const Router = require("express").Router();
 const Config = global.Config;
 const Util = require(Config.paths.utils);
-const Base = '/' + Config.app.apiPath + '/' + Config.app.version + '/' + "users";
+const Base = '/' + Config.web.public + '/' + Config.app.version + '/' + "users";
 const UserCtr = require(Config.paths.controllers + "/user.controller");
 
 
