@@ -1,5 +1,5 @@
 const Config = global.Config;
-// const errors = require(Config.paths.errors + "/test.errors");
+const LANG = require(Config.paths.lang)
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
 const validators = require(Config.paths.utils).validators;
@@ -18,24 +18,24 @@ module.exports = {
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: true,
+			required: [true,LANG.ES.PROJECT_REQUIRED],
 			index: true
 		},
 		test_case: {
 			type: Schema.Types.ObjectId,
 			ref: "TestCase",
-			required: true,
+			required: [true,LANG.ES.TEST_CASES_REQUIRED],
 			index: true
 		},
 		moodle_user: {
 			type: "Number",
-			required: true,
+			required: [true,LANG.ES.MOODLE_USER_REQUIRED],
 			index: true
 		},
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
+			required: [true,LANG.ES.USER_REQUIRED],
 			index: true
 		},
 		approved: {

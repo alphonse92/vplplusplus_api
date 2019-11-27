@@ -1,4 +1,5 @@
 const Config = global.Config;
+const LANG = require(Config.paths.lang)
 const Util = require(Config.paths.utils)
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
@@ -12,12 +13,12 @@ module.exports = {
 		},
 		name: {
 			type: "String",
-			required: true,
+			required: [true, LANG.ES.PROJECT_NAME_REQUIRED],
 			_editable: true
 		},
 		description: {
 			type: "String",
-			required: [true, 'Description is required'],
+			required: [true, LANG.ES.PROJECT_DESCRIPTION],
 			_editable: true
 		},
 		is_public: {

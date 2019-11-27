@@ -1,6 +1,7 @@
+const LANG = require(Config.paths.lang)
+
 import { capitalize, camelCase } from 'lodash'
 import * as Statics from './test.statics'
-
 /**
  * Instance methods for the testCase mongo model.
  * 
@@ -45,31 +46,14 @@ export async function compile() {
   const filename = `${className}.java`
 
   const code =
-    `/**
-* VplJUnit version 1.0
-* This class was generated automatically, and adds 
-* the VPL++ api to improve your tests with extra functionalities.
-* 
-* You can modify this class manually, please review the
-* VplJunit runner documentation of vpl ++  to know
-* how to improve your JUnit tests with vpl
-* 
-* If you need help please contact to the Vpl++ creator
-*/
-
+    `
+${LANG.ES.TEST_CLASS_CODE_HEADER}
 import VPLPluPlusCore.annotations.VplPlusPlus;
 import VPLPluPlusCore.annotations.VplTest;
 import VPLPluPlusCore.annotations.VplTestCase;
-
-// set here your imports
-// YOU NEED TO SET YOUR IMPORTS MANUALLY 
-
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.Before;
-
-// end of your imports
-
 @VplPlusPlus
 @VplTest(project = "${project}")
 public class ${className}{

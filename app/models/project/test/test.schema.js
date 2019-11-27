@@ -1,6 +1,7 @@
 const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
+const LANG = require('../../../lang/es')
 // const errors = require(Config.paths.errors + "/test∫.errors");
 const validators = require(Config.paths.utils).validators;
 module.exports = {
@@ -13,7 +14,7 @@ module.exports = {
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: true,
+			required: [true,LANG.PROJECT_REQUIRED],
 			_readOnly: true,
 			index: true
 		},

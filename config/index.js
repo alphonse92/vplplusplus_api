@@ -10,7 +10,7 @@ const routes = app + "/routes";
 const models = app + "/models";
 const services = app + "/services";
 const errors = app + "/errors";
-const lang = app + "/language";
+const lang = app + "/lang";
 const webservices = app + "/webservices";
 
 const getConfig = envVars => ({
@@ -73,7 +73,7 @@ const getConfig = envVars => ({
 		port: envVars.PORT || "1337",
 		public: envVars.PUBLIC || "vplapi"
 	},
-	paths: { cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices }
+	paths: { lang,cwd, app, config, public: publicPath, utils, controllers, db, routes, models, services, errors, lang, webservices }
 });
 
 const getFileConfig = () => require('./env/' + (process.env.NODE_ENV ? process.env.NODE_ENV : 'local'))
