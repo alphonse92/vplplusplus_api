@@ -65,7 +65,7 @@ export const TOPIC_DESCRIPTION_MAX_LENGTH = "La descripción del tópico debe te
 export const TOPIC_OWNER_REQUIRED = "Dueño del tópico requerido"
 export const TOPIC_DOES_NOT_EXIST = "Tópico no existe"
 export const TOPIC_ALREADY_EXIST = "Ya existe ese tópico"
-export const TOPIC_HAS_SUMMARIES = "Existen entregas de estudiantes a casos de pruebas relacionados a ese tópico"
+export const TOPIC_HAS_SUMMARIES = "No se puede eliminar ese tópic. Existen entregas de estudiantes a casos de pruebas relacionados a ese tópico. Para eliminarlo por favor elimine cada proyecto o caso de prueba que esté relacionado con éste tópico."
 
 
 
