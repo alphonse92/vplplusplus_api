@@ -35,7 +35,7 @@ Debajo puedes añadir tus imports.
 export const TEST_CASE_OWNER_REQUIRED = "Creador del caso de prueba requerido"
 export const TEST_CASE_PROJECT_REQUIRED = "Proyecto del caso de prueba requerido"
 export const TEST_CASE_TEST_REQUIRED = "Prueba del caso de prueba es requerido"
-export const TEST_CASE_TOPIC_REQUIRED = "Topicos de la prueba requeridos"
+export const TEST_CASE_TOPIC_REQUIRED = "Tópicos de la prueba requeridos"
 export const TEST_CASE_TOPIC_RANGE = "Solo puedes elegir entre 1 y 3 tópicos"
 export const TEST_CASE_NAME_REQUIRED = "Nombre del caso de prueba requerido"
 export const TEST_CASE_OBJECTIVE_REQUIRED = "Objetivo del caso de prueba requerido"
@@ -64,7 +64,7 @@ export const TOPIC_DESCRIPTION_REQUIRED = "Descripción del tópico requerido"
 export const TOPIC_DESCRIPTION_MAX_LENGTH = "La descripción del tópico debe tener máxico 255 caracteres"
 export const TOPIC_OWNER_REQUIRED = "Dueño del tópico requerido"
 export const TOPIC_DOES_NOT_EXIST = "Tópico no existe"
-export const TOPIC_ALREADY_EXIST = "Ya existe ese topico"
+export const TOPIC_ALREADY_EXIST = "Ya existe ese tópico"
 export const TOPIC_HAS_SUMMARIES = "Existen entregas de estudiantes a casos de pruebas relacionados a ese tópico"
 
 
