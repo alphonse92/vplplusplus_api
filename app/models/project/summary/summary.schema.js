@@ -18,24 +18,24 @@ module.exports = {
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: [true,LANG.ES.PROJECT_REQUIRED],
+			required: [true, LANG.ES.PROJECT_REQUIRED],
 			index: true
 		},
 		test_case: {
 			type: Schema.Types.ObjectId,
 			ref: "TestCase",
-			required: [true,LANG.ES.TEST_CASES_REQUIRED],
+			required: [true, LANG.ES.TEST_CASES_REQUIRED],
 			index: true
 		},
 		moodle_user: {
 			type: "Number",
-			required: [true,LANG.ES.MOODLE_USER_REQUIRED],
+			required: [true, LANG.ES.PROJECT_MOODLE_USER_REQUIRED],
 			index: true
 		},
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: [true,LANG.ES.USER_REQUIRED],
+			required: [true, LANG.ES.PROJECT_USER_REQUIRED],
 			index: true
 		},
 		approved: {

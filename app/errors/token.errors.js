@@ -1,58 +1,59 @@
+const LANG = require('../lang/es')
 module.exports = {
 	user_doesnt_exist: {
 		http_code: 404,
 		error: {
 			code: -1,
-			message: "User does not exist"
+			message: LANG.USER_DOES_NOT_EXIST_IN_MOODLE
 		}
 	},
 	user_suspended: {
 		http_code: 401,
 		error: {
 			code: -2,
-			message: "You are suspended. Please contact with your teacher or the system administrator"
+			message: LANG.LOGIN_USER_SUSPENDED
 		}
 	},
 	token_not_valid: {
 		http_code: 400,
 		error: {
 			code: -3,
-			message: "token isnt valid"
+			message: LANG.LOGIN_TOKEN_INVALID
 		}
 	},
 	login_fail: {
 		http_code: 400,
 		error: {
 			code: -4,
-			message: "Wrong username, email or password"
+			message: LANG.LOGIN_WRONG
 		}
 	},
 	client_doesnt_exist: {
 		http_code: 404,
 		error: {
 			code: -5,
-			message: "Client doesnt exist"
+			message: LANG.LOGIN_CLIENT_DOES_NOT_EXIST
 		}
 	},
 	token_doesnt_exist: {
 		http_code: 404,
 		error: {
 			code: -6,
-			message: "Token doesnt exist"
+			message: LANG.LOGIN_TOKEN_DOES_NOT_EXIST
 		}
 	},
 	user_clients_already_exists: {
 		http_code: 401,
 		error: {
 			code: -7,
-			message: "Cant create the token because the token name is the same than a username of a user."
+			message: LANG.LOGIN_CLIENT_ALREADY_EXIST
 		}
 	},
 	required_fields: {
 		http_code: 400,
 		error: {
 			code: -8,
-			message: "Please set a name and description"
+			message: LANG.TOKEN_MISSING_FIELDS
 		}
 	}
 }

@@ -1,8 +1,8 @@
 const Config = global.Config;
-const Util = require(Config.paths.utils)
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
-const validators = require(Config.paths.utils).validators;
+const LANG = require('../../lang/es')
+
 module.exports = {
 	name: "Token",
 	schema: {
@@ -12,31 +12,31 @@ module.exports = {
 		},
 		name: {
 			type: "String",
-			required: true,
+			required: [ true , LANG.TOKEN_NAME ] ,
 			maxlength: 255,
 			_readOnly: true
 		},
 		description: {
 			type: "String",
-			required: true,
+			required: [ true , LANG.TOKEN_DESCRIPTION_REQUIRED ] ,
 			maxlength: 255,
 			_readOnly: true
 		},
 		token: {
 			type: "String",
-			required: true,
+			required: [ true , LANG.TOKEN_TOKEN_REQUIRED ] ,
 			_readOnly: true
 		},
 		user: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
+			required: [ true , LANG.TOKEN_USER_REQUIRED ] ,
 			_readOnly: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
+			required: [ true , LANG.TOKEN_OWNER_REQUIRED ] ,
 			_readOnly: true
 		}
 	},

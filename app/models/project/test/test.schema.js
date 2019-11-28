@@ -2,7 +2,7 @@ const Config = global.Config;
 const mongoose = require(Config.paths.db + "/mongo");
 const Schema = mongoose.Schema;
 const LANG = require('../../../lang/es')
-// const errors = require(Config.paths.errors + "/test∫.errors");
+
 const validators = require(Config.paths.utils).validators;
 module.exports = {
 	name: "Test",
@@ -14,13 +14,13 @@ module.exports = {
 		project: {
 			type: Schema.Types.ObjectId,
 			ref: "Project",
-			required: [true,LANG.PROJECT_REQUIRED],
+			required: [true, LANG.PROJECT_REQUIRED],
 			_readOnly: true,
 			index: true
 		},
 		name: {
 			type: 'String',
-			required: true,
+			required: [ true, LANG.TEST_NAME_REQUIRED ],
 			_editable: true
 		},
 		tags: {
@@ -29,12 +29,12 @@ module.exports = {
 		},
 		description: {
 			type: 'String',
-			required: true,
+			required: [ true, LANG.TEST_DESCRIPTION_REQUIRED ],
 			_editable: true
 		},
 		objective: {
 			type: 'String',
-			required: true,
+			required: [ true, LANG.TEST_OBJECTIVE_REQUIRED ],
 			_editable: true
 		},
 		maxGrade: {
@@ -44,13 +44,13 @@ module.exports = {
 		},
 		code: {
 			type: 'String',
-			required: true,
+			required: [ true, LANG.TEST_CODE_REQUIRED ],
 			_editable: true
 		},
 		owner: {
 			type: Schema.Types.ObjectId,
 			ref: "User",
-			required: true,
+			required: [ true, LANG.TEST_OWNER_REQUIRED ],
 			_readOnly: true,
 			index: true
 		}
