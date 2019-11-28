@@ -59,7 +59,7 @@ export const TOKEN_MISSING_FIELDS = "Nombre y descripción del token requeridos"
 
 export const TOPIC_NAME_UNIQUE = "Ya existe un tópico llamado así"
 export const TOPIC_NAME_REQUIRED = "Nombre del tópico requerido"
-export const TOPIC_NAME_MAX_LENGTH = "El nombre del tipico debe tener máximo 10 caracteres"
+export const TOPIC_NAME_MAX_LENGTH = "El nombre del tópico debe tener máximo 10 caracteres"
 export const TOPIC_DESCRIPTION_REQUIRED = "Descripción del tópico requerido"
 export const TOPIC_DESCRIPTION_MAX_LENGTH = "La descripción del tópico debe tener máxico 255 caracteres"
 export const TOPIC_OWNER_REQUIRED = "Dueño del tópico requerido"
