@@ -34,7 +34,7 @@ Schema.methods.compile = function () {
     `
   @VplTestCase(id = "${id}" , grade = ${grade} )
   @Test()
-  public void ${name}Test(){     
+  public void ${name}(){     
     ${this.code}
   }
 `
