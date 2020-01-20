@@ -28,6 +28,16 @@ class SummaryService extends BaseService {
     super(Summary)
   }
 
+  async createSummariesForCompilationError(project) {
+    const TestCaseService = require('./project.test.case.service');
+    const TestCase = TestCaseService.getModel()
+    const TestCases = await TestCase.find({ project })
+
+    return TestCases.map(({ _id: test_case }) => {
+      return { output: "Compilation error", approved: false, test_case }
+    })
+  }
+
   async groupBy(CurrentUser, query, field) {
     const accumulators = {
       user: { $first: "$user" },
@@ -52,18 +62,18 @@ class SummaryService extends BaseService {
     const ProjectService = require('./project.service');
     const ProjectDoc = await ProjectService.get(undefined, { _id: project_id })
     const TeacherOfProject = await UserService.getModel().findById({ _id: ProjectDoc.owner })
-    const currentExecutionBelongsToTheProjectTeacher= TeacherOfProject.id.toString() === moodle_user.toString()
-    
-    
-    if(!ProjectDoc.activity && currentExecutionBelongsToTheProjectTeacher) throw new Util.Error(Errors.teacher_activity_no_setted)
-    if(!ProjectDoc.activity ) throw new Util.Error(Errors.student_activity_no_setted)
+    const currentExecutionBelongsToTheProjectTeacher = TeacherOfProject.id.toString() === moodle_user.toString()
+
+
+    if (!ProjectDoc.activity && currentExecutionBelongsToTheProjectTeacher) throw new Util.Error(Errors.teacher_activity_no_setted)
+    if (!ProjectDoc.activity) throw new Util.Error(Errors.student_activity_no_setted)
     if (currentExecutionBelongsToTheProjectTeacher) throw new Util.Error(Errors.teacher_cant_create_summary_for_him_projects)
 
     const { _id: project, activity } = ProjectDoc
     const { valideEnroledStudents = true, throwExceptions = true } = opts;
 
     await this.valideUserIsEnrolledInCourse(valideEnroledStudents, throwExceptions, activity, moodle_user)
-    
+
     const SummariesApproved = await Summary.find({ project, moodle_user, approved: true })
     // maps of references to find duplicates and approved test_cases
     const mapToFindDuplicates = {}

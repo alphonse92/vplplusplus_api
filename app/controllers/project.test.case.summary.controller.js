@@ -306,8 +306,16 @@ async function create(req, res, next) {
 			project,
 			moodle_user,
 			data,
+			compilation_error
 		} = req.body
-		const SummaryDoc = await SummaryService.createAll(project, moodle_user, data)
+
+		const studentTestResults = compilation_error
+			? await SummaryService.createSummariesForCompilationError(project)
+			: data
+
+		console.log(studentTestResults)
+
+		const SummaryDoc = await SummaryService.createAll(project, moodle_user, studentTestResults)
 		res.send(SummaryDoc)
 	} catch (e) { next(e) }
 
