@@ -29,7 +29,7 @@ Schema.methods.compile = function () {
     grade,
     _id: id
   } = this
-  const name = capitalize(camelCase(testCaseName))
+  const name = `${camelCase(testCaseName)}`
   const code =
     `
   @VplTestCase(id = "${id}" , grade = ${grade} )

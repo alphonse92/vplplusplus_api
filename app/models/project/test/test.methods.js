@@ -42,7 +42,11 @@ export async function compile() {
     tags,
     owner
   } = this
-  const className = `${capitalize(camelCase(name))}`
+
+  const camel = camelCase(name)
+  const letters = Array.from(camel)
+  const [firstLetter, ...rest] = letters
+  const className = `${capitalize(firstLetter)}${rest.join("")}`
   const filename = `${className}.java`
 
   const code =
