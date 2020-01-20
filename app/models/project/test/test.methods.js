@@ -56,8 +56,7 @@ import VPLPluPlusCore.annotations.VplPlusPlus;
 import VPLPluPlusCore.annotations.VplTest;
 import VPLPluPlusCore.annotations.VplTestCase;
 import static org.junit.Assert.assertEquals;
-import org.junit.Test;
-import org.junit.Before;
+import org.junit.*;
 @VplPlusPlus
 @VplTest(project = "${project}")
 public class ${className}{
