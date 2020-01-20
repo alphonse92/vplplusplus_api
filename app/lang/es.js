@@ -24,11 +24,11 @@ Esta clase fue generada automaticamente y incorpora
 las funcionalidades de VPL ++.
 
 Puedes modificar esta clase manualmente a tu gusto. 
-Si deseas puedes revisar la documentación de VPL-JLib
+Si deseas puedes revisar la documentacion de VPL-JLib
 y conocer como mejorar las pruebas unitarias de JUnit
 con Vpl Jlib
 
-Debajo puedes añadir tus imports.
+Debajo puedes anadir tus imports.
 */`
 
 
