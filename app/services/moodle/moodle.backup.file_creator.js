@@ -78,6 +78,7 @@ async function getActivityModuleDotXMLFromProjectDocument(ProjectDoc) {
         <name>execution_files/vpl_run.sh</name>
         <content># This script will be executed when the student or the teacher click on the button 'run' (the rocket button)
 . vpl_environment.sh
+export VPL_PLUS_PLUS_PROJECT_ID=${ProjectDoc._id}
 /usr/bin/vpl_run</content>
       </execution_file>
       <execution_file id="">
@@ -89,6 +90,7 @@ echo "Vpl ++ Executions does not supports debug.</content>
         <name>execution_files/vpl_evaluate.sh</name>
         <content># This script will be executed when the student or the teacher click on the button 'evaluate' (the check button)
 . vpl_environment.sh
+export VPL_PLUS_PLUS_PROJECT_ID=${ProjectDoc._id}
 /usr/bin/vpl $(pwd)/
 </content>
       </execution_file>
