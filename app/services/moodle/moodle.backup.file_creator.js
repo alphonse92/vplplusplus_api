@@ -25,7 +25,7 @@ async function getActivityModuleDotXMLFromProjectDocument(ProjectDoc) {
     const { filename, code } = testCompiled
     const tag = `<execution_file id="">
    <name>execution_files/${filename}</name>
-   <content>${code}</content>
+   <content><![CDATA[${code}]]></content>
 </execution_file>`
     schemaInfo.executionFileNames.push(filename)
     schemaInfo.executionFilesTags.push(tag)
