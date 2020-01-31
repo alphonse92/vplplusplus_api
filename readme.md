@@ -7,6 +7,8 @@ This is the repository of VPL++ API. Its belongs to the VPL++ ecosystem.
 1. Node v8 or greater
 2. Babel-node not required, it will installed as dev dependency.
 3. npx
+4. nodemon for local development 
+5. postman
 
 # Installation
 
@@ -14,9 +16,9 @@ This is the repository of VPL++ API. Its belongs to the VPL++ ecosystem.
 
 # Configuration
 
-The configuration is made by enviroment variables. However if you dont want to use enviroment variables you can choose by config file.
+The way to configure the API is environment variables. However if you dont want to use enviroment variables you can choose by config file.
 
-The folder `config/env` contains the folders that will be used by environmet. Each folder inside matchs with the environment name. For example, the folder `config/env/custom` matchs with the enviroment called `custom`.
+The folder `config/env` contains the folders that will be used by environment. Each folder inside matchs with the environment name. For example, the folder `config/env/custom` matchs with the enviroment called `custom`.
 
 The api will try to read the file `index.js`. 
 
@@ -41,20 +43,22 @@ module.exports = {
 	NODE_PATH: '.',
 	HOST: 'localhost',
 	PORT: '1337',
+	PUBLIC: 'api',
 	NODE_ENV: 'development',
 	SYSTEM_CORES: '1',
-	MONGO: 'mongodb://vpladmin:secret@localhost:27017/vpl-local?authSource=admin',
+	MONGO: 'mongodb://vpladmin:secret@localhost:27017/vpl-dev?authSource=admin',
 	MYSQL: 'mysql://root:root@localhost:3306/moodle?connectionAttributes=program_name:vplplusplus_api',
 	MOODLE_HOST: 'localhost',
 	MOODLE_PORT: '8080',
 	MOODLE_DB_PREFIX: 'mdl_',
 	MOODLE_AUTH_TYPE: 'saltedcrypt',
-	GOOGLE_CLIENT_ID: 'clientid.apps.googleusercontent.com',
+	GOOGLE_CLIENT_ID: '126760867544-k1es3tqiho46b0g831cmsvgokvl0npqu.apps.googleusercontent.com',
 	INIT_USER_TYPE: 'reset',
 	TOKEN_SECRET: 'secret',
 	TOKEN_EXP_MINUTES: 'NEVER',
 	CACHE_FOLDER: '/tmp/vplplusplus',
-	OPEN_DEVELOPMENT_ENDPOINT:"true"
+	OPEN_DEVELOPMENT_ENDPOINT: "true",
+	SHOW_CONFIG_AT_STARTUP: "true"
 };
 ```
 
@@ -62,20 +66,21 @@ module.exports = {
 
 1. HOST: The domain where the api is allocated.
 2. PORT: API port
-3. NODE_ENV: enviroment name,
-4. SYSTEM_CORES: the api will use this cores in the host cpu,
-5. MONGO: mongo connection string
-6. MYSQL: mysql connection string
-7. MOODLE_HOST: Moodle host
-8. MOODLE_PORT: Moodle port
-9. MOODLE_DB_PREFIX: Moddle table prefix
-10. MOODLE_AUTH_TYPE: for now, is only available 'saltedcrypt'. It is the alghoritm that moodle use to validate the user passwords
-11. GOOGLE_CLIENT_ID: In order to login with gooogle, it should be the client application in your google console.
-12. TOKEN_SECRET: JWT secret. Be carefull and does not exposes that.
-13. TOKEN_EXP_MINUTES: It could be `NEVER` or a number. Its the time in minutes that the tokens will expires for the users sessions
-14. CACHE_FOLDER: Host url for caching
-15. OPEN_DEVELOPMENT_ENDPOINT: Potentially dangerous. Its exposes a development endpoint.
-16. SHOW_CONFIG_AT_STARTUP: print the current configuration that the api take. Only admit true.
+3. PUBLIC: is the public path to the API, usefull when run it besida a gateway
+4. NODE_ENV: enviroment name,
+5. SYSTEM_CORES: the api will use this cores in the host cpu,
+6. MONGO: mongo connection string
+7. MYSQL: mysql connection string
+8. MOODLE_HOST: Moodle host
+9. MOODLE_PORT: Moodle port
+10. MOODLE_DB_PREFIX: Moddle table prefix
+11. MOODLE_AUTH_TYPE: for now, is only available 'saltedcrypt'. It is the alghoritm that moodle use to validate the user passwords
+12. GOOGLE_CLIENT_ID: In order to login with gooogle, it should be the client application in your google console.
+13. TOKEN_SECRET: JWT secret. Be carefull and does not exposes that.
+14. TOKEN_EXP_MINUTES: It could be `NEVER` or a number. Its the time in minutes that the tokens will expires for the users sessions
+15. CACHE_FOLDER: Host path for caching folder
+16. OPEN_DEVELOPMENT_ENDPOINT: Potentially dangerous. Its exposes a development endpoint.
+17. SHOW_CONFIG_AT_STARTUP: print the current configuration that the api take. Only admit true.
 
 # Running
 
@@ -106,122 +111,3 @@ Before execute the server, you can define the environment if you set the env var
 # Endpoints
 
 At root project, there is a exported Postman collections.
-
-# Glosary
-
-1. Project: project is related to a single vpl activity. It could contains several JUnit test clases.
-2. Test: Test is a single JUnit test class. It has contains one o more test cases.
-3. Test Case: Test case is a single JUnit method that evaluate something in a Test. 
-4. Summary: Is the result when the VPL ++ Runner in VPl Jail test a single test case.
-5. Runner: the runner is a wrapper of JUnit. This sotware should be installed in the Jail.
-
-
-## Test
-
-Test of vpl ++ looks like:
-
-```java
-
-import org.junit.Test;
-import VPLPluPlusCore.Configurator;
-import static org.junit.Assert.assertEquals;
-import VPLPluPlusCore.annotations.VplPlusPlus;
-import VPLPluPlusCore.annotations.VplTest;
-import VPLPluPlusCore.annotations.VplTestCase;
-import org.junit.Before;
-
-@VplPlusPlus
-@VplTest(   project = "5dbde95c22b5259ca46f359d")
-public class CalculadoraTest{
-
-  private Calculadora test;
-
-  @Before
-  public void setUp(){
-    test = new Calculadora();
-  }
-
-  //  This method is a vpl test case b/c it has the VplTestCase annotation
-  @VplTestCase(
-    // the id links this method with a test case in database
-    id = "5dbde95d22b5259ca46f35ab"
-  )
-  @Test()
-  public void testInstancia(){
-    new Calculadora();
-  }
-
-  @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test()
-  public void testSumar(){
-    assertEquals(3, test.sumar(1, 2));
-  }
-
-  @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test()
-  public void testRestar(){
-    assertEquals(-1, test.restar(1, 2));
-  }
-
-  @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test()
-  public void testMultiplicar(){
-    assertEquals(3, test.multiplicar(1, 2));
-  }
-
-  @VplTestCase(id = "5dbde95d22b5259ca46f35ab")
-  @Test()
-  public void testDividir(){
-    double x = test.dividir(2, 2);
-    assertEquals(1,x ,0);
-  }
-
-  // the methods below arent a vpl ++ test cases
-  // b/c those methods does not have the @VplTestCase annotattion
-  // and will be omited by the vpl + runner
-  @Test()
-  public void SingleJUnitMethod(){
-    assertEquals(2, test.multiplicar(1, 2));
-  }
-  
-  @Test()
-  public void SingleJUnitMethodThatFails(){
-    assertEquals(3, test.multiplicar(1, 2));
-  }
-
-}
-
-```
-
-# How to calculate the student skill of a topic?
- 
-The skill of a student is calculated by the next formulas:
-
-```
-Effort      (E)       =  s / ∑a  
-Coefficient (C)       =  ( T + 1 ) / ( R + 1 )
-Skill       (S)       =  T / (E*C)
-```
-
-Variables:
-
-```
-s: Total of summaries of a test case
-a: Attemps to solve a test case
-T: Total of test cases  
-R: Total of test cases that the student solved
-N: Total of test cases that the student not solved
-C: Negative coefiecent, more not solved tests, more penalization
-E: The ammount of all attempts to solve a test_case 
-S: Student skill level
-```
-
-Conditions:
-```
-1. Valid values of T : T >= R && T >= N && T > 0
-2. Valid values of R : T >= R >= 0
-3. Valid values of N : T >= N => 0
-4. Valid values of C:  C >= 1
-5. valid values of E:  E >= R => 0
-6. Valid values of S:  1 >= S >= 0
-```

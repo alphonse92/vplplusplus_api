@@ -1294,7 +1294,7 @@
 										],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n\t\"activity\":4,\n\t\"minTests\" : 1,\n\t\"maxTests\" : 3,\n\t\"minTestCases\" : 5,\n\t\"maxTestCases\" : 5,\n\t\"topicsLimit\" : 10,\n\t\"type\":\"days\",\n\t\"each\":1,\n\t\"quantity\":5\n}"
+											"raw": "{\n\t\"activity\":30,\n\t\"minTests\" : 1,\n\t\"maxTests\" : 3,\n\t\"minTestCases\" : 5,\n\t\"maxTestCases\" : 5,\n\t\"topicsLimit\" : 10,\n\t\"type\":\"days\",\n\t\"each\":1,\n\t\"quantity\":1\n}"
 										},
 										"url": {
 											"raw": "http://{{HOST_API}}:{{PORT_API}}/api/v1/dev/createFakeProject/",
