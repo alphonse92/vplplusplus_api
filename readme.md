@@ -82,6 +82,10 @@ module.exports = {
 16. OPEN_DEVELOPMENT_ENDPOINT: Potentially dangerous. Its exposes a development endpoint.
 17. SHOW_CONFIG_AT_STARTUP: print the current configuration that the api take. Only admit true.
 
+# Build docker image
+
+`docker-compose build api`
+
 # Running
 
 After you set the enviroment variables by each enviroment. You can run each enviroment running the next commands
