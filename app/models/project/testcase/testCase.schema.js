@@ -42,7 +42,7 @@ module.exports = {
 			}],
 			required: [ true, LANG.TEST_CASE_TOPIC_REQUIRED ],
 			validate: {
-				validator: function (v) { return v.length > 0 && v.length < 3 },
+				validator: function (v) { return v.length > 0 && v.length <= 3 },
 				message: LANG.TEST_CASE_TOPIC_RANGE
 			},
 			_editable: true
