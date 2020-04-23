@@ -13,9 +13,9 @@ class TopicService extends BaseService {
 		super(Topic)
 	}
 
-	async list() {
+	async list(query) {
 		try {
-			return await super.list()
+			return await super.list(query)
 		} catch (e) {
 			throw new Util.Error(Errors.topic_does_not_exist)
 		}
